@@ -360,16 +360,19 @@ void Canvas::move_to(Coord x, Coord y) {
 	tx = x;
 	ty = y;
     }
-#if 1
-	if (tx < -10000. || tx > 10000. || ty < -10000. || tx > 10000.) {
-		p->cur_point_ = p->point_;
-		return;
-	}
-#endif
     Display* d = c->display_;
     XPoint* xp = p->point_;
+#if 0
     xp->x = d->to_pixels(tx);
     xp->y = c->pheight_ - d->to_pixels(ty);
+#else
+	long ix = d->to_pixels(tx);
+	long iy = c->pheight_ - d->to_pixels(ty);
+	if (ix > 30000) {ix = 30000; } else if (ix < -30000) { ix = -30000;}
+	if (iy > 30000) {iy = 30000; } else if (iy < -30000) { iy = -30000;}
+	xp->x = ix;
+	xp->y = iy;
+#endif
     p->cur_point_ = xp + 1;
 }
 
@@ -404,16 +407,19 @@ void Canvas::line_to(Coord x, Coord y) {
 	ty = y;
     }
 
-#if 1
-	if (tx < -10000. || tx > 10000. || ty < -10000. || tx > 10000.) {
-		return;
-	}
-#endif
-   
     Display* d = c->display_;
     XPoint* xp = next_point(p);
+#if 0
     xp->x = d->to_pixels(tx);
     xp->y = c->pheight_ - d->to_pixels(ty);
+#else
+	long ix = d->to_pixels(tx);
+	long iy = c->pheight_ - d->to_pixels(ty);
+	if (ix > 30000) {ix = 30000; } else if (ix < -30000) { ix = -30000;}
+	if (iy > 30000) {iy = 30000; } else if (iy < -30000) { iy = -30000;}
+	xp->x = ix;
+	xp->y = iy;
+#endif
 }
 
 void Canvas::curve_to(
