@@ -222,7 +222,7 @@ private:
     ObjectMap* _curMap;
     ObjectMap* _substMap;
     float _fileVersion;
-#ifdef __GNUG__
+#if defined(__xlC__) || defined(__GNUG__)
     char* _tmpfile;
 #endif
 

@@ -42,6 +42,7 @@ enum CaretStyleOptions {
 
 class Painter;
 class Canvas;
+class TextLine;
 
 class TextDisplay {
 public:
