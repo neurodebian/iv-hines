@@ -8,6 +8,18 @@
 
 #define ExtraCCDefines -DLINUX
 
-#define ExtraCCLdFlags -x none -static
+#define NonSharedCCLdFlags -x none -static
+#define SharedCCLdFlags -shared
 
 #include <InterViews/xparams.cf>
+#include <InterViews/gcc.def>
+
+#undef XConfigDir
+#define XConfigDir /usr/X11R6/lib/X11/config
+#undef XIncDir
+#define XIncDir /usr/X11R6/include
+#undef XLibDir
+#define XLibDir /usr/X11R6/lib
+
+#define InstalledRoot /usr/interviews
+#define InstallRelative NO
