@@ -26,10 +26,7 @@
  */
 
 #include <OS/host.h>
-
-extern "C" {
-    int gethostname(char*, int);
-}
+#include <unistd.h>
 
 char Host::name_[100];
 
