@@ -118,7 +118,7 @@ static const char* motionName = "IV_MOTION";
 static const char* leaveName = "IV_LEAVE";
 static const char* dropName = "IV_DROP";
 static int dropUid = 0;
-static DragAtoms dragAtoms;
+static DragAtoms* dragAtoms;
 
 static void setDragProperty(
     XDisplay* display, XEvent& xevent, XWindow destination,
@@ -192,7 +192,7 @@ static boolean understandsDragging(XDisplay* xdisplay, XWindow xwindow) {
     unsigned char* buffer = nil;
     if (
 	XGetWindowProperty(
-	    xdisplay, xwindow, dragAtoms.drag(xdisplay), 0, 0,
+	    xdisplay, xwindow, dragAtoms->drag(xdisplay), 0, 0,
 	    False, AnyPropertyType, &actual_type, &actual_format, &nitems,
 	    &bytes_after, (unsigned char**)&buffer
 	) != Success
@@ -267,8 +267,8 @@ static XWindow translate(
 
 boolean XDrag::isDrag(const XEvent& xevent) {
     return (
-	dragAtoms.enter(xevent) || dragAtoms.motion(xevent) ||
-	dragAtoms.leave(xevent) || dragAtoms.drop(xevent)
+	dragAtoms->enter(xevent) || dragAtoms->motion(xevent) ||
+	dragAtoms->leave(xevent) || dragAtoms->drop(xevent)
     );
 }
 
@@ -440,6 +440,9 @@ protected:
 /* class Drag */
 
 Drag::Drag(Glyph* glyph) : MonoGlyph(glyph) {
+    if (!dragAtoms) {
+    	dragAtoms = new DragAtoms();
+    }
     rep_ = new DragRep(this);
 }
 
@@ -688,7 +691,7 @@ boolean DragRep::event(Event& event) {
 	drag_->dragType(value, length);
 	XEvent xevent;
 	setDragProperty(
-	    display, xevent, last, dragAtoms.enter(display), lx, ly,
+	    display, xevent, last, dragAtoms->enter(display), lx, ly,
 	    value, length
 	);
 	XSendEvent(display, last, False, NoEventMask, &xevent);
@@ -718,7 +721,7 @@ boolean DragRep::event(Event& event) {
 		// send drag leave to last window that was dragged over.
 		XEvent xevent;
 		setDragProperty(
-		    display, xevent, last, dragAtoms.leave(display), zx, zy
+		    display, xevent, last, dragAtoms->leave(display), zx, zy
 		);
 		XSendEvent(display, last, False, NoEventMask, &xevent);
 	    }
@@ -730,7 +733,7 @@ boolean DragRep::event(Event& event) {
 		int length;
 		drag_->dragType(value, length);
 		Atom messageType = (last != zone) ?
-		    dragAtoms.enter(display) : dragAtoms.motion(display);
+		    dragAtoms->enter(display) : dragAtoms->motion(display);
 		setDragProperty(
 		    display, xevent, zone, messageType, zx, zy, value, length
 		);
@@ -744,13 +747,13 @@ boolean DragRep::event(Event& event) {
 		// send drag abort to window that pointer is over.
 		XEvent xevent;
 		setDragProperty(
-		    display, xevent, last, dragAtoms.leave(display), lx, ly
+		    display, xevent, last, dragAtoms->leave(display), lx, ly
 		);
 		XSendEvent(display, last, False, NoEventMask, &xevent);
 	    }
 	    aborted = true;
-	} else if (dragAtoms.enter(dragEvent) || dragAtoms.motion(dragEvent) ||
-	    dragAtoms.leave(dragEvent) || dragAtoms.drop(dragEvent)
+	} else if (dragAtoms->enter(dragEvent) || dragAtoms->motion(dragEvent) ||
+	    dragAtoms->leave(dragEvent) || dragAtoms->drop(dragEvent)
 	) {
 	    // deliver drag events to a drag zone in this session.
 	    dragEvent.handle();
@@ -766,7 +769,7 @@ boolean DragRep::event(Event& event) {
 	drag_->dragData(value, length);
 	XEvent xevent;
 	setDragProperty(
-	    display, xevent, last, dragAtoms.drop(display), lx, ly,
+	    display, xevent, last, dragAtoms->drop(display), lx, ly,
 	    value, length
 	);
 	XSendEvent(display, last, False, NoEventMask, &xevent);
@@ -878,8 +881,8 @@ boolean DragZoneRep::caught(const Event& event) const {
 	return false;
     }
     return (
-	dragAtoms.enter(event) || dragAtoms.motion(event) ||
-	dragAtoms.leave(event) || dragAtoms.drop(event)
+	dragAtoms->enter(event) || dragAtoms->motion(event) ||
+	dragAtoms->leave(event) || dragAtoms->drop(event)
     );
 }
 
@@ -898,7 +901,7 @@ boolean DragZoneRep::event(Event& event) {
     }
 
     XEvent& xevent = event.rep()->xevent_;
-    if (dragAtoms.enter(event)) {
+    if (dragAtoms->enter(event)) {
 	if (!grabbing_) {
 	    event.grab(target_);
 	    grabbing_ = true;
@@ -913,7 +916,7 @@ boolean DragZoneRep::event(Event& event) {
 	return true;
     }
 
-    if (dragAtoms.motion(event)) {
+    if (dragAtoms->motion(event)) {
 	char* type;
 	int length;
 	getDragProperty(xevent, type, length);
@@ -943,7 +946,7 @@ boolean DragZoneRep::event(Event& event) {
 	return true;
     }
 
-    if (dragAtoms.leave(event)) {
+    if (dragAtoms->leave(event)) {
 	if (grabbing_) {
 	    event.ungrab(target_);
 	    grabbing_ = false;
@@ -952,7 +955,7 @@ boolean DragZoneRep::event(Event& event) {
 	return true;
     }
 
-    if (! dragAtoms.drop(event)) {
+    if (! dragAtoms->drop(event)) {
 	return true;
     }
     if (grabbing_) {
@@ -1024,7 +1027,7 @@ void DragZoneSink::draw(Canvas* canvas, const Allocation& allocation) const {
 	    XDisplay* xdisplay = rep->dpy();
 	    XWindow xwindow = rep->xwindow_;
 	    XChangeProperty(
-		xdisplay, xwindow, dragAtoms.drag(xdisplay), XA_STRING, 8,
+		xdisplay, xwindow, dragAtoms->drag(xdisplay), XA_STRING, 8,
 		PropModePrepend, 0, 0
 	    );
 	    DragZoneSink* self = (DragZoneSink*) this;
@@ -1038,8 +1041,8 @@ void DragZoneSink::pick(Canvas* c, const Allocation& a, int depth, Hit& hit) {
     const Event* event = hit.event();
     if (event != nil &&
 	(
-	    dragAtoms.enter(*event) || dragAtoms.motion(*event) ||
-	    dragAtoms.leave(*event) || dragAtoms.drop(*event)
+	    dragAtoms->enter(*event) || dragAtoms->motion(*event) ||
+	    dragAtoms->leave(*event) || dragAtoms->drop(*event)
 	)
     ) {
 	hit.target(depth, this, 0, target_);
@@ -1047,8 +1050,8 @@ void DragZoneSink::pick(Canvas* c, const Allocation& a, int depth, Hit& hit) {
 }
 
 boolean DragZoneSink::event(Event& event) {
-    if (dragAtoms.enter(event) || dragAtoms.motion(event) ||
-	dragAtoms.drop(event)) {
+    if (dragAtoms->enter(event) || dragAtoms->motion(event) ||
+	dragAtoms->drop(event)) {
 	char* type;
 	int length;
 	XEvent& xevent = event.rep()->xevent_;
