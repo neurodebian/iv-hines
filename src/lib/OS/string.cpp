@@ -303,23 +303,23 @@ CopyString::CopyString(const CopyString& s) : String() {
 }
 
 CopyString::~CopyString() {
-    free();
+    strfree();
 }
 
 String& CopyString::operator =(const CopyString& s) {
-    free();
+    strfree();
     set_value(s.string(), s.length());
     return *this;
 }
 
 String& CopyString::operator =(const String& s) {
-    free();
+    strfree();
     set_value(s.string(), s.length());
     return *this;
 }
 
 String& CopyString::operator =(const char* s) {
-    free();
+    strfree();
     set_value(s);
     return *this;
 }
@@ -340,7 +340,7 @@ void CopyString::set_value(const char* s, int len) {
     String::set_value(strncpy(ns, s, len), len);
 }
 
-void CopyString::free() {
+void CopyString::strfree() {
     char* s = (char*)(string());
     delete [] s;
 }
@@ -365,17 +365,17 @@ NullTerminatedString::NullTerminatedString(
 }
 
 NullTerminatedString::~NullTerminatedString() {
-    free();
+    strfree();
 }
 
 String& NullTerminatedString::operator =(const String& s) {
-    free();
+    strfree();
     assign(s);
     return *this;
 }
 
 String& NullTerminatedString::operator =(const char* s) {
-    free();
+    strfree();
     allocated_ = false;
     String::set_value(s, strlen(s));
     return *this;
@@ -396,7 +396,7 @@ void NullTerminatedString::assign(const String& s) {
     }
 }
 
-void NullTerminatedString::free() {
+void NullTerminatedString::strfree() {
     if (allocated_) {
 	char* s = (char*)(string());
 	delete [] s;

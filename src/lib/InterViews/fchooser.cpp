@@ -70,7 +70,7 @@ private:
     Action* update_;
 
     void init(FileChooser*, Style*, FileChooserAction*);
-    void free();
+    void fcfree();
     void build();
     void clear();
     void load();
@@ -110,7 +110,7 @@ FileChooser::FileChooser(
 }
 
 FileChooser::~FileChooser() {
-    impl_->free();
+    impl_->fcfree();
     delete impl_;
 }
 
@@ -172,7 +172,7 @@ MessageBox(NULL, "FileChooserImpl::init dir is nil", "Internal error", MB_OK);
     build();
 }
 
-void FileChooserImpl::free() {
+void FileChooserImpl::fcfree() {
     delete name_;
     delete dir_;
     delete [] filter_map_;

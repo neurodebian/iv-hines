@@ -112,7 +112,7 @@ protected:
     virtual void set_value(const char*);
     virtual void set_value(const char*, int);
 private:
-    void free();
+    void strfree();
 };
 
 class NullTerminatedString : public String {
@@ -133,7 +133,7 @@ private:
     boolean allocated_;
 
     void assign(const String&);
-    void free();
+    void strfree();
 };
 
 inline const char* String::string() const { return data_; }

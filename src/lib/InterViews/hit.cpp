@@ -97,7 +97,7 @@ private:
     friend class Hit;
 
     void init(Coord x1, Coord y1, Coord x2, Coord y2);
-    void free();
+    void hfree();
 
     void add_item(
 	boolean override,
@@ -133,7 +133,7 @@ void HitImpl::init(Coord x1, Coord y1, Coord x2, Coord y2) {
     a.top = y2;
 }
 
-void HitImpl::free() {
+void HitImpl::hfree() {
     for (int i = 0; i < items_.used_; i++) {
 	HitTargetList& list = items_.lists_[i];
 	if (list.targets_ != list.fixed_targets_) {
@@ -172,7 +172,7 @@ Hit::Hit(Coord left, Coord bottom, Coord right, Coord top) {
 Hit::Hit(HitImpl* h) { impl_ = h; }
 
 Hit::~Hit() {
-    impl_->free();
+    impl_->hfree();
     if (impl_ != (HitImpl*)free_store_) {
 	delete impl_;
     }
