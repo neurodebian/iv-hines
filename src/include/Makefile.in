@@ -67,6 +67,7 @@ install:
 	done
 	$(INSTALL_DATA) ivstream.h $(DESTDIR)$(includedir)/ivstream.h
 	$(INSTALL_DATA) ivstrm.h $(DESTDIR)$(includedir)/ivstrm.h
+	$(INSTALL_DATA) ivversion.h $(DESTDIR)$(includedir)/ivversion.h
 
 uninstall:
 	for dir in $(DIRS); do \
@@ -76,8 +77,9 @@ uninstall:
 	  done; \
 	  cd ..; \
 	done
-	rm -f ivstream.h ivstrm.h
-
+	for file in ivstream.h ivstrm.h ivversion.h do \
+	  rm -f $(DESTDIR}$(includedir)/$$file; \
+	done
 .PHONY: all install clean mostlyclean distclean uninstall
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
