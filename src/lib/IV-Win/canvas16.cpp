@@ -316,7 +316,7 @@ void MWcanvas16::clip()
 	{
 		clip = CreatePolygonRgn(pt, n, WINDING);
     }
-#if 0
+#if 1
 	// ---- merge with existing clipping area ----
 	HRGN intersect = CreateRectRgn(0,0,0,0);
 	CombineRgn(intersect, clipping_, clip, RGN_AND);
