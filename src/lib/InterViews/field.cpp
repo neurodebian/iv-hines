@@ -253,6 +253,9 @@ void FieldStringEditor::focus_in() { }
 void FieldStringEditor::focus_out() { }
 
 void FieldStringEditor::cut(SelectionManager* s) {
+	if (start_ > index_) {
+		int tmp = start_;  start_ = index_; index_ = tmp;
+	}
     s->put_value(Text() + start_, index_ - start_);
 }
 
