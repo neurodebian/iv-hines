@@ -284,6 +284,7 @@ ivmac = \
 	IV-Mac/cursor.lo \
 	IV-Mac/display.lo \
 	IV-Mac/event.lo \
+	IV-Mac/carbevent.lo \
 	IV-Mac/font.lo \
 	IV-Mac/mprinter.lo \
 	IV-Mac/raster.lo \

@@ -131,24 +131,61 @@ implementPtrList(MACcursorPtrList, Cursor)
 
 #if carbon
 extern "C" {
-#define NTYPE 5
+#define NTYPE 6
 static EventTypeSpec etype[] = {
 	{kEventClassMouse, kEventMouseDown},
 	{kEventClassMouse, kEventMouseMoved},
 	{kEventClassMouse, kEventMouseDragged},
 	{kEventClassMouse, kEventMouseUp},
-	{kEventClassKeyboard, kEventRawKeyDown}
+	{kEventClassKeyboard, kEventRawKeyDown},
+	{kEventClassKeyboard, kEventRawKeyRepeat}
 };
 	                                
 static OSStatus ehandler(EventHandlerCallRef x, EventRef er, void* v) {
-	input_er->setEventRef(er);
-	input_e->handle();
+//printf("ehandler class=%d kind=%d\n", GetEventClass(er), GetEventKind(er));
+	OSStatus result;
+	result = CallNextEventHandler(x, er);
+	if (result == eventNotHandledErr) {
+		input_er->setEventRef(er);
+		input_e->handle();
+		result = noErr;
+	}
 //	UInt32 ek;
 //	ek = GetEventKind(er);
 //	printf("%d\n", ek);
-	return eventNotHandledErr;
+	// wish we could do following only on last of a sequence of events.
+	Session::instance()->screen_update();
+	return result;
 }
 }
+
+void iv_carbon_dialog_handle(WindowRef w) {
+	EventRef er;
+	OSStatus result;
+	result = ReceiveNextEvent(0, NULL, kEventDurationForever, true, &er);
+//printf("%d %c%c%c%c %d %d\n", result,
+//GetEventClass(er)>>24,GetEventClass(er)>>16,GetEventClass(er)>>8,GetEventClass(er)>>0,
+//GetEventKind(er), IsWindowActive(w));
+	
+	WindowRef wr;
+	if (GetEventClass(er) == kEventClassMouse
+		&& GetEventParameter(er, kEventParamWindowRef,
+			typeWindowRef, NULL, sizeof(wr), NULL, &wr) == 0) {
+		if (FrontWindow() != w) {
+//printf("SelectWindow\n");
+			SelectWindow(w);
+		}
+	}else if ( GetEventClass(er) == kEventClassKeyboard) {
+		wr = FrontWindow();
+	}else{
+		wr = nil;
+	}
+	if (wr == w) {
+		SendEventToEventTarget(er, GetEventDispatcherTarget());
+	}
+	ReleaseEvent(er);
+}
+
 #endif
 
 // #######################################################################
@@ -359,7 +396,7 @@ boolean MACwindow::map()
 	if(theMacWindow_){
 		ShowWindow(theMacWindow_);
 		SelectWindow(theMacWindow_);
-		
+		getIvWindow()->canvas()->damage_all();
 		//Needed for Neuron
 		Event e;
 		getIvWindow()->receive(e);
@@ -611,7 +648,7 @@ void MACwindow::repair(void){
 	visRgn = NewRgn();
 	GetPortVisibleRegion(GetWindowPort(theMacWindow_), visRgn);
 	UpdateControls(theMacWindow_, visRgn);
-	DisposeRgn(visRgn);
+//	DisposeRgn(visRgn);
 #else	
 	UpdateControls(theMacWindow_, theMacWindow_->visRgn);
 #endif
@@ -628,6 +665,8 @@ void MACwindow::repair(void){
 	Rect r;
 	GetPortBounds(GetWindowPort(theMacWindow_), &r);
 	ValidWindowRect(theMacWindow_, &r);
+	QDFlushPortBuffer(GetWindowPort(theMacWindow_), visRgn);
+	DisposeRgn(visRgn);
 #else	
 	ValidRect(&theMacWindow_->portRect);
 #endif
@@ -1281,7 +1320,7 @@ long WindowRep::MACinput(EventRecord* theEvent, int type, int button){
 	GlobalToLocal(&theMouse);
 	input_er->localMouseLocation_ = theMouse;
 	SetPort(oldPort);
-//debugfile("Macinput %lx %lx %d %d %d\n", (long)win, (long)win->canvas(), type, theMouse.h, theMouse.v);	
+//printf("Macinput %lx %lx %d %d %d\n", (long)win, (long)win->canvas(), type, theMouse.h, theMouse.v);	
     // ---- go process it ----
 	EventRep::handleCallback(*input_e);
 

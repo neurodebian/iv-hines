@@ -1087,7 +1087,10 @@ void SMFKitCheckmark::request(Requisition& req) const {
 
 void SMFKitCheckmark::draw(Canvas* c, const Allocation& a) const {
     if (state_->test(TelltaleState::is_chosen)) {
-#if !MAC && !defined(CYGWIN)
+#if MAC
+	info().checkmark()->draw(c, a);
+#else
+#if !defined(CYGWIN)
 //printf("SMFKitCheckmark::draw %g %g %g %g %g %g\n", a.x(), a.y(),
 //a.left(), a.right(), a.bottom(), a.top());
 	Allocation a1;
@@ -1102,16 +1105,15 @@ void SMFKitCheckmark::draw(Canvas* c, const Allocation& a) const {
 //		t.translate((a.right()+a.left()-13)/2.0, (a.top()+a.bottom()-13)/2.0);
 //	}
 	c->transform(t);
-#if !MAC
 	info().shadow1()->draw(c, a1);
 	info().shadow2()->draw(c, a1);
-#endif
 	info().checkmark()->draw(c, a1);
 	c->pop_transform();
 #else
 	info().shadow1()->draw(c, a);
 	info().shadow2()->draw(c, a);
 	info().checkmark()->draw(c, a);
+#endif
 #endif
     }
 }

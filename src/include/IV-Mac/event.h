@@ -43,6 +43,7 @@ public:
 #if carbon
 		EventRef getEventRef();
 		static Point mouse_loc(EventRef);
+		void handle();
 #else
 		EventRecord * getEventRecord();
 #endif
@@ -53,6 +54,7 @@ public:
 		
 		void mouseDownEventHook(void);
 		void mouseUpEventHook(void);
+		void mouseMotionEventHook(void);
 		void keyDownEventHook(void);
 		void appleEventHook(void);
 		void nullEventHook(void);

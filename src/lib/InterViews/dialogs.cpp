@@ -211,6 +211,10 @@ boolean Dialog::run() {
     Session* s = Session::instance();
     Event e;
     done_ = false;
+#if MAC
+	extern void iv_carbon_dialog_handle(WindowRef);
+	WindowRef thiswin = canvas()->window()->rep()->macWindow();
+#endif
 #if OC_UNQUIT
 	boolean old;
 	if (IVDialog_setAcceptInput) {
@@ -221,11 +225,13 @@ boolean Dialog::run() {
     for (;;) {
 #if MAC
 	s->screen_update();
-#endif
+	iv_carbon_dialog_handle(thiswin);
+#else
+#if defined(WIN32)
 	s->read(e);
-#if defined(WIN32) || MAC
 	e.handle();
 #else
+	s->read(e);
 	// added by ro2m: don't respond to events that don't have display (it happens..)
 	if (e.display() == nil)
 	  continue;
@@ -234,6 +240,7 @@ boolean Dialog::run() {
 	} else if (e.type() == Event::key) {
 	    keystroke(e);
 	}
+#endif
 #endif
 	if (done_) {
 	    break;

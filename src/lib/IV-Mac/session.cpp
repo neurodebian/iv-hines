@@ -92,7 +92,8 @@ static PropertyData properties[] = {
 {"*TransientWindow*saveUnder", "on"},
 {"*background", "#ffffff"},
 {"*brush_width", "0"},
-{"*double_buffered", "on"},
+//{"*double_buffered", "on"},
+{"*double_buffered", "off"},
 {"*flat", "#aaaaaa"},
 {"*font", "*Arial*bold*--12*"},
 {"*MenuBar*font", "*Arial*bold*--12*"},
@@ -883,6 +884,7 @@ static Point where;
 void Session::read(Event& e)
 {				
 assert(0);
+// see iv_carbon_dialog_handle
 #if 0
 	RgnHandle region = NewRgn();
 	SetRectRgn(region, where.h, where.v, (where.h + 1), (where.v +1));	
@@ -896,7 +898,6 @@ assert(0);
 boolean read_if_pending(Event& e);
 boolean read_if_pending(Event& e)
 {
-assert(0);
 #if 0
 	RgnHandle region = NewRgn();
 	SetRectRgn(region, where.h, where.v, (where.h + 1), (where.v +1));	
@@ -907,6 +908,17 @@ assert(0);
 	}
 	return b;	
 #else
+#if defined(carbon)
+	EventQueueRef eqr = GetMainEventQueue();
+	EventTargetRef target = GetEventDispatcherTarget();
+	EventRef er;
+	while (GetNumEventsInQueue(eqr) != 0 && ReceiveNextEvent(0, NULL, kEventDurationForever, true, &er) == noErr) {
+		SendEventToEventTarget(er, target);
+		ReleaseEvent(er);
+	}
+#else
+	assert(0);
+#endif
 	return false;
 #endif
 }
@@ -1044,8 +1056,18 @@ void Session::screen_update() {
 // delivered. 
 int Session::run() {
 	screen_update();
+//printf("RunApplicationEventLoop\n");
+#if 1
 	RunApplicationEventLoop();
-printf("Return from RunApplicationEventLoop\n");
+#else
+	EventTargetRef target = GetEventDispatcherTarget();
+	EventRef er;
+	while (ReceiveNextEvent(0, NULL, kEventDurationForever, true, &er) == noErr) {
+		SendEventToEventTarget(er, target);
+		ReleaseEvent(er);
+	}
+#endif
+//printf("Return from RunApplicationEventLoop\n");
 	return 0;
 }
 
@@ -1165,6 +1187,7 @@ int Session::run_window(Window* w)
 void Session::quit()
 {
     rep_->done_ = true;
+    QuitApplicationEventLoop();
 }
 void Session::unquit() {
 	rep_->done_ = false;

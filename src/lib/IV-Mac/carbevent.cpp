@@ -184,29 +184,35 @@ Handler* Event::handler() const
 void Event::handle()
 {
 	EventRef er = rep_->getEventRef();
-	
 	if(er){
 		switch (GetEventClass(er)) {
 			case kEventClassMouse:
 				switch (GetEventKind(er)) {
 					case kEventMouseDown:
-printf("mouseDown\n");
+//printf("mouseDown\n");
 						rep_->mouseDownEventHook();
 						break;
 					case kEventMouseUp:
-printf("mouseUp\n");
+//printf("mouseUp\n");
 						rep_->mouseUpEventHook();
 						break;
 					case kEventMouseDragged:
 					case kEventMouseMoved:
+//printf("mouseMove\n");
+						rep_->mouseMotionEventHook();
 						break;
 					default:
 						break;
 				}
-
+				break;
 			case kEventClassKeyboard:
-printf("keyDown\n");
-				rep_->keyDownEventHook();
+				switch (GetEventKind(er)) {
+				case kEventRawKeyDown:
+				case kEventRawKeyRepeat:
+//printf("keyDown\n");
+					rep_->keyDownEventHook();
+					break;
+				}
 				break;
 			default:
 				break;
@@ -308,10 +314,9 @@ EventType Event::type() const
 unsigned long Event::time() const
 {
 	EventRef temp;
-	
 	if(temp = (rep()->getEventRef())) {
 		EventTime t = GetEventTime(temp);
-printf("Event::time %g\n", t);
+//printf("Event::time %g\n", t);
 		return (long)t;
 	}
 	//Should not reach this point
@@ -662,6 +667,25 @@ void EventRep::mouseUpEventHook(void){
 	
 	//Set InterViews type
 	type_ = Event::up;
+	button_ = last_button_;
+	
+	frontWindow = FrontWindow();
+	if(MACwindow::isOurWindow(frontWindow)){
+		ourStructure = WindowRep::rc(frontWindow);
+	} else {
+		ourStructure = nil;
+	}
+	
+	if(ourStructure)
+		ourStructure->MACinput(theEvent_, type_, button_);
+}
+
+void EventRep::mouseMotionEventHook(void){
+	WindowPtr		frontWindow;
+	WindowRep*		ourStructure;
+	
+	//Set InterViews type
+	type_ = Event::motion;
 	button_ = last_button_;
 	
 	frontWindow = FrontWindow();
