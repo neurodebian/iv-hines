@@ -195,10 +195,29 @@ boolean Dialog::post_at_aligned(
 #include <IV-Mac/window.h>
 #endif
 
+//NEURON used to have its own slightly hacked version of dialogs.cpp
+// but as of gcc 3.3 under powerpc-apple-darwin7.0.0
+// that caused multiply defined symbol errors. For this reason we
+// abbandoned the NEURON dialogs.cpp in favor of an extern C callback.
+// i.e. it is used if the pointer is non-nil
+#define OC_UNQUIT 1
+#if OC_UNQUIT
+extern "C" {
+boolean (*IVDialog_setAcceptInput)(boolean) = nil;
+}
+#endif
+
 boolean Dialog::run() {
     Session* s = Session::instance();
     Event e;
     done_ = false;
+#if OC_UNQUIT
+	boolean old;
+	if (IVDialog_setAcceptInput) {
+		old = (*IVDialog_setAcceptInput)(false);
+		s->unquit();
+	}
+#endif
     for (;;) {
 #if MAC
 	s->screen_update();
@@ -224,6 +243,11 @@ boolean Dialog::run() {
 	    break;
 	}
     }
+#if OC_UNQUIT
+	if (IVDialog_setAcceptInput) {
+		(*IVDialog_setAcceptInput)(old);
+	}
+#endif
     return accepted_;
 }
 

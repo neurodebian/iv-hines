@@ -261,3 +261,4 @@
 #define Viewer _lib_iv(Viewer)
 #define ViewerView _lib_iv(ViewerView)
 #define VoidData _lib_iv(VoidData)
+#define PSFont UnidrawPSFont

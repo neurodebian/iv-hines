@@ -261,3 +261,4 @@
 #undef Viewer
 #undef ViewerView
 #undef VoidData
+#undef PSFont

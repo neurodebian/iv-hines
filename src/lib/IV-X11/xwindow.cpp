@@ -512,6 +512,9 @@ boolean Window::receive(const Event& e) {
 	s = w.display_->primary_selection();
 	s->rep()->notify(s, xe.xselection);
 	break;
+    case EnterNotify:
+//	printf("Window::receive EnterNotify");
+	break;
     }
     if (handler != nil) {
 	Event writable_e(e);
