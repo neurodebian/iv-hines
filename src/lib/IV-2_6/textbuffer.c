@@ -33,7 +33,7 @@
 #include <ctype.h>
 #include <memory.h>
 #include <stdlib.h>
-//#include <string.h>
+#include <string.h>
 
 static const char NEWLINE = '\012';
 
@@ -201,7 +201,7 @@ int TextBuffer::LinesBetween (int index1, int index2) {
         const char* tt;
         int l = 0;
 	while (start < finish) {
-	    tt = (char*)memchr(start, NEWLINE, finish - start);
+	    tt = (char*)memchr((const void*)start, NEWLINE, finish - start);
 	    if (tt == nil) {
 		break;
 	    }
@@ -239,7 +239,7 @@ int TextBuffer::BeginningOfLine (int index) {
 int TextBuffer::BeginningOfNextLine (int index) {
     const char* t = Text(index);
     const char* e = text + length;
-    t = (char*)memchr(t, NEWLINE, e - t);
+    t = (char*)memchr((const void*)t, NEWLINE, e - t);
     if (t == nil) {
         return length;
     } else {
@@ -258,7 +258,7 @@ int TextBuffer::EndOfLine (int index) {
     if (t == e) {
 	return length;
     }
-    t = (char*)memchr(t, NEWLINE, e - t);
+    t = (char*)memchr((const void*)t, NEWLINE, e - t);
     if (t == nil) {
         return length;
     } else {
