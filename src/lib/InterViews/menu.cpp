@@ -466,12 +466,14 @@ void MenuImpl::restore_cursor(Canvas* c) {
 void MenuImpl::grab(Menu* m, const Event& e) {
 	 if (!grabbed_) {
 	e.grab(m->handler());
+	e.window()->grab_pointer(nil);
 	grabbed_ = true;
     }
 }
 
 void MenuImpl::ungrab(Menu* m, const Event& e) {
 	 if (grabbed_) {
+	e.window()->ungrab_pointer();
 	e.ungrab(m->handler());
 	grabbed_ = false;
 	 }

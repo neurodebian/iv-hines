@@ -562,7 +562,8 @@ void Window::grab_pointer(Cursor* c) const {
     XGrabPointer(
 	w.dpy(), w.xwindow_, True,
 	(unsigned int)(
-	    w.xattrs_.event_mask & (PointerMotionMask | PointerMotionHintMask)
+//	    w.xattrs_.event_mask & (PointerMotionMask | PointerMotionHintMask)
+	    w.xattrs_.event_mask & (ButtonPressMask | ButtonReleaseMask | PointerMotionMask | PointerMotionHintMask)
 	),
 	/* pointer_mode */ GrabModeAsync, /* keyboard_mode */ GrabModeAsync,
 	/* confine_to */ None,
