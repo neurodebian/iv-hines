@@ -971,6 +971,18 @@ static OSStatus ehandler(EventHandlerCallRef x, EventRef er, void*) {
 	return result;
 }
 
+// after Apple-H to hide the windows. showing them leaves them blank,
+// so must handle the show event
+static EventTypeSpec showtype[] = {{kEventClassApplication, kEventAppShown}};
+
+static OSStatus show_handler(EventHandlerCallRef x, EventRef er, void*) {
+	OSStatus result;
+//	printf("kEventApShown\n");
+	Session::instance()->screen_update();
+	result = noErr;
+	return result;
+}
+
 int stdin_event_ready();
 int dialog_running_ = 0;
 int stdin_event_ready() {
@@ -1003,6 +1015,8 @@ Session::Session(
 
     EventHandlerUPP hupp = NewEventHandlerUPP(ehandler);
     OSStatus err = InstallEventHandler(GetApplicationEventTarget(), hupp, 1, etype, 0, NULL);
+    hupp = NewEventHandlerUPP(show_handler);
+    err = InstallEventHandler(GetApplicationEventTarget(), hupp, 1, showtype, 0, NULL);
 }
 
 Session::~Session()

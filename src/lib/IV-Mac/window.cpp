@@ -158,6 +158,20 @@ static OSStatus ehandler(EventHandlerCallRef x, EventRef er, void* v) {
 	Session::instance()->screen_update();
 	return result;
 }
+
+static EventTypeSpec showtype[] = {{kEventClassWindow, kEventWindowShown}};
+static OSStatus show_handler(EventHandlerCallRef x, EventRef er, void* v) {
+        OSStatus result;
+	WindowRef wr;
+//        printf("kEventWindowShown\n");
+        result = GetEventParameter(er, kEventParamDirectObject, typeWindowRef,
+		NULL, sizeof(WindowRef), NULL, &wr);
+	WindowRep* wrep = (WindowRep*)GetWRefCon(wr);
+	wrep->ivWindowOf()->canvas()->damage_all();
+	result = noErr;
+        return result;
+}
+
 }
 
 void iv_carbon_dialog_handle(WindowRef w) {
@@ -345,6 +359,8 @@ void MACwindow::bind()
 	SetWTitle(theMacWindow_, ti);
 	EventHandlerUPP hupp = NewEventHandlerUPP(ehandler);
 	InstallWindowEventHandler(theMacWindow_, hupp, NTYPE, etype, 0, NULL);
+	hupp = NewEventHandlerUPP(show_handler);
+	InstallWindowEventHandler(theMacWindow_, hupp, 1, showtype, 0, NULL);
 #else
 	theMacWindow_ = NewCWindow(nil,						//where the window record will be stored
 							  params_->bounds_,			//size of window
