@@ -63,7 +63,20 @@
 
 #include <stdlib.h>
 
+
 extern "C" { void debugfile(const char*, ...);}
+
+#include <stdarg.h>
+void debugfile(const char* format, ...) {
+        va_list args;
+        static FILE* df;
+        if (!df) {
+                df = fopen("debugfile", "w");
+        }
+        va_start(args, format);
+        vfprintf(df, format, args);
+        fflush(df);
+}
 
 //Constant setting the time to yield when no events have been received
 #define SLEEP_TIME 10000
@@ -679,6 +692,8 @@ void SessionRep::initToolboxFunctions (void)
 {
 	/* Initialize all the needed managers. */
 #if carbon
+//	MoreMasterPointers(32);
+	InitCursor();
 #else
 	InitGraf(&qd.thePort);
 	InitFonts();
@@ -686,9 +701,9 @@ void SessionRep::initToolboxFunctions (void)
 	InitMenus();
 	TEInit();
 	InitDialogs(0L);
-#endif
 	InitCursor();
 	FlushEvents(everyEvent,0);
+#endif
 }
 
 
@@ -867,17 +882,22 @@ static Point where;
 // event.
 void Session::read(Event& e)
 {				
+assert(0);
+#if 0
 	RgnHandle region = NewRgn();
 	SetRectRgn(region, where.h, where.v, (where.h + 1), (where.v +1));	
 	WaitNextEvent(everyEvent, e.rep()->getEventRecord(), SLEEP_TIME, region);
 	DisposeRgn(region);
 	where = e.rep()->getEventRecord()->where;	
+#endif
 }
 
 // our problem is that pending does not deal with move events.
 boolean read_if_pending(Event& e);
 boolean read_if_pending(Event& e)
 {
+assert(0);
+#if 0
 	RgnHandle region = NewRgn();
 	SetRectRgn(region, where.h, where.v, (where.h + 1), (where.v +1));	
 	boolean b = WaitNextEvent(everyEvent, e.rep()->getEventRecord(), 0, region);
@@ -886,6 +906,9 @@ boolean read_if_pending(Event& e)
 		where = e.rep()->getEventRecord()->where;
 	}
 	return b;	
+#else
+	return false;
+#endif
 }
 
 /*

@@ -581,7 +581,7 @@ int Font::index(
 	int xoffset = Session::instance()->default_display()->to_pixels(Coord(offset));
 	w = 0;
 	for (p = s, n = 0; *p != '\0' && n < len; ++p, ++n) {
-		cw = width(*p);
+		cw = (int)width(*p);
 		w += cw;
 		if (w > xoffset) {
 			break;

@@ -13,6 +13,10 @@
 // $Date:   4 Aug 1996 
 // ======================================================================
 
+#if carbon
+static Cursor mac_arrow; // before defining the InterViews Cursor
+#endif
+
 #include <InterViews/bitmap.h>
 #include <InterViews/color.h>
 #include <InterViews/cursor.h>
@@ -62,7 +66,10 @@ void Cursor::init()
     //could think of doing it at the time.
     arrow = new Cursor(crossCursor);
 #if carbon
-    GetQDGlobalsArrow(*(arrow->rep())->theCursor);
+//    following line gives bus error on osx.
+//    GetQDGlobalsArrow((arrow->rep())->theCursor);
+	GetQDGlobalsArrow(&mac_arrow);
+	*(arrow->rep())->theCursor = &mac_arrow;
 #else 
     *((arrow->rep())->theCursor) = &(qd.arrow);
 #endif

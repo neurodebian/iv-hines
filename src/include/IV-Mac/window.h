@@ -92,11 +92,17 @@ public:
 	void activate(boolean activ);
 	void repair(void);
 	void update(void);
+#if carbon
+	void doDrag(EventRef theEvent);
+	void doGrow(EventRef theEvent);
+	void doBackgroundClick(EventRef theEvent);
+#else
 	void doDrag(EventRecord * theEvent);
 	void doGrow(EventRecord* theEvent);
+	void doBackgroundClick(EventRecord * theEvent);
+#endif
 	void adjustScrollBar (ControlHandle theControl);
 	void doZoom (void *data);
-	void doBackgroundClick(EventRecord * theEvent);
 	long MACpaint(void);
 	
 	void doubleBuffer(boolean b);
@@ -167,9 +173,14 @@ public:
 	Window* ivWindowOf()                    // associated IV window
 		{ return win; }
 	
+#if carbon
+	long MACinput(EventRef theEvent, int type, int button);
+	void doGrow(EventRef theEvent);	
+#else
 	long MACinput(EventRecord* theEvent, int type, int button);
-	void bind();
 	void doGrow(EventRecord* theEvent);	
+#endif
+	void bind();
 	const Allocation& getAllocation(void);
 	static MACWindowRepList update_list;
 	

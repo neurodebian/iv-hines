@@ -1,7 +1,7 @@
 #ifdef HAVE_CONFIG_H
 #include <../../config.h>
 #endif
-#if !carbon
+#if carbon
 // =======================================================================
 //
 //                     <IV-MAC/event.c>
@@ -34,9 +34,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#if !carbon
-#include <sound.h> // SysBeep got moved
-#endif
 
 // add by jijun 5/22/97
 extern "C" { void debugfile(const char*, ...);}
@@ -57,14 +54,13 @@ implementPtrList(MAChandlerPtrList, Handler)
 // ---- grabbing event handler list ----
 static MAChandlerPtrList grabberList(100);
 
-#if carbon
 static Point mouse_loc_;
-Point& EventRep::mouse_loc(EventRef er) {
+Point EventRep::mouse_loc(EventRef er) {
 	GetEventParameter(er, kEventParamMouseLocation, typeQDPoint, NULL,
 		sizeof(mouse_loc_), NULL, &mouse_loc_);
 	return mouse_loc_;
 }
-#endif
+
 //global point to determine mouse movement
 Point THE_PREVIOUS_MOUSE_POINT;
 
@@ -187,24 +183,37 @@ Handler* Event::handler() const
 // -----------------------------------------------------------------------
 void Event::handle()
 {
-	EventRecord * record = rep_->getEventRecord();
+	EventRef er = rep_->getEventRef();
 	
-	if(record){
-		switch(record->what){
-			case mouseDown:
+	if(er){
+		switch (GetEventClass(er)) {
+			case kEventClassMouse:
+				switch (GetEventKind(er)) {
+					case kEventMouseDown:
 printf("mouseDown\n");
-				rep_->mouseDownEventHook();
-				break;
-			case mouseUp:
+						rep_->mouseDownEventHook();
+						break;
+					case kEventMouseUp:
 printf("mouseUp\n");
-				rep_->mouseUpEventHook();
-//				ivoc_dismiss_defer();
-				break;
-			case keyDown:
-			case autoKey:
+						rep_->mouseUpEventHook();
+						break;
+					case kEventMouseDragged:
+					case kEventMouseMoved:
+						break;
+					default:
+						break;
+				}
+
+			case kEventClassKeyboard:
 printf("keyDown\n");
 				rep_->keyDownEventHook();
 				break;
+			default:
+				break;
+		}
+	}else{
+/*
+		switch(record->what){
 			case updateEvt:
 printf("updateEvt\n");
 				rep_->updateEventHook();
@@ -234,6 +243,7 @@ printf("default\n");
 				break;	
 		}
 	} else {
+*/
 		printf("Error Allocating memory for record");
 		exit(1);
 	}
@@ -297,10 +307,13 @@ EventType Event::type() const
 
 unsigned long Event::time() const
 {
-	EventRecord * temp;
+	EventRef temp;
 	
-	if(temp = (rep()->getEventRecord()))
-		return temp->when;
+	if(temp = (rep()->getEventRef())) {
+		EventTime t = GetEventTime(temp);
+printf("Event::time %g\n", t);
+		return (long)t;
+	}
 	//Should not reach this point
 	return 0;
 }
@@ -354,10 +367,18 @@ unsigned int Event::keymask() const
 // to some key/pointer event, in which case the modifiers field of the EvenT
 //  record would hold valid information. 
 // -------------------------------------------------------------------------
-boolean Event::control_is_down() const
-	{ return (rep_->getEventRecord()->modifiers & controlKey) ? true : false; }
-boolean Event::shift_is_down() const
-	{ return (rep_->getEventRecord()->modifiers & shiftKey) ? true : false; }
+boolean Event::control_is_down() const {
+	UInt32 modifier;
+	GetEventParameter(rep_->getEventRef(), kEventParamKeyModifiers,
+		typeUInt32, NULL, sizeof(modifier), NULL, &modifier);
+	return (modifier & controlKey) ? true : false;
+}
+boolean Event::shift_is_down() const {
+	UInt32 modifier;
+	GetEventParameter(rep_->getEventRef(), kEventParamKeyModifiers,
+		typeUInt32, NULL, sizeof(modifier), NULL, &modifier);
+	return (modifier & shiftKey) ? true : false;
+}
 
 //These aren't called ... so we'll deal with it later
 //
@@ -368,15 +389,23 @@ boolean Event::middle_is_down() const
 boolean Event::right_is_down() const
 	{ return false; }
 
-boolean Event::capslock_is_down() const
-	{ return (rep_->getEventRecord()->modifiers & alphaLock) ? true : false; }
+boolean Event::capslock_is_down() const {
+	UInt32 modifier;
+	GetEventParameter(rep_->getEventRef(), kEventParamKeyModifiers,
+		typeUInt32, NULL, sizeof(modifier), NULL, &modifier);
+	return (modifier & alphaLock) ? true : false;
+}
+
 boolean Event::meta_is_down() const
 	{ return false; }
 
 unsigned char Event::keycode() const
 {
+	char code;
 	if (rep_->typeOf() == key){
-		return ((char)((rep_->getEventRecord()->message) & charCodeMask));
+	GetEventParameter(rep_->getEventRef(), kEventParamKeyMacCharCodes,
+		typeChar, NULL, sizeof(code), NULL, &code);
+		return ((char)code);
 	} else {
 		return 0;
 	}
@@ -409,13 +438,11 @@ unsigned long Event::keysym() const
 // #######################################################################
 
 EventRep::EventRep(){
-	theEvent_ = new EventRecord;
+	theEvent_ = nil;
 	win_ = nil;
 }
 
 EventRep::~EventRep(){
-	if(theEvent_)
-		delete theEvent_;
 }
 
 void EventRep::setWindow(WindowPtr aMacWindow){
@@ -437,15 +464,20 @@ void EventRep::mouseDownEventHook(void){
 	long		menuChoice;
 	Rect		dragRect;
 	short		windowType;		/* modal, modeless, etc. */
+	Point		loc;
 	
 	frontWindow = FrontWindow();
-	windowPart = FindWindow(theEvent_->where, &hitWindow);	
+	loc = mouse_loc(theEvent_);
+	windowPart = FindWindow(loc, &hitWindow);	
 	//Set InterViews type
 	type_ = Event::down;
 	//Set InterViews button
-	if(theEvent_->modifiers & (controlKey | cmdKey)){
+	UInt32 modifier;
+	GetEventParameter(getEventRef(), kEventParamKeyModifiers,
+		typeUInt32, NULL, sizeof(modifier), NULL, &modifier);
+	if(modifier & (controlKey | cmdKey)){
 		button_ = Event::right;
-	} else if (theEvent_->modifiers & optionKey){
+	} else if (modifier & optionKey){
 		button_ = Event::middle;
 	} else {
 		button_ = Event::left;
@@ -461,7 +493,7 @@ void EventRep::mouseDownEventHook(void){
 				ourStructure->updateMenus();
 			#endif
 			
-			menuChoice = MenuSelect(theEvent_->where);	/* drop menu and track choice */
+			menuChoice = MenuSelect(loc);	/* drop menu and track choice */
 						
 			if (menuChoice)	/* if a choice made */
 			{
@@ -481,7 +513,7 @@ void EventRep::mouseDownEventHook(void){
 			/* there has to be a hit window */
 			
 			/* if clicking a background window & not a command drag */
-			if ( (hitWindow != frontWindow) && !(theEvent_->modifiers & cmdKey))
+			if ( (hitWindow != frontWindow) && !(modifier & cmdKey))
 			{
 				windowType = MACwindow::isDialog(frontWindow);
 				if ( windowType == MACwindow::MODAL || windowType == MACwindow::MOVABLE_MODAL){
@@ -506,12 +538,8 @@ void EventRep::mouseDownEventHook(void){
 			}
 			else	/* not our window, e.g. could be moveable dialog */
 			{
-#if carbon
 				GetRegionBounds(GetGrayRgn(), &dragRect);
-#else
-				dragRect = (**GetGrayRgn()).rgnBBox;	/* drag to any screen */
-#endif
-				DragWindow(hitWindow, theEvent_->where, &dragRect);
+				DragWindow(hitWindow, loc, &dragRect);
 			}
 			break;
 
@@ -526,10 +554,10 @@ void EventRep::mouseDownEventHook(void){
 
 		case inGoAway:
 			/* track mouse in go-away box */
-			if (TrackGoAway(hitWindow, theEvent_->where))
+			if (TrackGoAway(hitWindow, loc))
 			{
 				/* if the option key is down */
-				if (theEvent_->modifiers & optionKey)	
+				if (modifier & optionKey)	
 				{
 					/* close all windows, asking user to save if needed */
 					WindowPtr		macWindow  = FrontWindow();	/* first window */
@@ -570,7 +598,7 @@ void EventRep::mouseDownEventHook(void){
 			if (ourStructure = WindowRep::rc(hitWindow))
 			{
 				/* track  mouse in the zoom box */
-				if (TrackBox(hitWindow, theEvent_->where, windowPart))
+				if (TrackBox(hitWindow, loc, windowPart))
 				{
 					/* determine if we're zooming in or out */
 					short zoomDirection = windowPart;
@@ -658,6 +686,9 @@ void EventRep::keyDownEventHook(void){
 	//Set InterViews type
 	type_ = Event::key;
 	button_ = Event::none;
+	UInt32 modifier;
+	GetEventParameter(getEventRef(), kEventParamKeyModifiers,
+		typeUInt32, NULL, sizeof(modifier), NULL, &modifier);
 	
 	if(MACwindow::isOurWindow(frontWindow)){
 		ourStructure = WindowRep::rc(frontWindow);
@@ -670,9 +701,12 @@ void EventRep::keyDownEventHook(void){
 	If the command key is down, check for menu selection. Do this even
 	when there is no window open.
 */
-	if (theEvent_->modifiers & cmdKey)	/* see if a menu shortcut was hit. */
+	if (modifier & cmdKey)	/* see if a menu shortcut was hit. */
 	{
-		theKey = (char)(theEvent_->message & charCodeMask); /* get the key pressed */
+		char code;
+		GetEventParameter(getEventRef(), kEventParamKeyMacCharCodes,
+			typeChar, NULL, sizeof(code), NULL, &code);
+		theKey = (char)(code & charCodeMask); /* get the key pressed */
 		//UpdateMenusHook(frontWindow);	/* update the menus before selection */
 		menuChoice = MenuKey(theKey);	/* find out which menu item it matches */
 		if (HiWord(menuChoice))	/* if it matches a menu item */
@@ -707,7 +741,8 @@ void EventRep::appleEventHook(void){
 //debugfile("\nEvent.when=%ld",theEvent_->when);
 //debugfile("\nEvent.where=%p",theEvent_->where);
 //debugfile("\nEvent.modifiers=%d",theEvent_->modifiers);
-	error = AEProcessAppleEvent(theEvent_);	/* process the event */
+assert(0);
+//	error = AEProcessAppleEvent(theEvent_);	/* process the event */
 //debugfile("\nAppleProcess, error=%d", error);
 #if 0
 	error = AEProcessAppleEvent(theEvent_);	/* process the event */
@@ -730,6 +765,8 @@ void EventRep::nullEventHook(void){
  }
 
 void EventRep::osEventHook(void){
+assert(0);
+#if 0
 	char eventType;
 	eventType = theEvent_->message >> 24;
 	if(eventType & mouseMovedMessage){
@@ -748,9 +785,12 @@ void EventRep::osEventHook(void){
 					
 		}
 	}
+#endif
 }
 
 void EventRep::diskEventHook(void){
+assert(0);
+#if 0
 	Point standard;  //should be taken care of by system
 	standard.h = standard.v = 90;
 	if(HiWord(theEvent_->message) != noErr){
@@ -761,9 +801,12 @@ void EventRep::diskEventHook(void){
 		DIUnload();
 #endif
 	}
+#endif
 }
 
 void EventRep::activateEventHook(void){
+assert(0);
+#if 0
 	WindowPtr theWin;
 
 	theWin = ((WindowPtr)theEvent_->message);
@@ -773,9 +816,11 @@ void EventRep::activateEventHook(void){
 			windowOf()->rep()->activate((theEvent_->modifiers & activeFlag) != 0);
 		}
 	}
+#endif
 }
 
 void EventRep::updateEventHook(void){
+#if 0
 	WindowPtr theWin;
 	GrafPtr			oldPort;
 	Rect			contentRct;
@@ -811,9 +856,12 @@ void EventRep::updateEventHook(void){
 			SetPort(oldPort);
 		}
 	}
+#endif
 }
 
 void EventRep::appleMenuHook(short menuItem){
+assert(0);
+#if 0
 	Str255		itemName;
 	GrafPtr		oldPort;
 	
@@ -840,6 +888,7 @@ void EventRep::appleMenuHook(short menuItem){
 			SetPort(oldPort);	/* restore port, just in case */
 			break;
 	}
+#endif
 }	
 
 int EventRep::ivglobalMouse_x() 

@@ -40,7 +40,12 @@ public:
 		EventRep();
 		~EventRep();
 		
+#if carbon
+		EventRef getEventRef();
+		static Point mouse_loc(EventRef);
+#else
 		EventRecord * getEventRecord();
+#endif
 		Window* windowOf();
 		void setWindow(WindowPtr aMacWindow);
 		int typeOf();						// event type
@@ -57,7 +62,11 @@ public:
 		void updateEventHook(void);
 		void appleMenuHook(short menuItem);
 		
+#if carbon
+		void setEventRef(EventRef theEventRef);
+#else
 		void setEventRecord(EventRecord * theEventRecord);
+#endif
 		static void handleCallback(Event&);
 		// This function is called by WindowRep as a result an earlier call
 		// to Event::handle().
@@ -69,7 +78,11 @@ public:
 		void setMouseLocationToCurrent(void);
 private:
 		friend class WindowRep;				// this class fills in the event info
+#if carbon
+		EventRef theEvent_;
+#else
 		EventRecord * theEvent_;
+#endif
 		Window* win_;
 		int type_;                          // Event::type enum
 		int button_;                        // Event::button enum
@@ -78,16 +91,26 @@ private:
 };
 
 // --- inline functions ---
+#if carbon
+inline EventRef EventRep::getEventRef(void)
+	{return theEvent_;}
+#else
 inline EventRecord * EventRep::getEventRecord(void)
 	{return theEvent_;}
+#endif
 inline Window* EventRep::windowOf(void)
 	{return win_;}
 inline int EventRep::typeOf()
 	{ return type_; }
 inline int EventRep::buttonOf()
 	{ return button_; }
+#if carbon
+inline void EventRep::setEventRef(EventRef theEventRef)
+	{theEvent_ = theEventRef;}
+#else
 inline void EventRep::setEventRecord(EventRecord * theEventRecord)
 	{*theEvent_ = *theEventRecord;}
+#endif
 inline int EventRep::ivlocalMouse_x(void)
 	{return localMouseLocation_.h;}
 inline int EventRep::ivlocalMouse_y(void)

@@ -129,6 +129,28 @@ MACWindowRepList WindowRep::update_list;
 declarePtrList(MACcursorPtrList, Cursor)
 implementPtrList(MACcursorPtrList, Cursor)
 
+#if carbon
+extern "C" {
+#define NTYPE 5
+static EventTypeSpec etype[] = {
+	{kEventClassMouse, kEventMouseDown},
+	{kEventClassMouse, kEventMouseMoved},
+	{kEventClassMouse, kEventMouseDragged},
+	{kEventClassMouse, kEventMouseUp},
+	{kEventClassKeyboard, kEventRawKeyDown}
+};
+	                                
+static OSStatus ehandler(EventHandlerCallRef x, EventRef er, void* v) {
+	input_er->setEventRef(er);
+	input_e->handle();
+//	UInt32 ek;
+//	ek = GetEventKind(er);
+//	printf("%d\n", ek);
+	return eventNotHandledErr;
+}
+}
+#endif
+
 // #######################################################################
 // #################  MACcreateParams class
 // #######################################################################
@@ -283,6 +305,8 @@ void MACwindow::bind()
 	Str255 ti;
 	CopyCStringToPascal(params_->titleOf(), ti);
 	SetWTitle(theMacWindow_, ti);
+	EventHandlerUPP hupp = NewEventHandlerUPP(ehandler);
+	InstallWindowEventHandler(theMacWindow_, hupp, NTYPE, etype, 0, NULL);
 #else
 	theMacWindow_ = NewCWindow(nil,						//where the window record will be stored
 							  params_->bounds_,			//size of window
@@ -733,18 +757,23 @@ void MACwindow::update(void){
 // doDrag -
 //	implements window dragging ... the neuron section is for the Print 
 // Manager window
+#if carbon
+void MACwindow::doDrag(EventRef theEvent){
+#else
 void MACwindow::doDrag(EventRecord * theEvent){
+#endif
 	Rect		r;
 	
 	/* get dimensions of all monitors */
 #if carbon
+	Point p;
 	GetRegionBounds(GetGrayRgn(), &r);
+	DragWindow(theMacWindow_, EventRep::mouse_loc(theEvent), &r);
 #else
 	r = (**GetGrayRgn()).rgnBBox;
-#endif
-	
 	/* drag the window within the rectangle defining all monitors */
 	DragWindow(theMacWindow_, theEvent->where, &r);
+#endif
 	
 	//Needed for Neuron
 	Event e;
@@ -756,7 +785,11 @@ void MACwindow::doDrag(EventRecord * theEvent){
 // It allows the user to resize the window.  Again there is neuron code to
 // alert the print manager of the change, and the canvas is damages so that
 // the window's contents will be updated.
+#if carbon
+void MACwindow::doGrow(EventRef theEvent){
+#else
 void MACwindow::doGrow(EventRecord* theEvent){
+#endif
 	long result;
 	Rect			r;
 	short			width, height;
@@ -783,8 +816,11 @@ void MACwindow::doGrow(EventRecord* theEvent){
 	r.bottom = stretch_.v;
 
 	/* track mouse and resize window outline as we go */
+#if carbon
+	result = GrowWindow(theMacWindow_, EventRep::mouse_loc(theEvent), &r);
+#else
 	result = GrowWindow(theMacWindow_, theEvent->where, &r);
-	
+#endif	
 	if (result)
 	{
 		GetPort(&oldPort);
@@ -904,7 +940,11 @@ void MACwindow::doZoom (void *data)
 //  	Handles mouse down events to content regions of non-active windows.
 // Currently it just activates the window ... but it is set up to also handle drag and
 // drop support.
+#if carbon
+void MACwindow::doBackgroundClick(EventRef theEvent){
+#else
 void MACwindow::doBackgroundClick(EventRecord * theEvent){
+#endif
 	Boolean			activate = true;	/* Bring window forward? Assume yes. */
 	Point			localPoint;
 	GrafPtr			oldPort;
@@ -926,12 +966,19 @@ void MACwindow::doBackgroundClick(EventRecord * theEvent){
 			WaitMouseMoved() to determine if a drag was beginning, and handle 
 			it like this
 			
+#if carbon
+			if (WaitMouseMoved(EventRep::mouse_loc(theEvent)))
+			{
+				easyWindow->DoDragItems(macWindow, theEvent);
+				activate = false;      // don't activate background window
+			}
+#else
 			if (WaitMouseMoved(theEvent->where))
 			{
 				easyWindow->DoDragItems(macWindow, theEvent);
 				activate = false;      // don't activate background window
 			}
-			
+#endif			
 			This is for drag and drop only! Do not allow user to move anything
 			in a background window other than dragging to a new window. If the
 			drag begins in a background window and ends in the same window, 
@@ -1173,8 +1220,11 @@ void WindowRep::bind()
 // to the InterViews Windows private member.  It can therefore not allocate
 // new space for the Glyph.
 //------------------------------------------------------------------------
+#if carbon
+void WindowRep::doGrow(EventRef theEvent){
+#else
 void WindowRep::doGrow(EventRecord* theEvent){
-	
+#endif	
 	MACwindow::doGrow(theEvent);
 	
 	// ---- invalidate stored canvases ----
@@ -1205,17 +1255,29 @@ void WindowRep::doGrow(EventRecord* theEvent){
 // the Event and associated EventRep can't be constructed in the first
 // place.
 // -----------------------------------------------------------------------
+#if carbon
+long WindowRep::MACinput(EventRef theEvent, int type, int button){
+#else
 long WindowRep::MACinput(EventRecord* theEvent, int type, int button){
+#endif
 	Point 	theMouse;
 	GrafPtr oldPort;
 	// ---- set the EventRecord ----
+#if carbon
+	input_er->setEventRef(theEvent);
+#else
 	input_er->setEventRecord(theEvent);
+#endif
 	input_er->type_ = type;
 	input_er->win_ = win;
 	input_er->button_ =  button;
 	GetPort(&oldPort);
 	setport();
+#if carbon
+	theMouse = EventRep::mouse_loc(theEvent);
+#else
 	theMouse = theEvent->where;
+#endif
 	GlobalToLocal(&theMouse);
 	input_er->localMouseLocation_ = theMouse;
 	SetPort(oldPort);
