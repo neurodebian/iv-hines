@@ -4,8 +4,8 @@
 aclocal
 autoheader
 autoconf
-./configure --prefix=`pwd`
 
+#./configure --prefix=`pwd`
 # make
 # make install
 

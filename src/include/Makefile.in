@@ -32,7 +32,8 @@ INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 
-@CYGWIN_FALSE@DIRS = Dispatch IV-2_6 IV-X11 IV-look InterViews OS TIFF
+@CYGWIN_FALSE@DIRS = Dispatch IV-2_6 IV-2_6/InterViews IV-X11 IV-look InterViews OS TIFF
+
 @CYGWIN_TRUE@DIRS = Dispatch IV-Win IV-look InterViews OS TIFF
 
 @SET_MAKE@
@@ -60,8 +61,8 @@ install:
 	    $(INSTALL_DATA) $$file $(DESTDIR)$(includedir)/$$file; \
 	  done; \
 	done
-	$(mkinstalldirs) $(DESTDIR)$(includedir)/IV-2_6/InterViews
-	for file in IV-2_6/InterViews/*.h; do \
+	$(mkinstalldirs) $(DESTDIR)$(includedir)/InterViews/Bitmaps
+	for file in InterViews/Bitmaps/*.bm; do \
 	  $(INSTALL_DATA) $$file $(DESTDIR)$(includedir)/$$file; \
 	done
 	$(INSTALL_DATA) ivstream.h $(DESTDIR)$(includedir)/ivstream.h
