@@ -174,7 +174,7 @@ void iv_carbon_dialog_handle(WindowRef w) {
 			typeWindowRef, NULL, sizeof(wr), NULL, &wr) == 0) {
 		if (FrontWindow() != w) {
 //printf("SelectWindow\n");
-			SelectWindow(w);
+//			SelectWindow(w);
 		}
 	}else if ( GetEventClass(er) == kEventClassKeyboard) {
 		wr = FrontWindow();
