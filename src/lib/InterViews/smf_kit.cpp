@@ -45,6 +45,7 @@
 #include <InterViews/stencil.h>
 #include <InterViews/style.h>
 #include <InterViews/window.h>
+#include <InterViews/transformer.h>
 #include <OS/list.h>
 #include <OS/string.h>
 #include <math.h>
@@ -56,6 +57,8 @@ static PropertyData kit_props[] = {
     { "*moverSize", "20.0" },
     { "*radioScale", "0.9" },
     { "*sliderSize", "20.0" },
+    { "*buttonBorder", "4.0" },
+    { "*arrowBorder", "6.0" },
     { "*FileChooser*filter", "off" },
     { "*FieldEditor*beveled", "on" },
     { "*FieldEditor*background", "#b88d8d" },
@@ -83,8 +86,8 @@ static PropertyData kit_props[] = {
     { nil }
 };
 
-#define button_border 4
-#define arrow_border 6
+static Coord button_border;
+static Coord  arrow_border;
 #ifdef MAC
 #define shadow shadow_a
 #endif
@@ -756,6 +759,8 @@ void SMFKitInfo::load() {
     s.find_attribute("radioScale", radio_scale_);
     s.find_attribute("moverSize", mover_size_);
     s.find_attribute("sliderSize", slider_size_);
+    s.find_attribute("buttonBorder", button_border);
+    s.find_attribute("arrowBorder", arrow_border);
 
     String v;
     s.find_attribute("flat", v);
@@ -1082,11 +1087,26 @@ void SMFKitCheckmark::request(Requisition& req) const {
 
 void SMFKitCheckmark::draw(Canvas* c, const Allocation& a) const {
     if (state_->test(TelltaleState::is_chosen)) {
+//printf("SMFKitCheckmark::draw %g %g %g %g %g %g\n", a.x(), a.y(),
+//a.left(), a.right(), a.bottom(), a.top());
+	Allocation a1;
+	c->push_transform();
+	Transformer t;
+	float s = (a.right() - a.left())/11.;
+//	if (s < 1) {
+		t.scale(s, s);
+		t.translate(a.x(), a.y());
+//	}else{//suggested by Mike Neubig
+//		t.scale(1., 1.);
+//		t.translate((a.right()+a.left()-13)/2.0, (a.top()+a.bottom()-13)/2.0);
+//	}
+	c->transform(t);
 #if !MAC
-	info().shadow1()->draw(c, a);
-	info().shadow2()->draw(c, a);
+	info().shadow1()->draw(c, a1);
+	info().shadow2()->draw(c, a1);
 #endif
-	info().checkmark()->draw(c, a);
+	info().checkmark()->draw(c, a1);
+	c->pop_transform();
     }
 }
 

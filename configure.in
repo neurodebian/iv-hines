@@ -29,7 +29,7 @@ dnl This does the useful stuff from AM_INIT_AUTOMAKE, which we don't include
 dnl because I couldn't get automake to work properly.
 mlh_cxxflag="$CXXFLAGS"
 PACKAGE=iv
-VERSION=3.2b.hines15
+VERSION=3.2b.hines16
 AC_SUBST(PACKAGE)
 AC_SUBST(VERSION)
 
