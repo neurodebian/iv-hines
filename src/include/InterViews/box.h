@@ -56,8 +56,16 @@ public:
     virtual void modified(GlyphIndex);
 
     virtual void allotment(GlyphIndex, DimensionName, Allotment&) const;
+
+    // complicated boxes with sliders, graphs, and/or box adjusters require
+    // an effective modified() call on resize or adjustment. M. Hines could
+    // not fix this problem except with this sledgehammer approach.
+    // The WindowRep::resize will temporarily set the flag and call Glyph::request
+    // when its request_on_resize_ flag is true.
+    static void full_request(boolean);
 private:
     BoxImpl* impl_;
+    static boolean full_request_;
 };
 
 #include <InterViews/_leave.h>

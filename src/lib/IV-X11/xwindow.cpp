@@ -44,6 +44,7 @@
 #include <InterViews/session.h>
 #include <InterViews/style.h>
 #include <InterViews/window.h>
+#include <InterViews/box.h>
 #include <IV-X11/Xlib.h>
 #include <IV-X11/Xutil.h>
 #include <IV-X11/Xext.h>
@@ -84,6 +85,7 @@ implementPtrList(WindowCursorStack,Cursor)
 Window::Window(Glyph* g) {
     WindowRep* w = new WindowRep;
     rep_ = w;
+    w->request_on_resize_ = false;
     w->glyph_ = g;
     w->glyph_->ref();
     w->style_ = nil;
@@ -974,6 +976,11 @@ void WindowRep::move(Window*, int x, int y) {
  */
 
 void WindowRep::resize(Window* w, unsigned int xwidth, unsigned int xheight) {
+    if (request_on_resize_) {
+	    Box::full_request(true);
+	    glyph_->request(shape_);
+	    Box::full_request(false);
+    }
     canvas_->psize(xwidth, xheight);
     canvas_->damage_all();
     const Requirement& rx = shape_.requirement(Dimension_X);

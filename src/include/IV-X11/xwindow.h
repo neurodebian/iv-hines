@@ -190,6 +190,13 @@ public:
     void do_bind(Window*, XWindow parent, int left, int top);
     void init_renderer(Window*);
 
+    // some complicated windows need a full request on a resize. Otherwise
+    // sliders and graph views do not fit in their box. Note that
+    // a full request necessitates the invalidation of any box in the window.
+    // and that is accomplished by a temporary setting of
+    // a static flag for Box which is checked when the Box::request is called.
+    boolean request_on_resize_;
+    
     static Window* find(XWindow, WindowTable*);
 };
 

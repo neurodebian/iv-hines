@@ -59,6 +59,9 @@ private:
     void invalidate();
 };
 
+boolean Box::full_request_ = false;
+void Box::full_request(boolean b) { full_request_ = b; }
+
 Extension* BoxImpl::empty_ext_;
 
 Box::Box(Layout* layout, GlyphIndex size) : PolyGlyph(size) {
@@ -122,6 +125,9 @@ Box::~Box() {
 
 void Box::request(Requisition& requisition) const {
     BoxImpl* b = impl_;
+    if (full_request_) {
+	b->invalidate();
+    }
     if (!b->requested_) {
 	b->request();
     }
