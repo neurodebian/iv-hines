@@ -1,21 +1,52 @@
 /*
- * Definitions for gcc/g++.
+ * Definitions for gcc/g++. 2.6.3
  */
 
 #undef LanguageCCDefines
 #define LanguageCCDefines -Dcplusplus_2_1
 
+/* you will have trouble with makedepend unless you specify the places to
+   find standard includes. So I just throw it out. */
+#define DependCmd true
+
 #ifndef CCDriver
+#define SharedCCFlags -fPIC
+#undef ExtraCCFlags
+#undef TIFFExtraCFlags
+#define TIFFExtraCFlags /**/
 #define CCDriver g++
+#define CcCmd gcc
 #endif
 
 #ifndef DependCCFlags
 #define DependCCFlags $(CCDEFINES) $(CCINCLUDES)
 #endif
 
-#ifndef ExtraCCLdLibs
-#define ExtraCCLdLibs -lg++
+#undef HasDynamicSharedLibraries
+
+#if defined(SunArchitecture)
+#define HasDynamicSharedLibraries YES
 #endif
 
-#undef HasSunOSSharedLibraries
-#define HasSunOSSharedLibraries NO
+#if defined(AlphaArchitecture)
+/* perhaps someone can make shared libraries work */
+#define HasDynamicSharedLibraries NO
+#undef OptimizeCCFlags
+#undef OptimizedCDebugFlags
+#define OptimizedCDebugFlags -O
+#endif
+
+#if defined(SGIArchitecture)
+/* perhaps someone can make shared libraries work */
+#define HasDynamicSharedLibraries NO
+#endif
+
+#ifndef ExtraCCLdLibs
+#if defined(SunArchitecture) && HasDynamicSharedLibraries
+#define ExtraCCLdLibs -lg++ -lcurses
+#else
+#define ExtraCCLdLibs -lg++
+#endif
+#endif
+
+
