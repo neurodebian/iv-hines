@@ -33,7 +33,7 @@
 #include <ctype.h>
 #include <memory.h>
 #include <stdlib.h>
-#include <string.h>
+//#include <string.h>
 
 static const char NEWLINE = '\012';
 

@@ -50,6 +50,8 @@ defined(StratusArchitecture)
  */
 #undef InstalledRoot
 #define InstalledRoot /interviews
+#undef InstallRelative
+#define InstallRelative NO
 
 /*
  * If the X11 config files are not in /usr/lib/X11/config, the X11
@@ -62,9 +64,9 @@ defined(StratusArchitecture)
  */
 /*
 #undef XConfigDir
-#define XConfigDir /usr/X11R5/lib/X11/config
+#define XConfigDir /usr/X11R6/lib/X11/config
 #undef XIncDir
-#define XIncDir /usr/X11R5/include
+#define XIncDir /usr/X11R6/include
 #undef XLibDir
-#define XLibDir /usr/X11R5/lib
+#define XLibDir /usr/X11R6/lib
 */
