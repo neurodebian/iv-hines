@@ -4,7 +4,7 @@
 if test -f /usr/bin/glibtoolize ; then
 	glibtoolize -c -f
 else
-	libtoolize -c -f ; then#creates ltmain.sh config.guess config.sub
+	libtoolize -c -f
 fi
     
 aclocal
