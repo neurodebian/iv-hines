@@ -1,6 +1,6 @@
 dnl This was shamelessly stolen from the readline distribution.
 dnl Check type of signal routines (posix, 4.2bsd, 4.1bsd or v7)
-AC_DEFUN(BASH_SIGNAL_CHECK,
+AC_DEFUN([BASH_SIGNAL_CHECK],
 [AC_REQUIRE([AC_TYPE_SIGNAL])
 AC_MSG_CHECKING(for type of signal functions)
 AC_CACHE_VAL(bash_cv_signal_vintage,
@@ -44,7 +44,7 @@ dnl This was stolen from readlin-4.0.
 dnl
 dnl
 
-AC_DEFUN(BASH_CHECK_LIB_TERMCAP,
+AC_DEFUN([BASH_CHECK_LIB_TERMCAP],
 [
 if test "X$bash_cv_termcap_lib" = "X"; then
 _bash_needmsg=yes
@@ -87,7 +87,7 @@ dnl
 dnl @version $Id$
 dnl @author Luc Maisonobe
 dnl
-AC_DEFUN(AC_CXX_NAMESPACES,
+AC_DEFUN([AC_CXX_NAMESPACES],
 [AC_CACHE_CHECK(whether the compiler implements namespaces,
 ac_cv_cxx_namespaces,
 [AC_LANG_SAVE
@@ -110,7 +110,7 @@ dnl
 dnl @version $Id$
 dnl @author Luc Maisonobe
 dnl
-AC_DEFUN(AC_CXX_HAVE_STL,
+AC_DEFUN([AC_CXX_HAVE_STL],
 [AC_CACHE_CHECK(whether the compiler supports Standard Template Library,
 ac_cv_cxx_have_stl,
 [AC_REQUIRE([AC_CXX_NAMESPACES])
