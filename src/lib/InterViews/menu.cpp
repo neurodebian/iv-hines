@@ -359,6 +359,13 @@ void Menu::drag(const Event& e) {
 }
 
 void Menu::release(const Event& e) {
+#if carbon
+	extern boolean session_deactivating_;
+	if (session_deactivating_) {
+		unselect();
+		return;
+	}
+#endif
     Menu* m = this;
     GlyphIndex index;
     for (;;) {

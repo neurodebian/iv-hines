@@ -457,7 +457,15 @@ void InputHandlerImpl::motion(Event& e) {
     }
 }
 
+
 void InputHandlerImpl::up(Event& e) {
+#if carbon
+	extern boolean session_deactivating_;
+	if (session_deactivating_) {
+		input_->release(e);
+		return;
+	}
+#endif
     if (pressed_ && e.pointer_button() == button_) {
 	pressed_ = false;
 	e.ungrab(this);

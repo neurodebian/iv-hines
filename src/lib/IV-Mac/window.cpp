@@ -1772,6 +1772,11 @@ boolean Window::receive(const Event& e)
 void Window::grab_pointer(Cursor* c) const
 {
 	//The MAC seems to be handling this natively
+	// however a menu may persist after a mouse release and if the next
+	// click is off the application it should disappear. Since there is
+	// no equivalent to SetCapture on mswin or XGrabPointer on X11
+	// we make use of the application deactivate event in session.cpp
+	// and that will check Event::grabber
 }
 
 void Window::ungrab_pointer() const

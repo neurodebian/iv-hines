@@ -973,13 +973,37 @@ static OSStatus ehandler(EventHandlerCallRef x, EventRef er, void*) {
 
 // after Apple-H to hide the windows. showing them leaves them blank,
 // so must handle the show event
-static EventTypeSpec showtype[] = {{kEventClassApplication, kEventAppShown}};
+// when a menu is open and one clicks in another application then the
+// menu should be closed so we must handle the deactivate event.
+static EventTypeSpec showtype[] = {
+  {kEventClassApplication, kEventAppShown},
+  {kEventClassApplication, kEventAppDeactivated}
+};
+
+boolean session_deactivating_;
 
 static OSStatus show_handler(EventHandlerCallRef x, EventRef er, void*) {
-	OSStatus result;
-//	printf("kEventApShown\n");
-	Session::instance()->screen_update();
-	result = noErr;
+	OSStatus result = noErr;
+	switch (GetEventKind(er)) {
+	case kEventAppShown:
+//	printf("kEventAppShown\n");
+		Session::instance()->screen_update();
+		break;
+	case kEventAppDeactivated:
+//	printf("kEventAppDeactivated\n");
+		Event e;
+		if (e.grabber()) {
+//printf("grabbing\n");
+			e.rep()->set(Event::up, Event::left, -1000, -1000);
+			session_deactivating_ = true;
+			EventRep::handleCallback(e);
+			session_deactivating_ = false;
+			Session::instance()->screen_update();;
+// is still grabbing but it will go away as soon as any mouse press
+// in any InterViews window
+		}
+		break;
+	}
 	return result;
 }
 
@@ -1016,7 +1040,7 @@ Session::Session(
     EventHandlerUPP hupp = NewEventHandlerUPP(ehandler);
     OSStatus err = InstallEventHandler(GetApplicationEventTarget(), hupp, 1, etype, 0, NULL);
     hupp = NewEventHandlerUPP(show_handler);
-    err = InstallEventHandler(GetApplicationEventTarget(), hupp, 1, showtype, 0, NULL);
+    err = InstallEventHandler(GetApplicationEventTarget(), hupp, 2, showtype, 0, NULL);
 }
 
 Session::~Session()

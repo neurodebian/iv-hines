@@ -456,6 +456,14 @@ EventRep::EventRep(){
 EventRep::~EventRep(){
 }
 
+//
+void EventRep::set(int type, int button, int x, int y) {
+	type_ = type;
+	button_ = button;
+	localMouseLocation_.h = x;
+	localMouseLocation_.v = y;
+}
+
 void EventRep::setWindow(WindowPtr aMacWindow){
 	WindowRep*	temp;	
 	temp = WindowRep::rc(aMacWindow);

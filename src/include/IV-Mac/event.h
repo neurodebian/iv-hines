@@ -44,6 +44,7 @@ public:
 		EventRef getEventRef();
 		static Point mouse_loc(EventRef);
 		void handle();
+		void set(int type, int button, int x, int y);
 #else
 		EventRecord * getEventRecord();
 #endif
