@@ -2,8 +2,9 @@
 /*#define SVR4*/
 
 #include <sun.cf>
-#include <InterViews/xparams.cf>
 
+#include <InterViews/xparams.cf>
+#undef ConfigDir
 /*
  * In case sun.cf defines HasSharedLibraries but not HasDynamicSharedLibraries.
  */
@@ -13,6 +14,7 @@
 
 #undef SharedCCLdFlags
 #define SharedCCLdFlags -ztext -G
+#define SharedCCFlags -KPIC
 
 #ifndef LnCmd
 #define LnCmd ln -s
