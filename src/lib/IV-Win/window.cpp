@@ -1572,9 +1572,9 @@ boolean ManagedWindow::receive(const Event& e)
 	case WM_GETMINMAXINFO:
 		mrep_->WMminmax(er->wparamOf(), er->lparamOf());
         break;
-	//case WM_CLOSE:
-	//	rep_->WMclose(er->wparam_, er->lparam_);
-	//    break;
+	case WM_CLOSE:
+		mrep_->WMclose(er->wparamOf(), er->lparamOf());
+	    break;
 	default:
     	return false;
 	}
