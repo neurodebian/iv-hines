@@ -52,20 +52,17 @@ LIBS="$LIBS $LIBM"
 sinclude(./chkstream.m4)
 
 dnl Checks for header files.
-AC_PATH_XTRA
 AC_HEADER_DIRENT
 AC_HEADER_STDC
 AC_HEADER_SYS_WAIT
 AC_CHECK_HEADERS(fcntl.h malloc.h sys/file.h sys/ioctl.h sys/time.h unistd.h osfcn.h sys/select.h sys/stat.h sys/mman.h stropts.h sys/conf.h)
 
-if test "$no_x" = "yes" ; then
-	if test "$CYGWIN" = "yes" ; then
-		echo " CYGWIN and no X11 so make MSWwin version"
-		build_cygwin=yes
-	else
-		AC_MSG_ERROR([no X11 and not CYGWIN. Has to be one or both.])
-	fi
-fi
+if test "$CYGWIN" = "yes" ; then        
+	echo " CYGWIN defined so make MSWwin version"           
+	build_cygwin=yes        
+else        
+	AC_PATH_XTRA
+fi        
 
 dnl fake automake if
 if test x$build_cygwin = xyes ; then
