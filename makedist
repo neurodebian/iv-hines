@@ -1,6 +1,8 @@
 #!/bin/sh
 
-IV=iv-16
+ver="`sed -n 's/.*iv_hines_version \(.*\)/\1/p' < src/include/ivversion.h`"
+IV=iv-${ver}
+echo $IV
 
 if false ; then
 #from the cvs archive
