@@ -422,6 +422,12 @@ unsigned int Event::mapkey(char* buff, unsigned int bufflen) const
 //	printf("Event::mapkey currently not implemented\n");
 //	return 0;
 	buff[0] = keycode();
+        switch (buff[0]) {
+                case 034: buff[0] = 2; break; // left arrow to ^b
+                case 035: buff[0] = 6; break; // right arrow to ^f
+                case 036: buff[0] = 16; break; // up arrow to ^p
+                case 037: buff[0] = 14; break; // down arrow to ^n
+        }
 	buff[1] = '\0';
 	if (buff[0] == '\0') {
 		return 0;
