@@ -828,8 +828,12 @@ boolean Dispatcher::handleError() {
 	    return true;
 	}
 	break;
+#if defined(CYGWIN)
+    case 0:
+	break;
+#endif
     default:
-	perror("Dispatcher: select");
+	printf("errno=%d\n", errno);
 	exit(1);
 	/*NOTREACHED*/
     }
