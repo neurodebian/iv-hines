@@ -417,28 +417,6 @@ Concat(lib,libname.so.rev): depobjs					@@\
 clean::									@@\
 	$(RM) Concat(lib,libname.so.rev)
 #else
-#ifdef LinuxArchitecture
-#define NormalDynamicSharedLibraryTarget(libname,rev,depobjs,ldobjs)	@@\
-AOUT = Concat(lib,libname.so.rev)					@@\
-SHARED_CCFLAGS = SharedCCFlags						@@\
-									@@\
-AllTarget(Concat(lib,libname.so.rev))					@@\
-									@@\
-Concat(lib,libname.so.rev): depobjs					@@\
-	@echo "building $@"						@@\
-	$(RM) $@~							@@\
-	(T=`echo $@ | sed 's/\.[^\.]*$$//'`; \
-	 $(LD) -o $@~ $(SHARED_CCLDFLAGS) -soname $$T ldobjs \
-	 $(SHARED_CCLDLIBS))						@@\
-	$(RM) $@							@@\
-	$(MV) $@~ $@							@@\
-	$(RM) Concat(lib,libname.so)					@@\
-	$(LN) $@ Concat(lib,libname.so)					@@\
-									@@\
-clean::									@@\
-	$(RM) Concat(lib,libname.so)					@@\
-	$(RM) Concat(lib,libname.so.rev)
-#else
 #define NormalDynamicSharedLibraryTarget(libname,rev,depobjs,ldobjs)	@@\
 AOUT = Concat(lib,libname.so.rev)					@@\
 SHARED_CCFLAGS = SharedCCFlags						@@\
@@ -454,7 +432,6 @@ Concat(lib,libname.so.rev): depobjs					@@\
 									@@\
 clean::									@@\
 	$(RM) Concat(lib,libname.so.rev)
-#endif
 #endif
 #endif
 
@@ -612,25 +589,12 @@ step::									@@\
  * Install a library.
  */
 #ifndef InstallDynamicSharedLibrary
-#ifdef LinuxArchitecture
-#define InstallDynamicSharedLibrary(libname,rev,dest)			@@\
-install:: Concat(lib,libname.so.rev)					@@\
-	MakeDir(dest)							@@\
-	$(INSTALL) -c $(INSTLIBFLAGS) Concat(lib,libname.so.rev) dest	@@\
-	(cd dest; \
-	 T=`echo Concat(lib,libname.so.rev) | sed 's/\.[^\.]*$$//'`; \
-	 $(RM) $$T; \
-	 $(LN) Concat(lib,libname.so.rev) $$T; \
-	 $(RM) Concat(lib,libname.so); \
-	 $(LN) Concat(lib,libname.so.rev) Concat(lib,libname.so))
-#else
 #define InstallDynamicSharedLibrary(libname,rev,dest)			@@\
 install:: Concat(lib,libname.so.rev)					@@\
 	MakeDir(dest)							@@\
 	$(INSTALL) -c $(INSTLIBFLAGS) Concat(lib,libname.so.rev) dest	@@\
 	-(cd dest; rm Concat(lib,libname.so))				@@\
 	(cd dest; ln -s Concat(lib,libname.so.rev) Concat(lib,libname.so))
-#endif
 #endif
 
 #ifndef InstallNonSharedLibrary
