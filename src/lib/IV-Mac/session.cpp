@@ -959,6 +959,33 @@ void Session::poll(Event&)
 	printf("Session::poll - unsupported\n");
 }
 
+// the stdin event from another thread needs to go to the main thread
+extern "C" {
+
+static EventTypeSpec etype[] = {{'nrn1', 'nrn2'}};
+
+static OSStatus ehandler(EventHandlerCallRef x, EventRef er, void*) {
+	OSStatus result;
+	char c;
+	GetEventParameter(er, kEventParamResult, typeChar, NULL,
+sizeof(char), NULL, &c);
+printf("%c", c);
+fflush(stdout);
+	result = noErr;
+	return result;
+}
+
+void stdin_event_send(char);
+void stdin_event_send(char c) {
+	OSStatus err;
+	EventRef er;
+	err = CreateEvent(NULL, 'nrn1' , 'nrn2', 0, kEventAttributeNone, &er);
+	err = SetEventParameter(er, kEventParamResult, typeChar, 1, &c);
+	err = PostEventToQueue(GetMainEventQueue(), er, kEventPriorityStandard);
+	ReleaseEvent(er);
+}
+}
+
 // #######################################################################
 // ###############  Session class (portable part)
 // #######################################################################
@@ -973,6 +1000,9 @@ Session::Session(
     SessionRep::instance_ = this;
     rep_ = new SessionRep();
     rep_->init(classname, argc, argv, opts, initprops);
+
+    EventHandlerUPP hupp = NewEventHandlerUPP(ehandler);
+    OSStatus err = InstallEventHandler(GetApplicationEventTarget(), hupp, 1, etype, 0, NULL);
 }
 
 Session::~Session()
@@ -1056,7 +1086,7 @@ void Session::screen_update() {
 // delivered. 
 int Session::run() {
 	screen_update();
-//printf("RunApplicationEventLoop\n");
+printf("RunApplicationEventLoop\n");
 #if 1
 	RunApplicationEventLoop();
 #else
@@ -1067,9 +1097,10 @@ int Session::run() {
 		ReleaseEvent(er);
 	}
 #endif
-//printf("Return from RunApplicationEventLoop\n");
+printf("Return from RunApplicationEventLoop\n");
 	return 0;
 }
+
 
 #else
 

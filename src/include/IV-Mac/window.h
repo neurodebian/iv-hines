@@ -194,6 +194,7 @@ public:
 	return (WindowRep*)((CWindowPeek)wp)->refCon;
 #endif
 	}
+	boolean request_on_resize_;
 private:	
 	Window* win;					// associated InterViews window
 	

@@ -82,6 +82,7 @@
 #include <InterViews/color.h>
 #include <InterViews/display.h>
 #include <InterViews/action.h>
+#include <InterViews/box.h>
 #include <OS/list.h>
 #include <OS/string.h>
 #include <OS/table.h>
@@ -1336,7 +1337,8 @@ long WindowRep::MACinput(EventRecord* theEvent, int type, int button){
 Window::Window(Glyph* g)
 {
 	rep_ = new WindowRep(this);
-	
+	rep_->request_on_resize_ = false;
+
 	canvas_ = new MACcanvas;
 	((MACcanvas*)canvas_)->bind(rep_);
 	glyph_ = g;
@@ -1803,6 +1805,12 @@ void Window::resize()
 {
 	WindowPtr theWin = rep_->macWindow();
 	Rect* curr_pos;
+
+	if (rep_->request_on_resize_) {
+	    Box::full_request(true);
+	    glyph_->request(shape_);
+	    Box::full_request(false);
+	}
 
 	// ----- determine desired size ----
 	int width = canvas_->pwidth();
