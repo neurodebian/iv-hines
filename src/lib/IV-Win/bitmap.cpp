@@ -326,7 +326,7 @@ void BitmapRep::SyncSize()
 BitmapRep::~BitmapRep() 
 {
 	if (bm_.bmBits != nil)
-		delete bm_.bmBits;
+		delete [] (char*)bm_.bmBits;
 }
 
 // -----------------------------------------------------------------------

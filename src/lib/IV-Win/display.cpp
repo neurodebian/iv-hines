@@ -324,7 +324,13 @@ void Display::sync()
 
 void Display::ring_bell(int)
 {
+#if 0
 	MessageBeep(-1);
+#else
+	// since arg is unsigned int avoid warning even though MS
+	// recommends -1
+	MessageBeep(~0);
+#endif
 }
 
 void Display::set_key_click(int)

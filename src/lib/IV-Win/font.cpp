@@ -159,7 +159,7 @@ FontRep::FontRep(
 	// ---- required fields ----
 	font_.lfHeight = height;
 	strncpy(font_.lfFaceName, face_name, LF_FACESIZE-1);
-	font_.lfFaceName[LF_FACESIZE-1] = NULL;
+	font_.lfFaceName[LF_FACESIZE-1] = 0;
 
 }
 

@@ -32,11 +32,7 @@
 #ifdef MAC
 	#define WIN32
 #endif
-#ifdef WIN32
-#include <iostream.h>
-#else
 #include <ivstream.h>
-#endif
 #include <stdio.h>
 #include <string.h>
 
@@ -199,8 +195,8 @@ void Printer::psize(PixelCoord width, PixelCoord height){}
 
 Coord Printer::width() const {return 8.5*72;}
 Coord Printer::height() const {return 11.*72;}
-PixelCoord Printer::pwidth() const {return 8.5*72;}
-PixelCoord Printer::pheight() const {return 11.*72;}
+PixelCoord Printer::pwidth() const {return (PixelCoord)8.5*72;}
+PixelCoord Printer::pheight() const {return (PixelCoord)11.*72;}
 
 void Printer::transformer(const Transformer& t){
 	rep_->tr_ = t;

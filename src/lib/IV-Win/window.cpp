@@ -281,8 +281,8 @@ void MWwindow::bind()
 	params = 0;
 
 	// ---- store our pointer in the properties ----
-	MWassert(SetProp(hwnd, PROP_PTR_HIGH, (HANDLE) HIWORD(this)));
-	MWassert(SetProp(hwnd, PROP_PTR_LOW, (HANDLE) LOWORD(this)));
+	MWassert(SetProp(hwnd, PROP_PTR_HIGH, (HANDLE) ((long)HIWORD(this))));
+	MWassert(SetProp(hwnd, PROP_PTR_LOW, (HANDLE) ((long)LOWORD(this))));
 }
 
 void MWwindow::unbind()
