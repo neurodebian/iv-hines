@@ -248,6 +248,7 @@ public:
 	Cursor* cursor_;
 	UINT left_;
 	UINT bottom_;
+	boolean request_on_resize_;
 
 protected:
 

@@ -69,6 +69,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <InterViews/event.h>
 #include <InterViews/handler.h>
 #include <InterViews/hit.h>
+#include <InterViews/box.h>
 #include <InterViews/cursor.h>
 #include <InterViews/color.h>
 #include <InterViews/display.h>
@@ -872,6 +873,11 @@ long WindowRep::WMsize(WPARAM, LPARAM)
 
 	// ---- initialize for allocation ----
 	win->canvas_->psize(width, height);
+	if (request_on_resize_) {
+		Box::full_request(true);
+		win->glyph_->request(win->shape_);
+		Box::full_request(false);
+	}
 	const Requirement& rx = win->shape_.requirement(Dimension_X);
     const Requirement& ry = win->shape_.requirement(Dimension_Y);
     Coord xsize = win->canvas_->width();
@@ -988,6 +994,7 @@ extern void ivcleanup_after_window(Window*);
 Window::Window(Glyph* g)
 {
 	rep_ = new WindowRep(this);
+	rep_->request_on_resize_ = false;
 
 	//
 	// The type of canvas created depends upon the capabilities of the 
