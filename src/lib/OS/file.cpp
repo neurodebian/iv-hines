@@ -1,6 +1,10 @@
 #ifdef HAVE_CONFIG_H
 #include <../../config.h>
 #endif
+#if carbon
+#undef MAC
+#endif
+
 /*
  * Copyright (c) 1991 Stanford University
  * Copyright (c) 1991 Silicon Graphics, Inc.

@@ -328,12 +328,20 @@ InputHandlerImpl::InputHandlerImpl(InputHandler* h, Style* s) {
     focus_handler_ = nil;
     reset();
     if (threshold_ == 0) {
-#if MAC
+#if MAC && !carbon
 	long t = 25;
 #else
 	long t = 250;
 #endif
+// Note: for Carbon should use  GetDblTime to define the double click interval
+#if carbon
+	if (!s->find_attribute("clickDelay", t)) {
+		t = GetDblTime()*10;
+	}
+	//printf("double click delay (ms)  %d\n", t);
+#else
 	s->find_attribute("clickDelay", t);
+#endif
 	threshold_ = t;
     }
 }
@@ -453,7 +461,7 @@ void InputHandlerImpl::up(Event& e) {
     if (pressed_ && e.pointer_button() == button_) {
 	pressed_ = false;
 	e.ungrab(this);
-#if defined(WIN32) || MAC
+#if defined(WIN32) || (MAC && !carbon)
 	e.window()->ungrab_pointer();
 #endif
 	input_->release(e);

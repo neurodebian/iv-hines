@@ -211,9 +211,12 @@ boolean Dialog::run() {
     Session* s = Session::instance();
     Event e;
     done_ = false;
-#if MAC
+#if carbon
+	extern int dialog_running_;
 	extern void iv_carbon_dialog_handle(WindowRef);
 	WindowRef thiswin = canvas()->window()->rep()->macWindow();
+	int drsav = dialog_running_;
+	dialog_running_ = 1;
 #endif
 #if OC_UNQUIT
 	boolean old;
@@ -223,7 +226,7 @@ boolean Dialog::run() {
 	}
 #endif
     for (;;) {
-#if MAC
+#if carbon
 	s->screen_update();
 	iv_carbon_dialog_handle(thiswin);
 #else
@@ -254,6 +257,9 @@ boolean Dialog::run() {
 	if (IVDialog_setAcceptInput) {
 		(*IVDialog_setAcceptInput)(old);
 	}
+#endif
+#if carbon
+	dialog_running_ = drsav;
 #endif
     return accepted_;
 }

@@ -317,7 +317,7 @@ unsigned long Event::time() const
 	if(temp = (rep()->getEventRef())) {
 		EventTime t = GetEventTime(temp);
 //printf("Event::time %g\n", t);
-		return (long)t;
+		return (long)(t*1000.);
 	}
 	//Should not reach this point
 	return 0;

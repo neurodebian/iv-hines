@@ -912,7 +912,7 @@ boolean read_if_pending(Event& e)
 	EventQueueRef eqr = GetMainEventQueue();
 	EventTargetRef target = GetEventDispatcherTarget();
 	EventRef er;
-	while (GetNumEventsInQueue(eqr) != 0 && ReceiveNextEvent(0, NULL, kEventDurationForever, true, &er) == noErr) {
+	while (ReceiveNextEvent(0, NULL, kEventDurationNoWait, true, &er) == noErr) {
 		SendEventToEventTarget(er, target);
 		ReleaseEvent(er);
 	}
@@ -966,23 +966,23 @@ static EventTypeSpec etype[] = {{'nrn1', 'nrn2'}};
 
 static OSStatus ehandler(EventHandlerCallRef x, EventRef er, void*) {
 	OSStatus result;
-	char c;
-	GetEventParameter(er, kEventParamResult, typeChar, NULL,
-sizeof(char), NULL, &c);
-printf("%c", c);
-fflush(stdout);
+	QuitApplicationEventLoop();
 	result = noErr;
 	return result;
 }
 
-void stdin_event_send(char);
-void stdin_event_send(char c) {
+int stdin_event_ready();
+int dialog_running_ = 0;
+int stdin_event_ready() {
+	if (dialog_running_) {
+		return 0;
+	}
 	OSStatus err;
 	EventRef er;
 	err = CreateEvent(NULL, 'nrn1' , 'nrn2', 0, kEventAttributeNone, &er);
-	err = SetEventParameter(er, kEventParamResult, typeChar, 1, &c);
 	err = PostEventToQueue(GetMainEventQueue(), er, kEventPriorityStandard);
 	ReleaseEvent(er);
+	return 1;
 }
 }
 
@@ -1086,7 +1086,7 @@ void Session::screen_update() {
 // delivered. 
 int Session::run() {
 	screen_update();
-printf("RunApplicationEventLoop\n");
+//printf("RunApplicationEventLoop\n");
 #if 1
 	RunApplicationEventLoop();
 #else
@@ -1097,7 +1097,7 @@ printf("RunApplicationEventLoop\n");
 		ReleaseEvent(er);
 	}
 #endif
-printf("Return from RunApplicationEventLoop\n");
+//printf("Return from RunApplicationEventLoop\n");
 	return 0;
 }
 
