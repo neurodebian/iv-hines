@@ -525,7 +525,7 @@ void Printer::stencil(
                     byte |= 0x80 >> bit;
                 }
             }
-#if 0 && defined(__GNUC__)
+#if defined(__GNUC__)
 	    //out.form("%02x", byte);
 	sprintf(g3, "%02x", byte);
 	out << g3;
@@ -572,9 +572,10 @@ void Printer::image(const Raster* raster, Coord x, Coord y) {
             raster->peek(ix, iy, r, g, b, alpha);
             int byte = int(0xff * (r + g + b) / 3);
 
-#if 0 && defined(__GNUC__)
+#if defined(__GNUC__)
 //	    out.vform("%02x", byte);
 	sprintf(g3, "%02x", byte);
+printf("%s\n", g3);
 	out << g3;
 #else
             out << ((byte>>4) & 0x0f) <<  (byte & 0x0f);
