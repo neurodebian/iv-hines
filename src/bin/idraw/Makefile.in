@@ -53,7 +53,7 @@ RANLIB = @RANLIB@
 
 
 INCLUDES = -I../../include/IV-2_6 -I../../include $(X_CFLAGS)
-IVLIBS = ../../lib/libIVhines.la ../../lib/libUnidrawhines.la $(X_LIBS) 
+IVLIBS = ../../lib/libUnidrawhines.la ../../lib/libIVhines.la $(X_LIBS) 
 
 #
 # Lists of objects that go into the libraries:
