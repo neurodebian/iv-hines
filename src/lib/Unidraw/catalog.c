@@ -1504,7 +1504,8 @@ PSPattern* Catalog::ReadPattern (istream& in) {
             in >> graylevel;
 
         } else if (graylevel == nograylevel) {
-            for (int i = 0; in >> buf && i < patternHeight; i++) {
+	    int i;
+            for (i = 0; in >> buf && i < patternHeight; i++) {
                 if (buf[0] == '>' || sscanf(buf, "%x", &data[i]) != 1) {
                     break;
                 }
@@ -1613,7 +1614,8 @@ PSPattern* Catalog::ReadPattern (const char* n, int index) {
 	    istrstream in(definition, strlen(definition) + 1);
             int data[patternHeight];
 
-	    for (int i = 0; in >> buf && i < patternHeight; i++) {
+	    int i;
+	    for (i = 0; in >> buf && i < patternHeight; i++) {
 		if (sscanf(buf, "%x", &data[i]) != 1) {
 		    break;
 		}
