@@ -51,8 +51,10 @@ AC_SUBST(CARBON_TRUE)
 dnl Don't bother building static libraries if we can avoid it.
 if test "$CYGWIN" = "yes" ; then
 	AC_DISABLE_SHARED
+	AC_ENABLE_STATIC
 else
 	AC_DISABLE_STATIC
+	AC_ENABLE_SHARED
 fi
 
 dnl Checks for programs.

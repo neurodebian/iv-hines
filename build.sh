@@ -1,10 +1,12 @@
 #!/bin/sh
 # how to build from just the cvs sources
 
-if test ! -f "ltmain.sh" ; then
-	libtoolize -c -f #creates ltmain.sh config.guess config.sub libtool.m4
+if test -f /usr/bin/glibtoolize ; then
+	glibtoolize -c -f
+else
+	libtoolize -c -f ; then#creates ltmain.sh config.guess config.sub
 fi
-        
+    
 aclocal
 autoheader
 autoconf
