@@ -19,8 +19,10 @@
 #include <IV-Mac/window.h>
 #include <OS/math.h>
 #include <stdio.h>
+#if !carbon
 #include <sound.h> // SysBeep got moved
- 
+#endif
+
 class DisplayRep
 {
 public:

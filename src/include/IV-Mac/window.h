@@ -28,7 +28,9 @@
 #include <InterViews/window.h>
 #include <OS/list.h>
 
+#if !carbon
 #include <QDOffscreen.h>
+#endif
 
 class Window;
 class Bitmap;
@@ -39,7 +41,11 @@ class Glyph;
 class Cursor;
 class Event;
 
+#if carbon
+#define USE_SIOUX_WINDOW 0
+#else
 #define USE_SIOUX_WINDOW 1  //Enables one to remove SIOUX specific support
+#endif
 
 declarePtrList(MACWindowRepList, WindowRep);
 

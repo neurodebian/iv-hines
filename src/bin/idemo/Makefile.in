@@ -53,10 +53,11 @@ RANLIB = @RANLIB@
 
 
 INCLUDES = -I../../include $(X_CFLAGS)
-@CYGWIN_FALSE@IVLIBS = ../../lib/libIVhines.la ../../lib/libUnidrawhines.la $(X_LIBS) 
+@CARBON_FALSE@@CYGWIN_FALSE@IVLIBS = ../../lib/libIVhines.la ../../lib/libUnidrawhines.la $(X_LIBS) 
 @CYGWIN_FALSE@CYG =
 @CYGWIN_TRUE@IVLIBS = ../../lib/libIVhines.la 
 @CYGWIN_TRUE@CYG = -mwindows -e _mainCRTStartup
+@CARBON_TRUE@IVLIBS = ../../lib/libIVhines.la 
 
 #
 # Lists of objects that go into the libraries:
@@ -70,7 +71,8 @@ CONFIG_CLEAN_FILES =
 
 DEFS = @DEFS@ -I. -I$(srcdir)
 CPPFLAGS = @CPPFLAGS@
-LDFLAGS = @LDFLAGS@
+@CARBON_FALSE@LDFLAGS = @LDFLAGS@
+@CARBON_TRUE@LDFLAGS = @LDFLAGS@ -framework Carbon
 LIBS = @LIBS@
 X_CFLAGS = @X_CFLAGS@
 X_LIBS = @X_LIBS@ -lX11 -lXext
@@ -80,7 +82,8 @@ X_PRE_LIBS = @X_PRE_LIBS@
 CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS)
 LTCCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 CCOMPILE = $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
-CXXFLAGS = @CXXFLAGS@
+@CARBON_FALSE@CXXFLAGS = @CXXFLAGS@
+@CARBON_TRUE@CXXFLAGS = @CXXFLAGS@ -DMAC=1 -Dcarbon=1 -DSYSV=1
 CFLAGS = @CFLAGS@
 CXXLD = $(CXX)
 CXXLINK = $(LIBTOOL) --mode=link $(CXXLD) $(CXXFLAGS) $(LDFLAGS)

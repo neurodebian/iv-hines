@@ -53,8 +53,9 @@ RANLIB = @RANLIB@
 
 
 INCLUDES = -I../include $(X_CFLAGS)
-@CYGWIN_FALSE@KIT_DEFINES = -Dmotif_kit -Dsgi_motif_kit -Dopenlook_kit -Dbw_kit -Ddefault_kit=SMFKit
+@CARBON_FALSE@@CYGWIN_FALSE@KIT_DEFINES = -Dmotif_kit -Dsgi_motif_kit -Dopenlook_kit -Dbw_kit -Ddefault_kit=SMFKit
 @CYGWIN_TRUE@KIT_DEFINES = -Dmotif_kit -Dsgi_motif_kit
+@CARBON_TRUE@KIT_DEFINES = -Dmotif_kit -Dsgi_motif_kit -Dbw_kit -Ddefault_kit=SMFKit
 TIFF_DEFINES = -DCOLORIMETRY_SUPPORT -DJPEG_SUPPORT -DYCBCR_SUPPORT -DCMYK_SUPPORT -DHAVE_IEEEFP=1 -DUSE_VARARGS=0 -DUSE_PROTOTYPES=1 -DUSE_CONST=1
 TIFF_INCLUDES = -I../include/TIFF
 
@@ -63,8 +64,9 @@ TIFF_INCLUDES = -I../include/TIFF
 libIV = libIVhines.la
 libUnidraw = libUnidrawhines.la
 
-@CYGWIN_FALSE@lib_LTLIBRARIES = $(libIV) $(libUnidraw)
+@CARBON_FALSE@@CYGWIN_FALSE@lib_LTLIBRARIES = $(libIV) $(libUnidraw)
 @CYGWIN_TRUE@lib_LTLIBRARIES = $(libIV)
+@CARBON_TRUE@lib_LTLIBRARIES = $(libIV)
 
 libIV_la_LDFLAGS = -version-info 3:3:0 $(X_LDFLAGS)
 libIV_la_LIBADD = $(X_LIBS)
@@ -272,10 +274,25 @@ ivwin = \
 	IV-Win/mwlib.lo \
 	IV-Win/raster.lo \
 	IV-Win/session.lo \
-	IV-Win/window.lo \
+	IV-Win/window.lo
 
-@CYGWIN_FALSE@libIV_la_OBJECTS = $(dispatch) $(iv26) $(ivx11) $(interviews) $(os) $(tiff)
+ivmac = \
+	IV-Mac/bitmap.lo \
+	IV-Mac/brush.lo \
+	IV-Mac/canvas.lo \
+	IV-Mac/color.lo \
+	IV-Mac/cursor.lo \
+	IV-Mac/display.lo \
+	IV-Mac/event.lo \
+	IV-Mac/font.lo \
+	IV-Mac/mprinter.lo \
+	IV-Mac/raster.lo \
+	IV-Mac/session.lo \
+	IV-Mac/window.lo
+
+@CARBON_FALSE@@CYGWIN_FALSE@libIV_la_OBJECTS = $(dispatch) $(iv26) $(ivx11) $(interviews) $(os) $(tiff)
 @CYGWIN_TRUE@libIV_la_OBJECTS = $(dispatch) $(ivwin) $(interviews) $(os)
+@CARBON_TRUE@libIV_la_OBJECTS = $(dispatch) $(ivmac) $(interviews) $(os)
 
 libUnidraw_la_OBJECTS = \
 	Unidraw/align.lo \
@@ -383,7 +400,8 @@ LTLIBRARIES =  $(lib_LTLIBRARIES)
 
 DEFS = @DEFS@ -I. -I$(srcdir)
 CPPFLAGS = @CPPFLAGS@
-LDFLAGS = @LDFLAGS@
+@CARBON_FALSE@LDFLAGS = @LDFLAGS@
+@CARBON_TRUE@LDFLAGS = @LDFLAGS@ -framework Carbon
 LIBS = @LIBS@
 X_CFLAGS = @X_CFLAGS@
 X_LIBS = @X_LIBS@
@@ -394,7 +412,8 @@ libIV_la_DEPENDENCIES =
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS)
 LTCCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 CCOMPILE = $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
-CXXFLAGS = @CXXFLAGS@
+@CARBON_FALSE@CXXFLAGS = @CXXFLAGS@
+@CARBON_TRUE@CXXFLAGS = @CXXFLAGS@ -DMAC=1 -Dcarbon=1 -DSYSV=1
 CFLAGS = @CFLAGS@
 CXXLD = $(CXX)
 CXXLINK = $(LIBTOOL) --mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@

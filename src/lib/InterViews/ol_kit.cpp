@@ -432,7 +432,7 @@ static void init_ol_cursors() {
     question_mark_cursor = new Cursor(1, 15, question_pat, question_mask);
 }
 
-static const GlyphIndex normal = 0;
+static const GlyphIndex ivnormal = 0;
 static const GlyphIndex backward_arrow_highlighted = 1;
 static const GlyphIndex dragging = 2;
 static const GlyphIndex forward_arrow_highlighted = 3;
@@ -1745,7 +1745,7 @@ OL_ElevatorGlyph::OL_ElevatorGlyph(
     font_(s->font()),
     canvas_(nil),
     extension_(),
-    index_(normal)
+    index_(ivnormal)
 {
     Resource::ref(font_); 
 }
@@ -3486,7 +3486,7 @@ void OL_Elevator::drag_to(const Event& e) {
 
 void OL_Elevator::release_select() {
     OL_Stepper::release_select();
-    glyph_->flip_to(normal);
+    glyph_->flip_to(ivnormal);
     dragging_ = false;
 }
 
@@ -3503,7 +3503,7 @@ void OL_Elevator::adjust_for_dimming() {
 	    if (i == both_arrows_dimmed || i == backward_arrow_dimmed ||
 		i == forward_arrow_dimmed
 	    ) {
-		glyph_->flip_to(normal);
+		glyph_->flip_to(ivnormal);
 	    }
 	}
     }

@@ -33,8 +33,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#if !carbon
 #include <sound.h> // SysBeep got moved
-
+#endif
 
 // add by jijun 5/22/97
 extern "C" { void debugfile(const char*, ...);}
@@ -47,7 +48,7 @@ extern "C" { void debugfile(const char*, ...);}
 
 static int last_button_;
 
-extern "C" { void hoc_quit(); void ivoc_dismiss_defer();}
+//extern "C" { void hoc_quit(); void ivoc_dismiss_defer();}
 
 declarePtrList(MAChandlerPtrList, Handler)
 implementPtrList(MAChandlerPtrList, Handler)
@@ -186,7 +187,7 @@ void Event::handle()
 				break;
 			case mouseUp:
 				rep_->mouseUpEventHook();
-				ivoc_dismiss_defer();
+//				ivoc_dismiss_defer();
 				break;
 			case keyDown:
 			case autoKey:
@@ -447,7 +448,7 @@ void EventRep::mouseDownEventHook(void){
 			{
 				if((HiWord(menuChoice) == FILE_MENU_ID) && (LoWord(menuChoice) == QUIT_ITEM)){
 					//Session::instance()->quit();
-					hoc_quit();
+//					hoc_quit();
 				} else if ((HiWord(menuChoice) == APPLE_MENU_ID)){
 					appleMenuHook(LoWord(menuChoice));
 				}
@@ -541,7 +542,7 @@ void EventRep::mouseDownEventHook(void){
 						ourStructure->close_callback_->event(e);
 					}
 				}
-				ivoc_dismiss_defer();
+//				ivoc_dismiss_defer();
 			}
 			break;
 

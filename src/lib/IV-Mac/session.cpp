@@ -55,12 +55,13 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
+#if !carbon
 #include <sound.h>
 #include <Icons.h>	// add by jijun 6/19/97
+#include <SIOUXGlobals.h>
+#endif
 
 #include <stdlib.h>
-
-#include <SIOUXGlobals.h>
 
 extern "C" { void debugfile(const char*, ...);}
 
@@ -388,10 +389,12 @@ static void DMemory(void) {
 // add by jijun 5/30/97
 //extern "C" { int hoc_xopen1(const char* filename, const char* rcs);}
 extern "C" {
+#if !carbon
 void mac_open_doc(const char* s);
 void mac_open_app();
 boolean is_mac_dll(FSSpec*);
 boolean mac_open_dll(const char*, FSSpec*);
+#endif
 }
 
 extern "C" {
@@ -454,7 +457,9 @@ static pascal OSErr MyHandleOApp (const AppleEvent *theAppleEvent, AppleEvent *r
 	//debugfile("\nreply Descriptor type: %ld", reply.descriptorType);
 	//debugfile("\nhandlerRefcon: %ld", handlerRefcon);
 
+#if !carbon
 	mac_open_app();	
+#endif
 	//OSErr myErr=AEGetParamDesc(&theAppleEvent, keyDirectObject, typeAEList, &docList);
 	//debugfile("\nerror after AEGetParamDesc: %ld", myErr);
 	return (0);
@@ -506,7 +511,7 @@ static pascal OSErr MyHandleODoc (const AppleEvent *theAppleEvent, AppleEvent *r
 				// get each descriptor record from list, coerce the returned data to an FSSpec record,
 				// and open the associated file
 				// first all the dll's
-#if 1
+#if !carbon
 				for (long index=1; index<=itemInList; index++) {
 					myErr = AEGetNthPtr(&docList, index, typeFSS, &keywd, &returnedType,
 										&myFSS, sizeof(myFSS), &actualSize);
@@ -525,6 +530,7 @@ static pascal OSErr MyHandleODoc (const AppleEvent *theAppleEvent, AppleEvent *r
 					}	// noerr for AEGetNthPtr
 				}	// for loop
 #endif
+#if !carbon
 				// then all the hoc files
 				for (long index=1; index<=itemInList; index++) {
 					myErr = AEGetNthPtr(&docList, index, typeFSS, &keywd, &returnedType,
@@ -545,6 +551,7 @@ static pascal OSErr MyHandleODoc (const AppleEvent *theAppleEvent, AppleEvent *r
 						//myErr=FSpDelete(&myFSS);
 					}	// noerr for AEGetNthPtr
 				}	// for loop
+#endif
 			}	// noerr for AECountItems
 		}	// noerr for MyGotRequiredParams
 	OSErr ingoreErr=AEDisposeDesc(&docList);
@@ -1006,14 +1013,16 @@ void Session::screen_update() {
 // -----------------------------------------------------------------------
 // Event loops
 // -----------------------------------------------------------------------
-#if 0 && carbon
+#if carbon
 // event handling is claimed to be simplified in carbon. We assume
 // event handlers have been installed. I'm hoping that the sioux console
 // window will happily coexist with the interviews windows in the case
 // that the console is waiting for input and all events will be nicely
 // delivered. 
 int Session::run() {
+	screen_update();
 	RunApplicationEventLoop();
+printf("Return from RunApplicationEventLoop\n");
 	return 0;
 }
 

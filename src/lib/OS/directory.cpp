@@ -78,7 +78,9 @@ is to use WIN32_FIND_DATA
  * needs <sys/types.h>.
  */
 #if MAC
+#if !carbon
 #include <Files.h>
+#endif
 #include <ctype.h>
 #endif
 

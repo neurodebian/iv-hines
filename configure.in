@@ -16,6 +16,10 @@ AH_BOTTOM([
 #define WIN32 1
 #endif
 
+#if defined(carbon)
+#include <Carbon/Carbon.h>
+#endif
+
 #endif /* H_config_included */
 ])
 
@@ -33,6 +37,16 @@ AC_CYGWIN
 if test "$CYGWIN" = "yes" ; then
 	echo "CYGWIN=$CYGWIN"
 fi
+
+if test "$enable_carbon" == 'yes' ; then
+	CARBON_FALSE='#'
+	CARBON_TRUE=
+else
+	CARBON_FALSE=
+	CARBON_TRUE='#'
+fi
+AC_SUBST(CARBON_FALSE)
+AC_SUBST(CARBON_TRUE)
 
 dnl Don't bother building static libraries if we can avoid it.
 AC_DISABLE_STATIC
@@ -60,7 +74,7 @@ AC_CHECK_HEADERS(fcntl.h malloc.h sys/file.h sys/ioctl.h sys/time.h unistd.h osf
 if test "$CYGWIN" = "yes" ; then        
 	echo " CYGWIN defined so make MSWwin version"           
 	build_cygwin=yes        
-else        
+elif test "$enable_carbon" != "yes" ; then        
 	AC_PATH_XTRA
 fi        
 

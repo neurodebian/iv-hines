@@ -41,7 +41,9 @@
 #include <InterViews/iv.h>
 
 // ---- windows includes ----
+#if !carbon
 #include <windows.h>
+#endif
 
 class BitmapRep
 {
