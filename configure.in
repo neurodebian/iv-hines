@@ -81,6 +81,9 @@ if test "$CYGWIN" = "yes" ; then
 	build_cygwin=yes        
 elif test "$enable_carbon" != "yes" ; then        
 	AC_PATH_XTRA
+	if test "$no_x" = "yes" ; then
+		AC_MSG_ERROR([cannot find X11])
+	fi
 fi        
 
 dnl fake automake if
