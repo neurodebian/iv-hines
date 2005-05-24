@@ -710,7 +710,7 @@ void MACcanvas::damage_all()
 {
 	GrafPtr oldPort;
 
-	SetRect(&damageArea, 0, 0, width(), height()); 
+	SetRect(&damageArea, 0, 0, pwidth(), pheight()); 
 	if (window())
 	{
 		setWinToUpdate();
@@ -1111,7 +1111,7 @@ void MACcanvas::character(
 	// interviews coords. If ever to_pixels is not 1 there will have to be a lot of changes.
 	Transformer& m = matrix();
 	Coord tx = x;
-    Coord ty = y;
+	Coord ty = y;
 	if (transformed_)
 	{
 		m.transform(tx, ty);
@@ -1124,18 +1124,21 @@ void MACcanvas::character(
 	// started flushing every character. If we don't check x, then we don't flush enough
 	// expecially during text rubberbanding.
 	static Coord next_x;
+	PixelCoord ptx = toPixelX(tx);
+	PixelCoord pty = toPixelY(ty);
+	PixelCoord pwidth = toPixelX(width);
 	
 	if (text_item_.count == 0) {
-        begin_item(tx, ty, width);
-    } else if (
-      (text_item_.count >= text_item_.size) ||
-      (to_pixels(ty, Dimension_Y) != text_item_.y)
-      //|| (!Math::equal(x, next_x, .01))){ 
-      || (!Math::equal(to_pixels(tx, Dimension_X), next_x, float(1.1)))) {//allow 1 pixel slop
-        flush();
-        begin_item(tx, ty, width);
-    } 
-    next_x = tx + to_pixels(width, Dimension_X);    
+		begin_item(ptx, pty, pwidth);
+	} else if (
+	    (text_item_.count >= text_item_.size) ||
+	    (pty != text_item_.y)
+	    //|| (!Math::equal(x, next_x, .01))){ 
+	    || (!Math::equal(tx, next_x, float(1.1)))) {//allow 1 pixel slop
+		flush();
+		begin_item(ptx, pty, pwidth);
+	} 
+	next_x = tx + width;    
 	text_item_.buffer[text_item_.count++] = (char) ch;
 //if(printing) debugfile("character %c %g %g\n", ch, x, y);
 }
@@ -1172,7 +1175,7 @@ void MACcanvas::flush()
 		TextSize(fr->size_);
 		TextMode(fr->mode_);
 //if (printing) debugfile("flush %d %d\n",toPixelX(text_item_.x), toPixelY(text_item_.y)); 		
-        MoveTo(toPixelX(text_item_.x), toPixelY(text_item_.y));
+        MoveTo(text_item_.x, text_item_.y);
         DrawText(text_item_.buffer, 0, text_item_.count);
 // text_item_.buffer[text_item_.count] = '\0';
 // debugfile("|%s|\n", text_item_.buffer);

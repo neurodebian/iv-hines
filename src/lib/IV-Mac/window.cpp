@@ -1246,17 +1246,18 @@ void WindowRep::bind()
 	// ---- bind to the CanvasRep ----
 	MACcanvas* c = (MACcanvas*) win->canvas_;
 	c->bind(this);
+	Display* d = getIvWindow()->display();
 
 	//setup window sizing for glyph creation
 	win->glyph_->request(r);
-	params_->bounds_->bottom = r.y_requirement().natural();
-	params_->bounds_->right =r.x_requirement().natural();
+	params_->bounds_->bottom = d->to_pixels(r.y_requirement().natural(), Dimension_Y);
+	params_->bounds_->right = d->to_pixels(r.x_requirement().natural(), Dimension_X);
 	
 	//setup window expansion paramaters
-	shrink_.h = (r.x_requirement().natural() - r.x_requirement().shrink());
-	shrink_.v = (r.y_requirement().natural() - r.y_requirement().shrink());
-	stretch_.h = Math::min((r.x_requirement().natural() + r.x_requirement().stretch()),(float)2000.);
-	stretch_.v = Math::min((r.y_requirement().natural() + r.y_requirement().stretch()), (float)2000.);
+	shrink_.h = d->to_pixels((r.x_requirement().natural() - r.x_requirement().shrink()), Dimension_X);
+	shrink_.v = d->to_pixels((r.y_requirement().natural() - r.y_requirement().shrink()), Dimension_Y);
+	stretch_.h = d->to_pixels(Math::min((r.x_requirement().natural() + r.x_requirement().stretch()),(float)2000.), Dimension_X);
+	stretch_.v = d->to_pixels(Math::min((r.y_requirement().natural() + r.y_requirement().stretch()), (float)2000.), Dimension_Y);
 		
 	// ---- bind to MS-Window ----
 	MACwindow::bind();

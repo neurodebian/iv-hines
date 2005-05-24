@@ -51,8 +51,8 @@ public:
 		// These two functions determine when the canvas can be rendered
 		// upon, and when it can't.  The canvas is not valid for drawing
 		// outside of a begin/end pair.  
-	inline int toPixelX(int x) const;
-	inline int toPixelY(int y) const;
+	inline int toPixelX(Coord x) const;
+	inline int toPixelY(Coord y) const;
 	inline Coord fromPixelX(int x) const;
 	inline Coord fromPixelY(int x) const;
 	inline void setDamage(Rect * rectangle);
@@ -194,10 +194,10 @@ protected: // for MacPrinterCanvas
     TextItem text_item_;
 };
 
-inline int MACcanvas::toPixelX(int x) const
+inline int MACcanvas::toPixelX(Coord x) const
 	{return to_pixels(x, Dimension_X);}
-inline int MACcanvas::toPixelY(int y) const
-	{return to_pixels((pheight() - y), Dimension_Y);}	
+inline int MACcanvas::toPixelY(Coord y) const
+	{return pheight() - to_pixels(y, Dimension_Y);}	
 inline Coord MACcanvas::fromPixelX(int x) const
 	{return to_coord(x, Dimension_X);}
 inline Coord MACcanvas::fromPixelY(int y) const
