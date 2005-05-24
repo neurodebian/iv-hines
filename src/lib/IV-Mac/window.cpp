@@ -846,7 +846,12 @@ void MACwindow::doGrow(EventRef theEvent){
 #else
 void MACwindow::doGrow(EventRecord* theEvent){
 #endif
+#if carbon
+	Boolean result;
+	Rect			rout;
+#else
 	long result;
+#endif
 	Rect			r;
 	short			width, height;
 	short			newWidth;
@@ -854,8 +859,8 @@ void MACwindow::doGrow(EventRecord* theEvent){
 	GrafPtr			oldPort;
 	ControlHandle	theControl;
 
-	width = getIvWindow()->canvas()->width();
-	height = getIvWindow()->canvas()->height();
+	width = getIvWindow()->canvas()->pwidth();
+	height = getIvWindow()->canvas()->pheight();
 	
 	if(vertScroll){
 		width += 16;	/* width of scroll bar */
@@ -873,7 +878,7 @@ void MACwindow::doGrow(EventRecord* theEvent){
 
 	/* track mouse and resize window outline as we go */
 #if carbon
-	result = GrowWindow(theMacWindow_, EventRep::mouse_loc(theEvent), &r);
+	result = ResizeWindow(theMacWindow_, EventRep::mouse_loc(theEvent), &r, &rout);
 #else
 	result = GrowWindow(theMacWindow_, theEvent->where, &r);
 #endif	
@@ -886,7 +891,7 @@ void MACwindow::doGrow(EventRecord* theEvent){
 		{
 			Rect growBoxRect;
 #if carbon
-			Rect r;
+			Rect r = rout;
 			GetPortBounds(GetWindowPort(theMacWindow_), &r);
 			SetRect(&growBoxRect, r.right - 15, r.bottom - 15, r.right, r.bottom);
 			InvalWindowRect(theMacWindow_, &growBoxRect);
@@ -899,10 +904,12 @@ void MACwindow::doGrow(EventRecord* theEvent){
 #endif
 		}
 		
+#if carbon
+#else
 		newWidth = LoWord((long*)result);
 		newHeight  = HiWord((long*)result);
-		
 		SizeWindow(theMacWindow_, newWidth, newHeight, true);
+#endif
 
 		/* resize scroll bars */
 		theControl = (horizScroll);
@@ -1079,13 +1086,13 @@ void MACwindow::adjustScrollBar (ControlHandle theControl)
 	{
 		MoveControl(theControl, right - 15, -1);
 		SizeControl(theControl, 16, bottom - 13);
-		max = getIvWindow()->canvas()->height() - ((bottom - 15) - top);
+		max = getIvWindow()->canvas()->pheight() - ((bottom - 15) - top);
 	}
 	else
 	{
 		MoveControl(theControl, -1, bottom - 15);
 		SizeControl(theControl, right - 13, 16);
-		max = getIvWindow()->canvas()->width() - ((right - 15) - left);
+		max = getIvWindow()->canvas()->pwidth() - ((right - 15) - left);
 	}
 
 	if (max < 0)

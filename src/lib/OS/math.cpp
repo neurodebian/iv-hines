@@ -29,7 +29,11 @@
 
 /* would that these lived in a standard place ... */
 #if carbon
+#if __GNUC__ < 4
 #define myfabs std::fabs
+#else
+#define myfabs ::fabs
+#endif
 #else
 extern "C" {
     extern int abs(int);
