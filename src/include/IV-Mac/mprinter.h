@@ -7,12 +7,7 @@
 
 #include <InterViews/printer.h>
 #include <IV-Mac/canvas.h>
-
-#if MAC
-#include <ostream.h>
-#else
-class ostream;
-#endif
+#include <ivstream.h>
 
 class MacPrinterCanvas : public MACcanvas {
 public:

@@ -1,7 +1,9 @@
 #define boolean _lib_os(boolean)
 #if !MAC
+#if !defined(__GNUC__) || __GNUC__ < 4
 #define true _lib_os(true)
 #define false _lib_os(false)
+#endif
 #endif
 #define u_char _lib_os(u_char)
 #define CopyString _lib_os(CopyString)

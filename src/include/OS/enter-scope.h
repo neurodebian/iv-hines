@@ -43,8 +43,10 @@
 typedef unsigned boolean;
 
 #if !MAC
+#if !defined(__GNUC__) || __GNUC__ < 4
 static const unsigned false = 0;
 static const unsigned true = 1;
+#endif
 #endif
 
 #endif

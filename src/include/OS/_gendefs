@@ -4,8 +4,10 @@ set tmp = /tmp/$$
 cp /dev/null $tmp
 echo "boolean" >> $tmp
 echo "#if !MAC" >> $tmp
+echo "#if !defined(__GNUC__) || __GNUC__ < 4" >> $tmp
 echo "true" >> $tmp
 echo "false" >> $tmp
+echo "#endif" >> $tmp
 echo "#endif" >> $tmp
 echo "u_char" >> $tmp
 grep "^class" *.h | \
