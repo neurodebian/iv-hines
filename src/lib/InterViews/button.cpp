@@ -72,10 +72,18 @@ void Button::action(Action* a) {
 
 Action* Button::action() const { return action_; }
 
+#if carbon
+extern boolean need_motion_on_deactivate_;
+#define NEEDMOTION(arg) need_motion_on_deactivate_ = arg;
+#else
+#define NEEDMOTION(arg) /**/
+#endif
+
 void Button::enter() {
     TelltaleState* s = state();
     if (s->test(TelltaleState::is_enabled)) {
 	s->set(TelltaleState::is_visible, true);
+	NEEDMOTION(true)
     }
 }
 
@@ -83,6 +91,7 @@ void Button::leave() {
     TelltaleState* s = state();
     if (s->test(TelltaleState::is_enabled)) {
 	s->set(TelltaleState::is_visible, false);
+	NEEDMOTION(false)
     }
 }
 
@@ -96,6 +105,7 @@ void Button::press(const Event&) {
 void Button::release(const Event& e) {
     TelltaleState* s = state();
     if (s->test(TelltaleState::is_enabled)) {
+	NEEDMOTION(false)
 	s->set(TelltaleState::is_active, false);
 	if (inside(e)) {
 	    boolean chosen = s->test(TelltaleState::is_chosen);

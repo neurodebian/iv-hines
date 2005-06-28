@@ -981,6 +981,7 @@ static EventTypeSpec showtype[] = {
 };
 
 boolean session_deactivating_;
+boolean need_motion_on_deactivate_;
 
 static OSStatus show_handler(EventHandlerCallRef x, EventRef er, void*) {
 	OSStatus result = noErr;
@@ -994,7 +995,12 @@ static OSStatus show_handler(EventHandlerCallRef x, EventRef er, void*) {
 		Event e;
 		if (e.grabber()) {
 //printf("grabbing\n");
+		    if (need_motion_on_deactivate_) {
+			// motion out of window sometimes leaves a button highlighted
+			e.rep()->set(Event::motion, Event::left, -1000, -1000);
+		    }else{
 			e.rep()->set(Event::up, Event::left, -1000, -1000);
+		    }
 			session_deactivating_ = true;
 			EventRep::handleCallback(e);
 			session_deactivating_ = false;

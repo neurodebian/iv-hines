@@ -311,7 +311,15 @@ void Menu::unselect() {
     }
 }
 
+#if carbon
+extern boolean need_motion_on_deactivate_;
+#define NEEDMOTION(arg) need_motion_on_deactivate_ = arg;
+#else
+#define NEEDMOTION(arg) /**/
+#endif
+
 void Menu::press(const Event& e) {
+	NEEDMOTION(false)
     Canvas* c = canvas();
     if (c != nil) {
 	impl_->save_cursor(c);

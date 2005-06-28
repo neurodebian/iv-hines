@@ -323,8 +323,11 @@ unsigned long Event::time() const
 	return 0;
 }
 
+extern boolean session_deactivating_;
+
 Coord Event::pointer_x() const
 {
+	if (session_deactivating_) { return -1000.; }
 	Coord x_temp;
 	Display* dpy = display();
 	return dpy->to_coord(rep_->ivlocalMouse_x(), Dimension_X);
@@ -332,6 +335,7 @@ Coord Event::pointer_x() const
 
 Coord Event::pointer_y() const
 {
+	if (session_deactivating_) { return -1000.; }
 	Display* dpy = display();
 	return dpy->to_coord(rep_->ivlocalMouse_y(), Dimension_Y);;
 }
