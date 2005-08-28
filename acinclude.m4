@@ -160,6 +160,9 @@ AC_DEFUN([SHOULD_TRUE_BE_DECLARED],[
  AC_TRY_COMPILE([
 #include <stdio.h>
 #include <stdlib.h>
+#if defined(true)
+xxxxxx
+#endif
 #define true ostrue
 #define false osfalse
 #define boolean osboolean
@@ -174,7 +177,7 @@ static const unsigned true = 0;
 	ivos_declare_true=yes , ivos_declare_true=no
  )
  AC_LANG_RESTORE
- if test "$ivos_declare_true" = yes; then
+ if test "$ivos_declare_true" = "yes" -a "$enable_carbon" != "yes" ; then
 	AC_DEFINE(IVOS_DECLARE_TRUE,,[define if ostrue should be declared])
  fi
 ])dnl
