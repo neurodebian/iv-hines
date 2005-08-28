@@ -1,5 +1,5 @@
 #undef boolean
-#if !MAC
+#if defined(IVOS_DECLARE_TRUE)
 #undef true
 #undef false
 #endif
