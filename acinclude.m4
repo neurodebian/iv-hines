@@ -181,3 +181,42 @@ static const unsigned true = 0;
 	AC_DEFINE(IVOS_DECLARE_TRUE,,[define if ostrue should be declared])
  fi
 ])dnl
+
+dnl decide whether to use std::fabs or ::fabs or declare it explicitly
+AC_DEFUN([NRN_FABS],[
+ AC_LANG_SAVE
+ AC_LANG_CPLUSPLUS
+ AC_TRY_COMPILE([
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#define myfabs ::fabs
+ ],[
+	double d;
+	d = -25.0;
+	d = myfabs(d);
+	return (d == 25.0)?0:1;
+ ],
+	ivos_fabs="::fabs" , ivos_fabs=""
+ )
+ if test "$ivos_fabs" = "" ; then
+   AC_TRY_COMPILE([
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#define myfabs std::fabs
+   ],[
+	double d;
+	d = -25.0;
+	d = myfabs(d);
+	return (d == 25.0)?0:1;
+   ],
+	ivos_fabs="std::fabs" , ivos_fabs=""
+   )
+ fi
+ if test "$ivos_fabs" != "" ; then
+	AC_DEFINE_UNQUOTED(IVOS_FABS,$ivos_fabs,[undefined or ::fabs or std::fabs])
+ fi
+ AC_LANG_RESTORE
+])dnl
+

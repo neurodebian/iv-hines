@@ -99,6 +99,7 @@ AC_SUBST(CYGWIN_FALSE)
 AC_SUBST(CYGWIN_TRUE)
 
 SHOULD_TRUE_BE_DECLARED
+NRN_FABS
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_TYPE_OFF_T

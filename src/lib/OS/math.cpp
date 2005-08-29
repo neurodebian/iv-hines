@@ -25,15 +25,12 @@
  * OF THIS SOFTWARE.
  */
 
+#include <math.h>
 #include <OS/math.h>
 
 /* would that these lived in a standard place ... */
-#if carbon
-#if __GNUC__ < 4
-#define myfabs std::fabs
-#else
-#define myfabs ::fabs
-#endif
+#if defined(IVOS_FABS)
+#define myfabs IVOS_FABS
 #else
 extern "C" {
     extern int abs(int);
