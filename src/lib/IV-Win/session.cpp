@@ -1,6 +1,5 @@
-#ifdef HAVE_CONFIG_H
 #include <../../config.h>
-#endif
+
 /*
 Copyright (C) 1993 Tim Prinzing
 Copyright (C) 2002 Tim Prinzing, Michael Hines

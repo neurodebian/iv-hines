@@ -1,3 +1,5 @@
+#include <../../config.h>
+
 /*
 Copyright (C) 1993 Tim Prinzing
 Copyright (C) 2002 Tim Prinzing, Michael Hines

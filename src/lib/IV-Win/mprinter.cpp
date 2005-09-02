@@ -1,3 +1,5 @@
+#include <../../config.h>
+
 /*
 Copyright (C) 2002 Michael Hines
 This file contains programs and data originally developed by Michael Hines
