@@ -93,13 +93,13 @@ return;
 }
 
 void ivcleanup_add_window(Window* w) {
-return;
+//return;
 //MessageBox(NULL, "ivcleanup_add_window", "xxx", MB_OK);
 	dwl_.append(w);
 }
 
 void ivcleanup_remove_window(Window* w) {
-return;
+//return;
 	long i, cnt = dwl_.count();
 	for (i=0; i < cnt; ++i) {
 		if (w == dwl_.item(i)) {
@@ -117,7 +117,7 @@ return;
 	}
 }
 void ivcleanup_after_window(Window* w) {
-return;
+//return;
 	// sometimes a window references this window. So if this happens
 	// to be deleted first then when the referencing window deletes
 	// it, then error. This semi-prevents this from happening.
@@ -130,11 +130,11 @@ return;
 static Extension* ext;
 
 void iv_rescale_map() {
-return;
 	Display& d = *Session::instance()->default_display();
 	long i, cnt = dwl_.count();
 	RECT r;
 	Window* w;
+printf("iv_rescale_map %d\n", cnt);
 	for (i=0; i < cnt; ++i) {
 		w = dwl_.item(i);
 		long dummy;
@@ -157,9 +157,9 @@ return;
 }
 
 void iv_rescale_unmap() {
-return;
 	Display& d = *Session::instance()->default_display();
 	long i, cnt = dwl_.count();
+printf("iv_rescale_unmap %d\n", cnt);
 	ext = new Extension[cnt];
 	RECT r;
 	for (i=0; i < cnt; ++i) {

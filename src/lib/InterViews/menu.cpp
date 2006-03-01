@@ -433,6 +433,12 @@ void Menu::release(const Event& e) {
 		m = m->item(hit.index(0))->menu();
 		if (m != nil) {
 		    m->select(0);
+#if defined(WIN32)
+//twice clicking on a menu that opens a submenu gets it into a state
+//where it is hard to close except by clicking on a submenu item and
+//dragging the mouse off the subment and releasing.
+		    impl_->ungrab(this, e);
+#endif
 		    impl_->grab(this, e);
 		    return;
 		}
