@@ -134,7 +134,7 @@ void iv_rescale_map() {
 	long i, cnt = dwl_.count();
 	RECT r;
 	Window* w;
-printf("iv_rescale_map %d\n", cnt);
+//printf("iv_rescale_map %d\n", cnt);
 	for (i=0; i < cnt; ++i) {
 		w = dwl_.item(i);
 		long dummy;
@@ -159,7 +159,7 @@ printf("iv_rescale_map %d\n", cnt);
 void iv_rescale_unmap() {
 	Display& d = *Session::instance()->default_display();
 	long i, cnt = dwl_.count();
-printf("iv_rescale_unmap %d\n", cnt);
+//printf("iv_rescale_unmap %d\n", cnt);
 	ext = new Extension[cnt];
 	RECT r;
 	for (i=0; i < cnt; ++i) {
