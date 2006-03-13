@@ -41,13 +41,13 @@ static long ListImpl_best_new_sizes[] = {
     2097136, 4194288, 8388592, 16777200, 33554416, 67108848
 };
 
-long ListImpl_best_new_count(long count, unsigned int size) {
+long ListImpl_best_new_count(long count, unsigned int size, unsigned int m) {
     for (int i = 0; i < sizeof(ListImpl_best_new_sizes)/sizeof(long); i++) {
         if (count * size < ListImpl_best_new_sizes[i]) {
             return ListImpl_best_new_sizes[i] / size;
         }
     }
-    return count;
+    return count*m;
 }
 
 void ListImpl_range_error(long i) {

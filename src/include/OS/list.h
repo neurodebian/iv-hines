@@ -32,7 +32,7 @@
 #include <OS/enter-scope.h>
 
 extern void ListImpl_range_error(long index);
-extern long ListImpl_best_new_count(long count, unsigned size);
+extern long ListImpl_best_new_count(long count, unsigned int size, unsigned int m = 1);
 
 #if 1 || defined(__STDC__) || defined(__ANSI_CPP__)
 #define __ListItr(List) List##_Iterator
@@ -230,7 +230,7 @@ List::~List() { \
 \
 void List::insert(long index, const T& item) { \
     if (count_ == size_) { \
-        long size = ListImpl_best_new_count(size_ + 1, sizeof(T)); \
+        long size = ListImpl_best_new_count(size_ + 1, sizeof(T), 2); \
         T* items = new T[size]; \
         if (items_ != 0) { \
             register long i; \
