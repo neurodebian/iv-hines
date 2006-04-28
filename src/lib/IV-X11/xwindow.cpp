@@ -1839,6 +1839,8 @@ void Display::set_screen(int s) {
     d.pheight_ = DisplayHeight(dpy, s);
     d.set_dpi(x_pixel_);
     x_point_ = 1 / x_pixel_;
+    y_pixel_ = x_pixel_;
+    y_point_ = x_point_;
     d.width_ = to_coord(d.pwidth_);
     d.height_ = to_coord(d.pheight_);
 }

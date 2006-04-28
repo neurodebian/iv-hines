@@ -120,7 +120,10 @@ Table::Table(int n) { \
 Table::~Table() { \
     for (register TableEntry(Table)** e = first_; e <= last_; e++) { \
 	TableEntry(Table)* t = *e; \
-	delete t; \
+        for (register TableEntry(Table)* i = t; i; i = t) { \
+	    t = i->chain_; \
+	    delete i; \
+	} \
     } \
     delete [] first_; \
 } \
