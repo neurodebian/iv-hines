@@ -433,10 +433,13 @@ void Menu::release(const Event& e) {
 		m = m->item(hit.index(0))->menu();
 		if (m != nil) {
 		    m->select(0);
-#if defined(WIN32)
+#if 0 && defined(WIN32)
 //twice clicking on a menu that opens a submenu gets it into a state
 //where it is hard to close except by clicking on a submenu item and
 //dragging the mouse off the subment and releasing.
+// or clicking on any neuron window. Unfortunately, this fix broke the
+// ability to click on an item with submenus and have the submenu persist.
+// Therefore we are backing out of it.
 		    impl_->ungrab(this, e);
 #endif
 		    impl_->grab(this, e);
