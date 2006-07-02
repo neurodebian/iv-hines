@@ -71,7 +71,7 @@ private:
     void down(Event&);
     void motion(Event&);
     void up(Event&);
-    boolean inside(const Event&, const AllocationInfo&);
+    boolean inside(const Event&, const AllocationInfo&, boolean hit_check = true);
 
     static unsigned long threshold_;
 };
@@ -223,7 +223,11 @@ void InputHandler::pick(Canvas* c, const Allocation& a, int depth, Hit& h) {
     EventType t = (e == nil) ? Event::undefined : e->type();
     switch (t) {
     case Event::key:
+#if defined(WIN32) || MAC
+	if (e && impl_->inside(*e, info, false)) {
+#else
 	if (e && impl_->inside(*e, info)) {
+#endif
 	    InputHandler* ih = impl_->focus_handler_;
 	    InputHandlerImpl* handler = (ih == nil) ? impl_ : ih->impl_;
 	    h.target(depth, this, 0, handler); 
@@ -483,7 +487,7 @@ void InputHandlerImpl::up(Event& e) {
 }
 
 boolean InputHandlerImpl::inside(
-    const Event& event, const AllocationInfo& info
+    const Event& event, const AllocationInfo& info, boolean hit_check
 ) {
     Coord x = event.pointer_x();
     Coord y = event.pointer_y();
@@ -494,6 +498,7 @@ boolean InputHandlerImpl::inside(
     }
     const Extension& e = info.extension();
     if (x < e.right() && x >= e.left() && y < e.top() && y >= e.bottom()) {
+	if (! hit_check) { return true; }
 	const Transformer& t = info.transformer();
 	Hit hit(&event);
 	hit.transform(t);
