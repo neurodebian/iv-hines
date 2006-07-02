@@ -166,9 +166,9 @@ inline Window* EventRep::windowOf() const
 inline void EventRep::windowSet(Window* w)
 	{ window_ = w; }
 inline PixelCoord EventRep::windowXpos() const
-	{ return ptrX_; }
+	{ return ptrX_ > 32768 ? ptrX_ - 0x10000 : ptrX_; }
 inline PixelCoord EventRep::windowYpos() const
-	{ Canvas* c = window_->canvas(); return (c->pheight() - ptrY_); }
+	{ Canvas* c = window_->canvas(); return (c->pheight() - ((ptrY_ > 32768)? ptrY_ - 0x10000 : ptrY_)); }
 
 
 #endif

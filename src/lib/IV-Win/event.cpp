@@ -352,7 +352,7 @@ PixelCoord EventRep::displayXpos() const
 {
 	POINT pt;								// point to be converted.
 	HWND h = window_->rep()->msWindow();	// handle of MS-Windows window
-	pt.x = ptrX_;							// x in client coords
+	pt.x = (ptrX_ > 32768) ? ptrX_- 0x10000 : ptrX_;							// x in client coords
 	pt.y = ptrY_;							// y in client coords
 	ClientToScreen(h, &pt);
 	 
@@ -364,7 +364,7 @@ PixelCoord EventRep::displayYpos() const
 	POINT pt;								// point to be converted
 	HWND h = window_->rep()->msWindow();	// handle of MS-Windows window
 	pt.x = ptrX_;							// x in client coords
-	pt.y = ptrY_;							// y in client coords
+	pt.y = (ptrY_ > 32768) ? ptrY_ - 0x10000 : ptrY_;							// x in client coords
 	ClientToScreen(h, &pt);
 
 	Display* d = window_->display();
