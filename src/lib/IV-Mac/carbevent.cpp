@@ -496,14 +496,23 @@ void EventRep::mouseDownEventHook(void){
 	type_ = Event::down;
 	//Set InterViews button
 	UInt32 modifier;
+	UInt16 button;
+	GetEventParameter(getEventRef(), kEventParamMouseButton,
+		typeMouseButton, NULL, sizeof(UInt16), NULL, &button);
 	GetEventParameter(getEventRef(), kEventParamKeyModifiers,
 		typeUInt32, NULL, sizeof(modifier), NULL, &modifier);
-	if(modifier & (controlKey | cmdKey)){
+	if (button == kEventMouseButtonSecondary) {
 		button_ = Event::right;
-	} else if (modifier & optionKey){
+	}else if (button == kEventMouseButtonTertiary) {
 		button_ = Event::middle;
-	} else {
-		button_ = Event::left;
+	}else{
+		if(modifier & (controlKey | cmdKey)){
+			button_ = Event::right;
+		} else if (modifier & optionKey){
+			button_ = Event::middle;
+		} else {
+			button_ = Event::left;
+		}
 	}
 	last_button_ = button_;
 	
