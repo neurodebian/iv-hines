@@ -57,11 +57,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE 
  * OF THIS SOFTWARE.
  */
+#include <IV-Win/MWlib.h>
 #ifdef CYGWIN
 #include <Dispatch/iohandler.h>
 #include <Dispatch/dispatcher.h>
 #endif
-#include <IV-Win/MWlib.h>
 #include <InterViews/window.h>
 #include <InterViews/style.h>
 #include <InterViews/session.h>
