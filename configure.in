@@ -154,7 +154,7 @@ echo "because of a g++-2.8.1 optimization bug. Setting CXXFLAGS=-g"
 fi
 
 if test "$exec_prefix" = "NONE" ; then
-	exec_prefix='${prefix}/@host_cpu@'
+	exec_prefix="${prefix}/${host_cpu}"
 fi
 
 AC_OUTPUT([Makefile src/Makefile src/bin/Makefile src/bin/idemo/Makefile
