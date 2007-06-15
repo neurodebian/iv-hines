@@ -253,6 +253,7 @@ void Canvas::ellipse_path(
 // -----------------------------------------------------------------------
 MWcanvas::MWcanvas() : damageArea(0.0, 0.0, 0.0, 0.0)
 {
+	win_ = nil;
 	// ---- initialize transformation stack -----
 	transformers_ = new MWtransformPtrList;
 	Transformer* identity = new Transformer;
