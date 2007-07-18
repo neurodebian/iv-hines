@@ -23,7 +23,14 @@ AH_BOTTOM([
 #endif /* H_config_included */
 ])
 
+
+dnl following does not seem to work in the sense of
+dnl causing problems with exec_prefix
 AC_PREFIX_DEFAULT(/usr/local/iv)
+dnl so do it explicitly
+if test "$prefix" = NONE ; then
+	prefix=/usr/local/iv
+fi
 
 dnl This does the useful stuff from AM_INIT_AUTOMAKE, which we don't include
 dnl because I couldn't get automake to work properly.
@@ -153,9 +160,10 @@ echo "because of a g++-2.8.1 optimization bug. Setting CXXFLAGS=-g"
 	fi
 fi
 
-if test "$exec_prefix" = "NONE" ; then
-	exec_prefix="${prefix}/${host_cpu}"
-fi
+case "$exec_prefix" in
+	NONE*)	exec_prefix="${prefix}/${host_cpu}"
+	;;
+esac
 
 AC_OUTPUT([Makefile src/Makefile src/bin/Makefile src/bin/idemo/Makefile
 	src/bin/idraw/Makefile src/bin/iclass/Makefile src/include/Makefile
