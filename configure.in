@@ -64,6 +64,13 @@ else
 	AC_ENABLE_SHARED
 fi
 
+AC_ARG_ENABLE([UniversalMacBinary],
+	AC_HELP_STRING([--enable-UniversalMacBinary], [combined binary for ppc and i386, fake arch is called umac]),[
+	CFLAGS="$CFLAGS -arch ppc -arch i386"
+	CXXFLAGS="$CXXFLAGS -arch ppc -arch i386"
+	host_cpu=umac
+])
+
 dnl Checks for programs.
 AC_PROG_CXX
 AC_PROG_INSTALL
