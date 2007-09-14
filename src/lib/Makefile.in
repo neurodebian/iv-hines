@@ -292,7 +292,7 @@ ivmac = \
 	IV-Mac/window.lo
 
 @CARBON_FALSE@@CYGWIN_FALSE@libIV_la_OBJECTS = $(dispatch) $(iv26) $(ivx11) $(interviews) $(os) $(tiff)
-@CYGWIN_TRUE@libIV_la_OBJECTS = $(dispatch) $(ivwin) $(interviews) $(os)
+@CYGWIN_TRUE@libIV_la_OBJECTS = $(dispatch) $(ivwin) $(interviews) $(os) $(tiff)
 @CARBON_TRUE@libIV_la_OBJECTS = $(dispatch) $(ivmac) $(interviews) $(os)
 
 libUnidraw_la_OBJECTS = \

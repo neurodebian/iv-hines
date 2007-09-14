@@ -57,8 +57,9 @@ AC_SUBST(CARBON_TRUE)
 
 dnl Don't bother building static libraries if we can avoid it.
 if test "$CYGWIN" = "yes" ; then
-	AC_DISABLE_SHARED
-	AC_ENABLE_STATIC
+	AC_DISABLE_STATIC
+	AC_ENABLE_SHARED
+	LIBS="-lgdi32 -lcomdlg32"
 else
 	AC_DISABLE_STATIC
 	AC_ENABLE_SHARED
