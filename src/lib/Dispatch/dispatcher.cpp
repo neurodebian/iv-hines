@@ -108,13 +108,13 @@ FdMask::FdMask() {
 }
 
 void FdMask::zero() { Memory::zero(this, sizeof(FdMask)); }
-void FdMask::setBit(int fd) { FD_SET(fd,this); }
-void FdMask::clrBit(int fd) { FD_CLR(fd,this); }
-boolean FdMask::isSet(int fd) const { return FD_ISSET(fd,this); }
+void FdMask::setBit(int fd) { FD_SET(fd,(fd_set*)this); }
+void FdMask::clrBit(int fd) { FD_CLR(fd,(fd_set*)this); }
+boolean FdMask::isSet(int fd) const { return FD_ISSET(fd,(fd_set*)this); }
 
 boolean FdMask::anySet() const {
 
-#ifdef _XOPEN_SOURCE
+#if 0 && defined(_XOPEN_SOURCE)
     const int mskcnt = howmany(FD_SETSIZE,NFDBITS);
     for (int i = 0; i < mskcnt; i++) {
 	if (fds_bits[i]) {
@@ -126,7 +126,7 @@ boolean FdMask::anySet() const {
 // Redo using entirely standard macros.  This is slightly less efficient.
 //
     for (int fd_idx = 0; fd_idx < FD_SETSIZE; ++fd_idx)
-      if (FD_ISSET(fd_idx, this))
+      if (FD_ISSET(fd_idx, (fd_set*)this))
 	return true;
 #endif
     return false;
@@ -138,7 +138,7 @@ int FdMask::numSet() const {
 // Redone using entirely standard macros.
 //
     for (int i = 0; i < FD_SETSIZE; ++i)
-      if (FD_ISSET(i, this))
+      if (FD_ISSET(i, (fd_set*)this))
 	++n;
 
 //    const int mskcnt = howmany(FD_SETSIZE,NFDBITS);
