@@ -370,7 +370,7 @@ void MWcanvas16::move_to(Coord x, Coord y)
 		tx = x;
 		ty = y;
 	}
-#if 1
+#if 0
 	if (tx < -1500. || tx > 1500. || ty < -1500. || ty > 1500.) {
 		p->cur_point_ = p->point_;
 		return;
@@ -400,7 +400,7 @@ void MWcanvas16::line_to(Coord x, Coord y)
 		ty = y;
 	 }
 
-#if 1
+#if 0
 	if (tx < -1500. || tx > 1500. || ty < -1500. || ty > 1500.) {
 		return;
 	}

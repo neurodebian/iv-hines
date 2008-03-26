@@ -1745,11 +1745,8 @@ long ManagedWindowRep::WMminmax(WPARAM, LPARAM lParam)
 
 	Requirement& rx = win->shape_.requirement(Dimension_X);
 	Requirement& ry = win->shape_.requirement(Dimension_Y);
-	unsigned int xAdjust = 2 * (GetSystemMetrics(SM_CXBORDER) + 
-		GetSystemMetrics(SM_CXFRAME));
-	unsigned int yAdjust = GetSystemMetrics(SM_CYBORDER) +
-		GetSystemMetrics(SM_CYCAPTION) +
-		(2 * GetSystemMetrics(SM_CYFRAME));
+	unsigned int xAdjust = GetSystemMetrics(SM_CXMINTRACK);
+	unsigned int yAdjust = GetSystemMetrics(SM_CYMINTRACK);
 
 	Display* dpy = win->display();
 	MWassert(dpy);
@@ -1759,10 +1756,10 @@ long ManagedWindowRep::WMminmax(WPARAM, LPARAM lParam)
 	mmi->ptMinTrackSize.y = Math::max(2 + yAdjust,
 		dpy->to_pixels(ry.natural() - ry.shrink(), Dimension_Y) + yAdjust);
 	mmi->ptMaxTrackSize.x = Math::min(
-		(unsigned int) GetSystemMetrics(SM_CXSCREEN),
+		(unsigned int) GetSystemMetrics(SM_CXMAXTRACK),
 		dpy->to_pixels(rx.natural() + rx.stretch(), Dimension_X) + xAdjust);
 	mmi->ptMaxTrackSize.y = Math::min(
-		(unsigned int) GetSystemMetrics(SM_CYSCREEN),
+		(unsigned int) GetSystemMetrics(SM_CYMAXTRACK),
 		dpy->to_pixels(ry.natural() + ry.stretch(), Dimension_Y) + yAdjust);
 	mmi->ptMaxSize.x = mmi->ptMaxTrackSize.x;
 	mmi->ptMaxSize.y = mmi->ptMaxTrackSize.y;

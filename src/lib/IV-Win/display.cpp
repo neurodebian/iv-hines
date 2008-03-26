@@ -72,8 +72,10 @@ static float fudge_;
 
 static void set_pixel_twips(HDC hdc) {
 #if 1
-	int pw = GetDeviceCaps(hdc, HORZRES); // width of screen in pixels
-	int ph = GetDeviceCaps(hdc, VERTRES); // height of screen in pixels
+//	int pw = GetDeviceCaps(hdc, HORZRES); // width of screen in pixels
+//	int ph = GetDeviceCaps(hdc, VERTRES); // height of screen in pixels
+	int pw = GetSystemMetrics(SM_CXVIRTUALSCREEN); // width of screen in pixels
+	int ph = GetSystemMetrics(SM_CYVIRTUALSCREEN); // width of screen in pixels
 	logpixelsx_ = GetDeviceCaps(hdc, LOGPIXELSX);//pixels/logical inch
 	logpixelsy_ = -GetDeviceCaps(hdc, LOGPIXELSY);//pixels/logical inch
 	display_xsize_ = Coord(pw)/logpixelsx_*72.; // screen width in points
@@ -192,8 +194,10 @@ void Display::rescale() {
 	x_pixel_ = Coord(72.0) / Coord(p.x);
 	y_pixel_ = (Coord) Math::abs( Coord(72.0) / Coord(p.y) );
 	// ---- determine display size ----
-	rep_->pwidth_ = GetDeviceCaps(hdc, HORZRES);
-	rep_->pheight_ = GetDeviceCaps(hdc, VERTRES);
+//	rep_->pwidth_ = GetDeviceCaps(hdc, HORZRES);
+//	rep_->pheight_ = GetDeviceCaps(hdc, VERTRES);
+	rep_->pwidth_ = GetSystemMetrics(SM_CXVIRTUALSCREEN);
+	rep_->pheight_ = GetSystemMetrics(SM_CYVIRTUALSCREEN);
 	rep_->width_ = to_coord( rep_->pwidth_, Dimension_X);
 	rep_->height_ = to_coord( rep_->pheight_, Dimension_Y);
 	ReleaseDC(NULL, hdc);
@@ -228,8 +232,10 @@ Display::Display(DisplayRep* d)
 	x_pixel_ = Coord(72.0) / Coord(p.x);
 	y_pixel_ = (Coord) Math::abs( Coord(72.0) / Coord(p.y) );
 	// ---- determine display size ----
-	rep_->pwidth_ = GetDeviceCaps(hdc, HORZRES);
-	rep_->pheight_ = GetDeviceCaps(hdc, VERTRES);
+//	rep_->pwidth_ = GetDeviceCaps(hdc, HORZRES);
+//	rep_->pheight_ = GetDeviceCaps(hdc, VERTRES);
+	rep_->pwidth_ = GetSystemMetrics(SM_CXVIRTUALSCREEN);
+	rep_->pheight_ = GetSystemMetrics(SM_CYVIRTUALSCREEN);
 	rep_->width_ = to_coord( rep_->pwidth_, Dimension_X);
 	rep_->height_ = to_coord( rep_->pheight_, Dimension_Y);
 	ReleaseDC(NULL, hdc);
