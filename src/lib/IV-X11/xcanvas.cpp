@@ -868,7 +868,8 @@ implementTable2(TxRasterTable,const Raster*,int,RasterRep*)
 
 static TxRasterTable* _tx_rasters;
 
-static RasterRep* tx_raster(const Raster* r, const Transformer& tx) {
+static RasterRep* tx_raster(const Raster* r, const Transformer& tx,
+  Coord xt, Coord yt, Coord cw, Coord ch) {
     int key = tx_key(tx, r->width(), r->height());
     if (key == 0) {
         return r->rep();
@@ -880,7 +881,6 @@ static RasterRep* tx_raster(const Raster* r, const Transformer& tx) {
         if (!_tx_rasters->find(rep, r, key)) {
 	    Display* d = r->rep()->display_;
 	    DisplayRep& dr = *d->rep();
-            rep = new RasterRep;
 
             Transformer v(tx);
 
@@ -900,6 +900,11 @@ static RasterRep* tx_raster(const Raster* r, const Transformer& tx) {
             Coord xmin = Math::min(x1, x2, x3, x4);
             Coord ymax = Math::max(y1, y2, y3, y4);
             Coord ymin = Math::min(y1, y2, y3, y4);
+
+	    if (xmin + xt < 0) { xmin = -xt; }
+	    if (xmax + xt > cw) {xmax = cw - xt;}
+	    if (ymin + yt < 0) { ymin = -yt;}
+	    if (ymax + yt > ch) {ymax = ch - yt;}
 
             int width = d->to_pixels(xmax) - d->to_pixels(xmin);
             int height = d->to_pixels(ymax) - d->to_pixels(ymin);
@@ -961,6 +966,7 @@ static RasterRep* tx_raster(const Raster* r, const Transformer& tx) {
             XDestroyImage(source);
             XDestroyImage(dest);
 
+            rep = new RasterRep;
 	    rep->display_ = d;
             rep->pixmap_ = map;
             rep->pwidth_ = width;
@@ -971,7 +977,10 @@ static RasterRep* tx_raster(const Raster* r, const Transformer& tx) {
             rep->right_ = xmax;
             rep->bottom_ = ymin;
             rep->top_ = ymax;
-            _tx_rasters->insert(r, key, rep);
+//printf("width=%d height=%d\n", width, height);
+//printf("xmin=%g xmax=%g ymin=%g ymax=%g xt=%g yt=%g cw=%g ch=%g\n", xmin, xmax, ymin, ymax,
+// xt, yt, cw, ch);
+//            _tx_rasters->insert(r, key, rep);
         }
         return rep;
     }
@@ -984,9 +993,7 @@ void Canvas::image(const Raster* image, Coord x, Coord y) {
     XDisplay* dpy = c->dpy();
     GC gc = c->drawgc_;
     Transformer& m = c->matrix();
-
-    image->flush();
-    RasterRep* info = tx_raster(image, m);
+    Display* d = c->display_;
 
     Coord tx, ty;
     if (c->transformed_) {
@@ -996,7 +1003,10 @@ void Canvas::image(const Raster* image, Coord x, Coord y) {
 	ty = y;
     }
 
-    Display* d = c->display_;
+    image->flush();
+    RasterRep* info = tx_raster(image, m, tx, ty, width(), height());
+    if (!info) { return; }
+
     int pleft = d->to_pixels(tx + info->left_);
     int ptop = c->pheight_ - d->to_pixels(ty + info->top_);
 
@@ -1007,6 +1017,12 @@ void Canvas::image(const Raster* image, Coord x, Coord y) {
 	dpy, info->pixmap_, c->drawbuffer_, gc,
 	0, 0, info->pwidth_, info->pheight_, pleft, ptop
     );
+
+    if (info != image->rep()) {
+	XFreePixmap(info->display_->rep()->display_, info->pixmap_);
+	delete info;
+    }
+
 }
 
 Window* Canvas::window() const { return rep()->window_; }
