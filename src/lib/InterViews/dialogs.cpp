@@ -213,10 +213,12 @@ boolean Dialog::run() {
     done_ = false;
 #if carbon
 	extern int dialog_running_;
+	extern int iv_carbon_in_menu_;
 	extern void iv_carbon_dialog_handle(WindowRef);
 	WindowRef thiswin = canvas()->window()->rep()->macWindow();
 	int drsav = dialog_running_;
 	dialog_running_ = 1;
+	iv_carbon_in_menu_ = 0;
 #endif
 #if OC_UNQUIT
 	boolean old;

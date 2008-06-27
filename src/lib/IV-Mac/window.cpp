@@ -174,6 +174,8 @@ static OSStatus show_handler(EventHandlerCallRef x, EventRef er, void* v) {
 
 }
 
+int iv_carbon_in_menu_;
+
 void iv_carbon_dialog_handle(WindowRef w) {
 	EventRef er;
 	OSStatus result;
@@ -195,7 +197,8 @@ void iv_carbon_dialog_handle(WindowRef w) {
 	}else{
 		wr = nil;
 	}
-	if (wr == w) {
+//printf("dialog iv_carbon_in_menu = %d\n", iv_carbon_in_menu_);
+	if (wr == w || iv_carbon_in_menu_) {
 		SendEventToEventTarget(er, GetEventDispatcherTarget());
 	}
 	ReleaseEvent(er);

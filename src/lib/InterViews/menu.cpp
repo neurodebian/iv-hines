@@ -227,6 +227,11 @@ void Menu::select(GlyphIndex index) {
     }
 }
 
+#if carbon
+// want to handle menu in a dialog box
+extern int iv_carbon_in_menu_;
+#endif
+
 void Menu::open() {
     MenuImpl& i = *impl_;
     GlyphIndex index = i.item_;
@@ -267,6 +272,9 @@ void Menu::open() {
 		}
 #endif
 		w.map();
+#if carbon
+		++iv_carbon_in_menu_;
+#endif
 	    }
 	}
     }
@@ -281,6 +289,9 @@ void Menu::close() {
 		Window* w = mi->window();
 		if (w != nil) {
 	    	w->unmap();
+#if carbon
+		--iv_carbon_in_menu_;
+#endif
 		}
 #endif
 		TelltaleState* t = mi->state();
