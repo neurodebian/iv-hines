@@ -7,7 +7,7 @@
 /*
  * If you are using gcc/g++, then uncomment the include below.
  */
-/* #include <InterViews/gcc.def> */
+#include <InterViews/gcc.def>
 
 /*
  * Default customization of kits.
@@ -30,7 +30,7 @@
 #if defined(SGIArchitecture) || defined(SunArchitecture) || \
 defined(StratusArchitecture)
 #undef BuildRPCClasses
-#define BuildRPCClasses YES
+#define BuildRPCClasses NO
 #endif
 
 /*
@@ -48,10 +48,12 @@ defined(StratusArchitecture)
  * /..../iv/installed so InterViews applications still can find the
  * installed data files.
  */
-#undef InstalledRoot
-#define InstalledRoot /interviews
-#undef InstallRelative
+#ifndef InstalledRoot
+#define InstalledRoot /local/interviews
+#endif
+#ifndef InstallRelative
 #define InstallRelative NO
+#endif
 
 /*
  * If the X11 config files are not in /usr/lib/X11/config, the X11

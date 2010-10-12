@@ -32,7 +32,7 @@ char Host::name_[100];
 
 const char* Host::name() {
     if (name_[0] == '\0') {
-	gethostname(name_, sizeof(name_));
+//	gethostname(name_, sizeof(name_));
     }
     return name_;
 }

@@ -233,7 +233,8 @@ static XWindow translate(
     if (status == 0) {
 	return None;
     }
-    for (int i = kids - 1; i >= 0 && children[i] != under ; --i);
+    int i;
+    for (i = kids - 1; i >= 0 && children[i] != under ; --i);
     for (--i; i >= 0; --i) {
 	XWindowAttributes attributes;
 	XGetWindowAttributes(display, children[i], &attributes);

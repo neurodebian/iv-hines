@@ -26,6 +26,7 @@
  * TextEditor - basic interactive editor for mulit-line text
  */
 
+#include <string.h>
 #include <InterViews/bitmap.h>
 #include <InterViews/cursor.h>
 #include <InterViews/event.h>
@@ -45,7 +46,7 @@
 #include <OS/math.h>
 #include <ctype.h>
 #include <memory.h>
-#include <string.h>
+//#include <string.h>
 
 #include <IV-2_6/_enter.h>
 

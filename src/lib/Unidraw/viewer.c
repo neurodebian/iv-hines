@@ -201,11 +201,11 @@ Viewer::Viewer (
 }
 
 Viewer::Viewer (
-    const char* instance,
+    const char* instance1,
     Editor* ed, GraphicView* gv, UPage* page, Grid* grid, 
     Coord w, Coord h, Orientation orientation,
     Alignment align, Zooming zoom
-) : GraphicBlock(instance, nil, 0, align, zoom) {
+) : GraphicBlock(instance1, nil, 0, align, zoom) {
     Init(ed, gv, page, grid, w, h, orientation);
 }
 

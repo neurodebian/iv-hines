@@ -35,8 +35,8 @@
 
 RubberEllipse::RubberEllipse(
     Painter* p, Canvas* c, IntCoord cx, IntCoord cy, IntCoord rx, IntCoord ry, 
-    IntCoord offx, IntCoord offy
-) : Rubberband(p, c, offx, offy) {
+    IntCoord off_x, IntCoord off_y
+) : Rubberband(p, c, off_x, off_y) {
     centerx = cx;
     centery = cy;
     radiusx = rx;
@@ -88,8 +88,8 @@ void RubberEllipse::Draw() {
 
 SlidingEllipse::SlidingEllipse(
     Painter* p, Canvas* c, IntCoord cx, IntCoord cy, IntCoord xr, IntCoord yr,
-    IntCoord rfx, IntCoord rfy, IntCoord offx, IntCoord offy
-) : RubberEllipse(p, c, cx, cy, xr, yr, offx, offy) {
+    IntCoord rfx, IntCoord rfy, IntCoord off_x, IntCoord off_y
+) : RubberEllipse(p, c, cx, cy, xr, yr, off_x, off_y) {
     refx = trackx = rfx;
     refy = tracky = rfy;
 }
@@ -120,8 +120,8 @@ void SlidingEllipse::CurrentRadii(int& xr, int& yr) {
 
 RubberCircle::RubberCircle(
     Painter* p, Canvas* c, IntCoord cx, IntCoord cy, IntCoord rx, IntCoord ry,
-    IntCoord offx, IntCoord offy
-) : RubberEllipse(p, c, cx, cy, rx, ry, offx, offy) {
+    IntCoord off_x, IntCoord off_y
+) : RubberEllipse(p, c, cx, cy, rx, ry, off_x, off_y) {
     /* nothing else to do */
 }
 
@@ -154,18 +154,18 @@ void RubberCircle::Draw() {
 /*****************************************************************************/
 
 void RubberPointList::Copy(
-    IntCoord* x, IntCoord* y, int n, IntCoord*& nx, IntCoord*& ny
+    IntCoord* x1, IntCoord* y1, int n, IntCoord*& nx, IntCoord*& ny
 ) {
     nx = new IntCoord[n];
     ny = new IntCoord[n];
-    Memory::copy(x, nx, n*sizeof(IntCoord));
-    Memory::copy(y, ny, n*sizeof(IntCoord));
+    Memory::copy(x1, nx, n*sizeof(IntCoord));
+    Memory::copy(y1, ny, n*sizeof(IntCoord));
 }
 
 RubberPointList::RubberPointList(
     Painter* p, Canvas* c, IntCoord px[], IntCoord py[], int n,
-    IntCoord offx, IntCoord offy
-) : Rubberband(p, c, offx, offy) {
+    IntCoord off_x, IntCoord off_y
+) : Rubberband(p, c, off_x, off_y) {
     Copy(px, py, n, x, y);
     count = n;
 }
@@ -179,8 +179,8 @@ RubberPointList::~RubberPointList() {
 
 RubberVertex::RubberVertex(
     Painter* p, Canvas* c, IntCoord px[], IntCoord py[], int n, int pt,
-    IntCoord offx, IntCoord offy
-) : RubberPointList(p, c, px, py, n, offx, offy) {
+    IntCoord off_x, IntCoord off_y
+) : RubberPointList(p, c, px, py, n, off_x, off_y) {
     rubberPt = pt;
     trackx = x[rubberPt];
     tracky = y[rubberPt];
@@ -235,8 +235,8 @@ void RubberVertex::DrawSplineSection(
 
 RubberHandles::RubberHandles(
     Painter* p, Canvas* c, IntCoord px[], IntCoord py[], int n,
-    int pt, int size, IntCoord offx, IntCoord offy
-) : RubberVertex(p, c, px, py, n, pt, offx, offy) {
+    int pt, int size, IntCoord off_x, IntCoord off_y
+) : RubberVertex(p, c, px, py, n, pt, off_x, off_y) {
      d = size / 2;
 }
 
@@ -287,8 +287,8 @@ void RubberHandles::Track(IntCoord x, IntCoord y) {
 
 RubberSpline::RubberSpline(
     Painter* p, Canvas* c, IntCoord px[], IntCoord py[], int n, int pt,
-    IntCoord offx, IntCoord offy
-) : RubberVertex(p, c, px, py, n, pt, offx, offy) {
+    IntCoord off_x, IntCoord off_y
+) : RubberVertex(p, c, px, py, n, pt, off_x, off_y) {
     /* nothing else to do */
 }
 
@@ -322,8 +322,8 @@ void RubberSpline::Draw() {
 
 RubberClosedSpline::RubberClosedSpline(
     Painter* p, Canvas* c, IntCoord px[], IntCoord py[], int n, int pt,
-    IntCoord offx, IntCoord offy
-) : RubberVertex(p, c, px, py, n, pt, offx, offy) {
+    IntCoord off_x, IntCoord off_y
+) : RubberVertex(p, c, px, py, n, pt, off_x, off_y) {
     /* nothing else to do */
 }
 
@@ -364,8 +364,8 @@ void RubberClosedSpline::Draw() {
 
 SlidingPointList::SlidingPointList(
     Painter* p, Canvas* c, IntCoord px[], IntCoord py[], int n,
-    IntCoord rfx, IntCoord rfy, IntCoord offx, IntCoord offy
-) : RubberPointList(p, c, px, py, n, offx, offy) {
+    IntCoord rfx, IntCoord rfy, IntCoord off_x, IntCoord off_y
+) : RubberPointList(p, c, px, py, n, off_x, off_y) {
     refx = rfx;
     refy = rfy;
     trackx = rfx;
@@ -435,8 +435,8 @@ void SlidingPointList::Track(IntCoord x0, IntCoord y0) {
 
 SlidingLineList::SlidingLineList(
     Painter* p, Canvas* c, IntCoord px[], IntCoord py[], int n,
-    IntCoord rfx, IntCoord rfy, IntCoord offx, IntCoord offy
-) : SlidingPointList(p, c, px, py, n, rfx, rfy, offx, offy) {
+    IntCoord rfx, IntCoord rfy, IntCoord off_x, IntCoord off_y
+) : SlidingPointList(p, c, px, py, n, rfx, rfy, off_x, off_y) {
 }
 
 void SlidingLineList::Draw() {
@@ -474,8 +474,8 @@ static void Bounds(IntCoord c[], int n, IntCoord& lower, IntCoord& upper) {
 
 ScalingLineList::ScalingLineList(
     Painter* p, Canvas* c, IntCoord px[], IntCoord py[], int n,
-    IntCoord cx, IntCoord cy, IntCoord offx, IntCoord offy
-) : RubberPointList(p, c, px, py, n, offx, offy) {
+    IntCoord cx, IntCoord cy, IntCoord off_x, IntCoord off_y
+) : RubberPointList(p, c, px, py, n, off_x, off_y) {
     Copy(px, py, n, newx, newy);
     centerx = cx;
     centery = cy;
@@ -546,8 +546,8 @@ void ScalingLineList::Draw() {
 RotatingLineList::RotatingLineList(
     Painter* p, Canvas* c, IntCoord px[], IntCoord py[], int n,
     IntCoord cx, IntCoord cy, IntCoord rfx, IntCoord rfy,
-    IntCoord offx, IntCoord offy
-) : RubberPointList(p, c, px, py, n, offx, offy) {
+    IntCoord off_x, IntCoord off_y
+) : RubberPointList(p, c, px, py, n, off_x, off_y) {
     Copy(px, py, n, newx, newy);
     centerx = cx;
     centery = cy;

@@ -156,7 +156,6 @@
 #undef PadComp
 #undef PadGraphic
 #undef PadView
-#undef Page
 #undef PanelControl
 #undef PanelInteractor
 #undef PasteCmd
@@ -221,7 +220,6 @@
 #undef SlotView
 #undef SplineComp
 #undef SplineView
-#undef State
 #undef StateVar
 #undef StateVarView
 #undef StencilComp

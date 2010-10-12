@@ -387,9 +387,11 @@ void TBScrollBoxImpl::redraw() {
 void TBScrollBoxImpl::undraw_range(GlyphIndex begin, GlyphIndex end) {
     ScrollBox* s = scrollbox_;
     for (GlyphIndex i = begin; i <= end; i++) {
+     if (i >= 0 && i < s->count()) {
 	Glyph* g = s->component(i);
 	if (g != nil) {
 	    g->undraw();
 	}
+     }
     }
 }

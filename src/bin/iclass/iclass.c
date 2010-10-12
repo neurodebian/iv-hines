@@ -398,21 +398,21 @@ void IClass::UpdateClassesBrowser () {
 }
 
 void IClass::UpdateParentBrowser () {
-    const char* parent;
+    const char* parent1;
     int i = 0;
 
     _parents->Clear();
 
     for (;;) {
-        parent = _cbuf->Parent(_curClass->Text(), i++);
+        parent1 = _cbuf->Parent(_curClass->Text(), i++);
 
-        if (parent == nil) {
+        if (parent1 == nil) {
             if (i == 1) {
                 _parents->Append(NONE);
             }
             break;
         } else {
-            _parents->Append(parent);
+            _parents->Append(parent1);
         }
     }
 }
@@ -581,13 +581,13 @@ Interactor* IClass::AddScroller (Interactor* i) {
 }
 
 void IClass::InsertDialog (Interactor* dialog) {
-    World* world = GetWorld();
+    World* world1 = GetWorld();
 
     Coord x, y;
     Align(Center, 0, 0, x, y);
-    GetRelative(x, y, world);
+    GetRelative(x, y, world1);
 
-    world->InsertTransient(dialog, this, x, y, Center);
+    world1->InsertTransient(dialog, this, x, y, Center);
 }
 
 void IClass::RemoveDialog (Interactor* dialog) {
@@ -629,10 +629,10 @@ void IClass::ClearCmd () {
     RemoveDialog(&dialog);
 
     if (accepted) {
-        World* world = GetWorld();
-        const char* recursive = world->GetAttribute("recursive");
-        const char* verbose = world->GetAttribute("verbose");
-        const char* CPlusPlusFiles = world->GetAttribute("CPlusPlusFiles");
+        World* world1 = GetWorld();
+        const char* recursive = world1->GetAttribute("recursive");
+        const char* verbose = world1->GetAttribute("verbose");
+        const char* CPlusPlusFiles = world1->GetAttribute("CPlusPlusFiles");
 
         delete _cbuf;
         _cbuf = new ClassBuffer(

@@ -84,11 +84,11 @@ declareSelectionCallback(FieldStringEditor)
 implementSelectionCallback(FieldStringEditor)
 
 FieldStringEditor::FieldStringEditor(
-    ButtonState* bs, const char* sample, WidgetKit* kit, Style* style
-) : StringEditor(bs, sample) {
+    ButtonState* bs, const char* sample1, WidgetKit* kit, Style* style1
+) : StringEditor(bs, sample1) {
     kit_ = kit;
-    style_ = style;
-    Resource::ref(style);
+    style_ = style1;
+    Resource::ref(style1);
     delete input;
     input = nil;
 }
@@ -186,8 +186,8 @@ void FieldStringEditor::do_rate_scroll(Event& e) {
     Window* w = canvas->window();
     Cursor* c = w->cursor();
     WidgetKit& kit = *kit_;
-    Cursor* left = kit.lfast_cursor();
-    Cursor* right = kit.rfast_cursor();
+    Cursor* left1 = kit.lfast_cursor();
+    Cursor* right1 = kit.rfast_cursor();
     int origin = display->Left(0, 0);
     int width = display->Width();
     Poll(e);
@@ -199,9 +199,9 @@ void FieldStringEditor::do_rate_scroll(Event& e) {
 	);
 	display->Scroll(0, origin, ymax);
 	if (e.x - x < 0) {
-	    w->cursor(left);
+	    w->cursor(left1);
 	} else {
-	    w->cursor(right);
+	    w->cursor(right1);
 	}
 	Poll(e);
     } while (e.rightmouse);

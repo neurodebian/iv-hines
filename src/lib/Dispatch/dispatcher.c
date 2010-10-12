@@ -50,14 +50,16 @@ extern "C" {
     extern int select(int, fd_set*, fd_set*, fd_set*, struct timeval*);
 #endif
 #endif
-#ifdef __DECCXX
+#if defined(__DECCXX) || (defined(__GNUC__) && !defined(SVR4))
     extern int gettimeofday(struct timeval*, struct timezone*);
 #endif
 }
 
 #ifdef LINUX
 #define howmany(x,y) ((((u_int)(x))+(((u_int)(y))-1))/((u_int)(y)))
+#if 0
 #define fds_bits __bits
+#endif
 #endif
 
 Dispatcher* Dispatcher::_instance;
@@ -605,14 +607,29 @@ void Dispatcher::sigCLD() {
 #define fxSIGHANDLER
 #endif
 #ifndef fxSIGVECHANDLER
-#define fxSIGVECHANDLER
+#define fxSIGVECHANDLER	(void(*)(int))
 #endif
-#ifndef fxSIGACTIONHANDLER
-#define fxSIGACTIONHANDLER
+
+#if !defined(fxSIGACTIONHANDLER) && defined(__GNUC__)
+#define fxSIGACTIONHANDLER (void(*)(...))
+#endif
+#if !defined(fxSIGACTIONHANDLER) && defined(SVR4)
+#define fxSIGACTIONHANDLER (void(*)(int))
+#endif
+#if !defined(fxSIGACTIONHANDLER)
+#define fxSIGACTIONHANDLER (void(*)())
 #endif
 
 #ifndef SA_INTERRUPT
 #define SA_INTERRUPT 0
+#endif
+
+#if defined(sun) && defined(__GNUC__) && !defined(SVR4)
+extern "C" { int sigvec(int, struct sigvec*, struct sigvec*);}
+#endif
+
+#if defined(AIXV3)
+extern "C" { int sigvec(int, struct sigvec*, struct sigvec*);}
 #endif
 
 int Dispatcher::waitFor(

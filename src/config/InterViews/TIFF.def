@@ -99,7 +99,7 @@ TIFF_OPTIMIZE_CFLAGS = TIFFOptimizeCFlags
 #if defined(SunArchitecture)
 #define TIFFStdCDefines \
     -DCOLORIMETRY_SUPPORT -DYCBCR_SUPPORT \
-    -DHAVE_IEEEFP=1 -DUSE_VARARGS=1 -DUSE_PROTOTYPES=0
+    -DHAVE_IEEEFP=1 -DUSE_VARARGS=0 -DUSE_PROTOTYPES=1
 #endif
 #if defined(AIXArchitecture)
 #define TIFFStdCDefines \
@@ -119,7 +119,7 @@ TIFF_OPTIMIZE_CFLAGS = TIFFOptimizeCFlags
 #if defined(AlphaArchitecture)
 #define TIFFStdCDefines \
     -DCOLORIMETRY_SUPPORT -DYCBCR_SUPPORT \
-    -DHAVE_IEEEFP=1 -DUSE_VARARGS=1 -DUSE_PROTOTYPES=0
+    -DHAVE_IEEEFP=1 -DUSE_VARARGS=0 -DUSE_PROTOTYPES=1
 #endif
 #if defined(NeXTArchitecture)
 #define TIFFStdCDefines \

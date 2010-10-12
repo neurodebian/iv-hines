@@ -26,6 +26,7 @@
  * TextBuffer - editable text buffer
  */
 
+#include <string.h>
 #include <InterViews/regexp.h>
 #include <IV-2_6/InterViews/textbuffer.h>
 #include <OS/math.h>
@@ -33,7 +34,7 @@
 #include <ctype.h>
 #include <memory.h>
 #include <stdlib.h>
-#include <string.h>
+//#include <string.h>
 
 static const char NEWLINE = '\012';
 

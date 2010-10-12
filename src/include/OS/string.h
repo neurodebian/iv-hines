@@ -103,6 +103,7 @@ public:
     CopyString(const CopyString&);
     virtual ~CopyString();
 
+    virtual String& operator =(const CopyString&);
     virtual String& operator =(const String&);
     virtual String& operator =(const char*);
 

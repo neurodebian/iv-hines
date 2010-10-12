@@ -29,6 +29,7 @@ grep "^class" {.,*}/*.h | \
 	grep -v '^Rubberband$' | \
 	grep -v '^Selection$' | \
 	grep -v '^Shape$' | \
+	grep -v '^State$' | \
 	grep -v '^String$' | \
 	grep -v '^TextDisplay$' | \
 	grep -v '^Transformer$' | \

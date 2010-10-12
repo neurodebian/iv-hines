@@ -105,19 +105,19 @@ static void do_color(ostream& out, const Color* color) {
 static void do_brush(ostream& out, const Brush* brush) {
     Coord linewidth = brush->width();
     out << linewidth << " setlinewidth\n";
-/*
- * Should do something about patterned brushes.
- * Maybe something like this:
- *
- *  int dcnt = brush->dash_count();
- *  if (dcnt != 0) {
- *      out << "[";
- *      for (int i = 0; i < dcnt; i++) {
- *          out << " " << brush->dash_list(i);
- *      }
- *      out << " ] 0 setdash\n";
- *  }
- */
+#if 1
+ // Should do something about patterned brushes.
+ // Maybe something like this:
+  
+    int dcnt = brush->dash_count();
+    if (dcnt != 0) {
+        out << "[";
+        for (int i = 0; i < dcnt; i++) {
+            out << " " << brush->dash_list(i);
+        }
+        out << " ] 0 setdash\n";
+    }
+#endif
 }
 
 static void do_font(ostream& out, const Font* font) {
@@ -157,7 +157,7 @@ Printer::~Printer() {
     delete rep_;
 }
 
-PixelCoord Printer::to_pixels(Coord p) const { return p; }
+PixelCoord Printer::to_pixels(Coord p) const { return (PixelCoord)p; }
 Coord Printer::to_coord(PixelCoord p) const { return p; }
 Coord Printer::to_pixels_coord(Coord p) const { return p; }
 

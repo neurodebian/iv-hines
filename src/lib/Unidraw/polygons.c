@@ -181,8 +181,8 @@ void S_Rect::draw (Canvas *c, Graphic* gs) {
 /*****************************************************************************/
 
 F_Rect::F_Rect (
-    Coord _x0, Coord _y0, Coord _x1, Coord _y1, Graphic* gr
-) : Rect(_x0, _y0, _x1, _y1, gr) {
+    Coord x0, Coord y0, Coord x1, Coord y1, Graphic* gr
+) : Rect(x0, y0, x1, y1, gr) {
     _pat = nil;
     if (gr != nil) {
 	F_Rect::SetPattern(gr->GetPattern());

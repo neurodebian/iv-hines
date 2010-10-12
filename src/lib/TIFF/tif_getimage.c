@@ -1,5 +1,5 @@
 #ifndef lint
-static char rcsid[] = "$Header: /usr/people/sam/tiff/libtiff/RCS/tif_getimage.c,v 1.8 92/03/11 09:19:10 sam Exp $";
+static char rcsid[] = "$Header: /local/iv3.2/iv/src/lib/TIFF/tif_getimage.c,v 1.1 1996/03/11 13:23:56 hines Exp hines $";
 #endif
 
 /*
@@ -31,9 +31,9 @@ static char rcsid[] = "$Header: /usr/people/sam/tiff/libtiff/RCS/tif_getimage.c,
  *
  * Read and return a packed RGBA image.
  */
-#include "tiffio.h"
 #include "tiffcompat.h"
 #include "prototypes.h"
+#include "tiffio.h"
 
 typedef	u_char RGBvalue;
 

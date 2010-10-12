@@ -57,7 +57,7 @@
 #include <OS/table.h>
 #include <X11/Xatom.h>
 #include <sys/ioctl.h>
-#if defined(sun) && OSMajorVersion >= 5
+#if defined(sun) && defined(SVR4)
 #include <stropts.h>
 #include <sys/conf.h>
 #endif
@@ -1958,7 +1958,7 @@ void Display::put(const Event& e) {
  * Check to see if the display connection just shut down.
  */
 
-#if !defined(FIONREAD) && defined(sun) && OSMajorVersion >= 5
+#if !defined(FIONREAD) && defined(sun) && defined(SVR4)
 #define FIONREAD I_NREAD
 #endif
 

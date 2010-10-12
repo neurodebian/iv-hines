@@ -1,8 +1,7 @@
 /* solaris 2.4 requires the following*/
-/*#define SVR4*/
+#define SVR4
 
 #include <sun.cf>
-
 #include <InterViews/xparams.cf>
 #undef ConfigDir
 /*

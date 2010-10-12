@@ -227,7 +227,7 @@ void Menu::open() {
 		    a->execute();
 		}
 	    }
-	    if (mi->window() != nil) {
+	    if (mi->window() != nil && mi->patch_->canvas() != nil) {
 		const Window& rel = *mi->patch_->canvas()->window();
 		const Allocation& a = mi->patch_->allocation();
 		Window& w = *mi->window();
@@ -328,6 +328,7 @@ void Menu::release(const Event& e) {
     if (index >= 0) {
 	GlyphIndex top_index = selected();
 	TelltaleState* top_t = item(top_index)->state();
+	Resource::ref(top_t);
 	top_t->set(TelltaleState::is_running, true);
 	impl_->ungrab(this, e);
 	Canvas* c = canvas();
@@ -351,6 +352,7 @@ void Menu::release(const Event& e) {
 	    }
 	}
 	top_t->set(TelltaleState::is_running, false);
+	Resource::unref(top_t);
     } else {
 	/*
 	 * If we hit an item with a submenu, then we leave

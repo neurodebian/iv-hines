@@ -53,7 +53,8 @@ void MatchEditor::Init () {
 }
 
 void MatchEditor::Match (const char* p, boolean m) {
-    for (char* pp = pattern; *p != '\0'; ++p, ++pp) {
+    char* pp;
+    for (pp = pattern; *p != '\0'; ++p, ++pp) {
         *pp = *p;
         if (*p == '%') {
             ++p;

@@ -306,7 +306,8 @@ void PSArrowLine::Brush (ostream& out) {
 	} else {
 	    out << "[";
 
-	    for (int i = 0; i < dashpatsize - 1; i++) {
+	    int i;
+	    for (i = 0; i < dashpatsize - 1; i++) {
 		out << dashpat[i] << " ";
 	    }
 	    out << dashpat[i] << "] " << dashoffset << " ";
@@ -559,7 +560,8 @@ void PSArrowMultiLine::Brush (ostream& out) {
 	} else {
 	    out << "[";
 
-	    for (int i = 0; i < dashpatsize - 1; i++) {
+	    int i;
+	    for (i = 0; i < dashpatsize - 1; i++) {
 		out << dashpat[i] << " ";
 	    }
 	    out << dashpat[i] << "] " << dashoffset << " ";
@@ -808,7 +810,8 @@ void PSArrowSpline::Brush (ostream& out) {
 	} else {
 	    out << "[";
 
-	    for (int i = 0; i < dashpatsize - 1; i++) {
+	    int i;
+	    for (i = 0; i < dashpatsize - 1; i++) {
 		out << dashpat[i] << " ";
 	    }
 	    out << dashpat[i] << "] " << dashoffset << " ";

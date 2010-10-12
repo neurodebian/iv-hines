@@ -36,7 +36,8 @@ public:
     void CorrectedTip(Coord&, Coord&, PSBrush*, Transformer*);
 
     virtual Graphic* Copy();
-    virtual Graphic& operator = (Graphic&);
+//    virtual Graphic& operator = (Graphic&);
+    virtual Arrowhead& operator = (Arrowhead&);
 protected:
     Arrowhead(Coord*, Coord*, Graphic*);
 

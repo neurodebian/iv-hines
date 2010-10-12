@@ -1,5 +1,5 @@
 /*
- * Definitions for gcc/g++. 2.6.3
+ * Definitions for gcc/g++. 2.7.2
  */
 
 #undef LanguageCCDefines
@@ -10,6 +10,7 @@
 #define DependCmd true
 
 #ifndef CCDriver
+#undef SharedCCFlags
 #define SharedCCFlags -fPIC
 #undef ExtraCCFlags
 #undef TIFFExtraCFlags
@@ -25,6 +26,10 @@
 #undef HasDynamicSharedLibraries
 
 #if defined(SunArchitecture)
+#define HasDynamicSharedLibraries YES
+#endif
+
+#if defined(LinuxArchitecture)
 #define HasDynamicSharedLibraries YES
 #endif
 

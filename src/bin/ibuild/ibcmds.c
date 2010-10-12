@@ -175,7 +175,7 @@ static void Warning (Editor* ed, const char* warning) {
 
 static boolean Abort (Editor* ed, pid_t pid, const char* warning) {
     boolean aborted;
-    AbortDialog dialog(int(pid), warning);
+    AbortDialog dialog((int)pid, warning);
     ed->InsertDialog(&dialog);
     aborted = dialog.Abort();
     ed->RemoveDialog(&dialog);
@@ -2412,7 +2412,8 @@ void ToolsCmd::Execute () {
 	    IBEditor* iEd = (IBEditor*) unidraw->GetEditor(i);
 	    ToolPanel* itoolpanel = iEd->GetToolPanel();
 
-            for (int i = 0; i < installed->Count(); i++) {
+	    int i;
+            for (i = 0; i < installed->Count(); i++) {
                 itoolpanel->Install(installed->GetName(i));
             }
             for (i = 0; i < removed->Count(); i++) {

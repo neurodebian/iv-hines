@@ -200,9 +200,15 @@ Raster* TIFFRasterImpl::load(const char* filename) {
 	    for (long j = 0; j < width; j++) {
 		r->poke(
 		    j, i,
+#ifdef LINUX
+		    ColorIntensity(float(c[0]) / float(0xff)),
+		    ColorIntensity(float(c[1]) / float(0xff)),
+		    ColorIntensity(float(c[2]) / float(0xff)),
+#else
 		    ColorIntensity(float(c[3]) / float(0xff)),
 		    ColorIntensity(float(c[2]) / float(0xff)),
 		    ColorIntensity(float(c[1]) / float(0xff)),
+#endif
 		    1.0
 		);
 		c += sizeof (u_long);

@@ -55,7 +55,7 @@ public:
     virtual PSPattern* GetPattern();
 
     virtual Graphic* Copy();
-    virtual Graphic& operator = (Graphic&);
+//    virtual Graphic& operator = (Graphic&);
     virtual ArrowLine& operator = (ArrowLine&);
 protected:
     ArrowLine(
@@ -96,7 +96,7 @@ public:
     float ArrowScale();
 
     virtual Graphic* Copy();
-    virtual Graphic& operator = (Graphic&);
+//    virtual Graphic& operator = (Graphic&);
     virtual ArrowMultiLine& operator = (ArrowMultiLine&);
 protected:
     ArrowMultiLine(
@@ -136,7 +136,7 @@ public:
     float ArrowScale();
 
     virtual Graphic* Copy();
-    virtual Graphic& operator = (Graphic&);
+//    virtual Graphic& operator = (Graphic&);
     virtual ArrowOpenBSpline& operator = (ArrowOpenBSpline&);
 protected:
     ArrowOpenBSpline(

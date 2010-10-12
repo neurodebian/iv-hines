@@ -50,7 +50,17 @@ Arrowhead::Arrowhead (
 ) : SF_Polygon(x, y, COUNT, g) { }
 
 Graphic* Arrowhead::Copy () { return new Arrowhead(_x, _y, this); }
+#if 0
 Graphic& Arrowhead::operator = (Graphic& g) { return Graphic::operator=(g); }
+#else
+// SUNWspro/bin/CC gives error for above construct. In fact, it is not
+// a full copy but I don't want to change it's behavior. If there is
+// a bug with arrowheads however, this is probably it.
+Arrowhead& Arrowhead::operator = (Arrowhead& g) {
+	Graphic::operator=(g);
+	return *this;
+}
+#endif
 
 Coord Arrowhead::CorrectedHeight (float t) {
     float w = _x[BOTRIGHT] - _x[BOTCTR];

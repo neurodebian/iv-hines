@@ -1125,7 +1125,8 @@ void Painter::Polygon(Canvas* c, IntCoord x[], IntCoord y[], int n) {
 	return;
     }
     register XPoint* v = AllocPts(n+1);
-    for (register int i = 0; i < n; i++) {
+    register int i;
+    for (i = 0; i < n; i++) {
 	Map(c, x[i], y[i], v[i].x, v[i].y);
     }
     if (x[i-1] != x[0] || y[i-1] != y[0]) {

@@ -1,5 +1,5 @@
 #ifndef lint
-static char rcsid[] = "$Header: /usr/people/sam/tiff/libtiff/RCS/tif_print.c,v 1.43 92/03/17 11:08:58 sam Exp $";
+static char rcsid[] = "$Header: /local/iv3.2/iv/src/lib/TIFF/tif_print.c,v 1.1 1996/03/11 13:25:12 hines Exp hines $";
 #endif
 
 /*
@@ -31,9 +31,9 @@ static char rcsid[] = "$Header: /usr/people/sam/tiff/libtiff/RCS/tif_print.c,v 1
  *
  * Directory Printing Support
  */
-#include <stdio.h>
 #include <string.h>
 #include "tiffioP.h"
+#include <stdio.h>
 
 #ifdef JPEG_SUPPORT
 static

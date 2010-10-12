@@ -46,6 +46,9 @@ public:
     virtual ~Brush();
 
     virtual Coord width() const;
+    virtual int dash_count() const;
+    virtual int dash_list(int index) const;
+        
 
     BrushRep* rep(Display*) const;
 protected:

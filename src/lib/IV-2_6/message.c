@@ -33,15 +33,15 @@
 #include <stdlib.h>
 #include <string.h>
 
-Message::Message(const char* msg, Alignment al, int pad, int hstr, int vstr) {
-    Init(msg, al, pad, hstr, vstr);
+Message::Message(const char* msg, Alignment al, int pad1, int hstr, int vstr) {
+    Init(msg, al, pad1, hstr, vstr);
 }
 
 Message::Message(
     const char* name,
-    const char* msg, Alignment al, int pad, int hstr, int vstr
+    const char* msg, Alignment al, int pad1, int hstr, int vstr
 ) : Interactor(name) {
-    Init(msg, al, pad, hstr, vstr);
+    Init(msg, al, pad1, hstr, vstr);
 }
 
 void Message::Init (const char* t, Alignment a, int p, int hstr, int vstr) {

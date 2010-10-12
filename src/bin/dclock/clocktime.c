@@ -52,7 +52,7 @@ int Clock::NextTick () {
 void Clock::GetTime (char* date, int& h, int& m, int& s) {
     struct tm local;
 
-#if defined(hpux) || defined(AIXV3)
+#if defined(hpux) || defined(AIXV3) || defined(LINUX)
     local = * localtime((time_t*) &gmt.tv_sec);
 #else
 #ifdef __DECCXX

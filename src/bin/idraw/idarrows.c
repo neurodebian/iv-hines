@@ -80,7 +80,9 @@ void ArrowLine::SetPattern (PSPattern* pat) {
 }
 
 PSPattern* ArrowLine::GetPattern () { return _pat; }
+#if 0
 Graphic& ArrowLine::operator = (Graphic& g) { return Graphic::operator=(g); }
+#endif
 
 ArrowLine& ArrowLine::operator = (ArrowLine& aline) {
     Graphic::operator=(aline);
@@ -243,9 +245,11 @@ ArrowMultiLine::~ArrowMultiLine () {
     delete _tail;
 }
 
+#if 0
 Graphic& ArrowMultiLine::operator = (Graphic& g) {
     return Graphic::operator=(g);
 }
+#endif
 
 ArrowMultiLine& ArrowMultiLine::operator = (ArrowMultiLine& aml) {
     Graphic::operator=(aml);
@@ -423,9 +427,11 @@ ArrowOpenBSpline::~ArrowOpenBSpline () {
     delete _tail;
 }
 
+#if 0
 Graphic& ArrowOpenBSpline::operator = (Graphic& g) {
     return Graphic::operator=(g);
 }
+#endif
 
 ArrowOpenBSpline& ArrowOpenBSpline::operator = (ArrowOpenBSpline& aml) {
     Graphic::operator=(aml);

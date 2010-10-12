@@ -539,7 +539,8 @@ static boolean contains(const char* string, const char* substring) {
     int sublength = strlen(substring);
     int length = strlen(string) - sublength;
     for (int i = 0; i <= length; ++i) {
-        for (int j = 0; j < sublength; ++j) {
+	int j;
+        for (j = 0; j < sublength; ++j) {
             if (string[i+j] != substring[j]) {
                 break;
             }

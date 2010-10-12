@@ -101,13 +101,13 @@ void BasicDialog::Forward (Event& e) {
 }    
 
 boolean BasicDialog::IsAChild (Interactor* i) {
-    Scene* parent = i->Parent();
+    Scene* parent1 = i->Parent();
 
-    while (parent != nil) {
-        if (parent == this) {
+    while (parent1 != nil) {
+        if (parent1 == this) {
             return true;
         }
-        parent = parent->Parent();
+        parent1 = parent1->Parent();
     }
     return false;
 }
@@ -420,7 +420,7 @@ Interactor* PrintDialog::Interior () {
                         "send to printer via a command, or ", _dest, true
                     ),
                     new VGlue(space/3, 0),
-#if defined(__DECCXX) || defined(AIXV3)
+#if 1 || defined(__DECCXX) || defined(AIXV3)
 		    /* is passing an const unsigned 0 ambiguous here? */
                     new RadioButton("save in file:", _dest, int(false))
 #else

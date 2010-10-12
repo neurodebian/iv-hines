@@ -24,14 +24,6 @@
  * Implementation of idraw-specific commands.
  */
 
-#include "ided.h"
-#include "idclasses.h"
-#include "idcmds.h"
-#include "idcomp.h"
-#include "iddialogs.h"
-#include "idvars.h"
-#include "idversion.h"
-
 #include <Unidraw/dialogs.h>
 #include <Unidraw/catalog.h>
 #include <Unidraw/clipboard.h>
@@ -48,6 +40,14 @@
 
 #undef FileChooser
 #define FileChooser _lib_iv(FileChooser)
+
+#include "ided.h"
+#include "idclasses.h"
+#include "idcmds.h"
+#include "idcomp.h"
+#include "iddialogs.h"
+#include "idvars.h"
+#include "idversion.h"
 
 #include <stream.h>
 

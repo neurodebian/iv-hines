@@ -298,6 +298,12 @@ CopyString::~CopyString() {
     free();
 }
 
+String& CopyString::operator =(const CopyString& s) {
+    free();
+    set_value(s.string(), s.length());
+    return *this;
+}
+
 String& CopyString::operator =(const String& s) {
     free();
     set_value(s.string(), s.length());

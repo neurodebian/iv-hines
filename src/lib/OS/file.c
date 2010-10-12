@@ -41,6 +41,8 @@ extern "C" {
 #endif
 
 /* no standard place for these */
+
+#ifndef __GNUC__
 extern "C" {
     extern int close(int);
 #if defined(sgi)
@@ -59,6 +61,7 @@ extern "C" {
     extern int read(int, void*, unsigned int);
 #endif
 }
+#endif
 
 #if defined(hpux) || defined(__GNUC__)
 #include <unistd.h>

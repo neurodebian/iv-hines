@@ -562,7 +562,8 @@ static char* octal(unsigned char c, register char* p) {
 const char* PSText::Filter (const char* string, int len) {
     TextBuffer stext(sbuf, 0, SBUFSIZE);
 
-    for (int dot = 0; len--; string++) {
+    int dot;
+    for (dot = 0; len--; string++) {
 	char c = *string;
 
 	if (!isascii(c) || iscntrl(c)) {

@@ -658,7 +658,8 @@ void IdrawCatalog::PSReadPattern (istream& in, Graphic* gs) {
 		graylevel = CalcGrayLevel(data[0]);
 	    }
 	} else if (graylevel == -1) {
-	    for (int i = 0; in >> _buf && i < patternHeight; i++) {
+	    int i;
+	    for (i = 0; in >> _buf && i < patternHeight; i++) {
 		if (_buf[0] == '>' || sscanf(_buf, "%x", &data[i]) != 1) {
 		    break;
 		}

@@ -422,7 +422,8 @@ StyleAttribute* StyleRep::add_attribute(
     if (e->avail_ <= n) {
 	long new_avail = n + 5;
 	StyleAttributeList** new_list = new StyleAttributeList*[new_avail];
-	for (long i = 0; i < e->avail_; i++) {
+	long i;
+	for (i = 0; i < e->avail_; i++) {
 	    new_list[i] = e->entries_[i];
 	}
 	for (i = e->avail_; i < new_avail; i++) {

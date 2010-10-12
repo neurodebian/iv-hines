@@ -157,7 +157,8 @@ boolean Control::IsGrabbing(Interactor* i) {
     if (i == this) {
 	return true;
     }
-    for (ControlState* c = state_; c != nil; c = c->Next()) {
+    ControlState* c;
+    for (c = state_; c != nil; c = c->Next()) {
 	if (c->IsView(i)) {
 	    return true;
 	}

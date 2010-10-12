@@ -2,6 +2,15 @@
 
 set tmp = /tmp/$$
 cp /dev/null $tmp
+
+echo "RasterRect" >> $tmp
+echo "Point" >> $tmp
+echo "Line" >> $tmp
+echo "Ellipse" >> $tmp
+echo "MultiLine" >> $tmp
+echo "Polygon" >> $tmp
+echo "ClosedBSpline" >> $tmp
+
 echo "Alignment" >> $tmp
 echo "ColorIntensity" >> $tmp
 echo "ColorOp" >> $tmp
