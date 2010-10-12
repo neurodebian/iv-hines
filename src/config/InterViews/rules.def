@@ -400,7 +400,7 @@ BackwardCompatibilityCCDefines BackwardCompatibilityCCIncludes)
  * Make a shared library.
  */
 #ifndef NormalDynamicSharedLibraryTarget
-#if defined(sun) && OSMajorVersion < 5
+#if defined(SunArchitecture) && OSMajorVersion < 5
 #define NormalDynamicSharedLibraryTarget(libname,rev,depobjs,ldobjs)	@@\
 AOUT = Concat(lib,libname.so.rev)					@@\
 SHARED_CCFLAGS = SharedCCFlags						@@\
@@ -592,7 +592,9 @@ step::									@@\
 #define InstallDynamicSharedLibrary(libname,rev,dest)			@@\
 install:: Concat(lib,libname.so.rev)					@@\
 	MakeDir(dest)							@@\
-	$(INSTALL) -c $(INSTLIBFLAGS) Concat(lib,libname.so.rev) dest
+	$(INSTALL) -c $(INSTLIBFLAGS) Concat(lib,libname.so.rev) dest	@@\
+	-(cd dest; rm Concat(lib,libname.so))				@@\
+	(cd dest; ln -s Concat(lib,libname.so.rev) Concat(lib,libname.so))
 #endif
 
 #ifndef InstallNonSharedLibrary
