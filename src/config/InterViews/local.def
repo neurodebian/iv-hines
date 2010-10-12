@@ -7,7 +7,7 @@
 /*
  * If you are using gcc/g++, then uncomment the include below.
  */
-#include <InterViews/gcc.def>
+/*#include <InterViews/gcc.def>*/
 
 /*
  * Default customization of kits.
@@ -30,7 +30,7 @@
 #if defined(SGIArchitecture) || defined(SunArchitecture) || \
 defined(StratusArchitecture)
 #undef BuildRPCClasses
-#define BuildRPCClasses NO
+#define BuildRPCClasses YES
 #endif
 
 /*

@@ -610,7 +610,7 @@ void Dispatcher::sigCLD() {
 #define fxSIGVECHANDLER	(void(*)(int))
 #endif
 
-#if !defined(fxSIGACTIONHANDLER) && defined(__GNUC__)
+#if !defined(fxSIGACTIONHANDLER) && (defined(__GNUC__) || defined(sgi))
 #define fxSIGACTIONHANDLER (void(*)(...))
 #endif
 #if !defined(fxSIGACTIONHANDLER) && defined(SVR4)

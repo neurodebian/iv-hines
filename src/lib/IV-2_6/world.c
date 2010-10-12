@@ -173,10 +173,6 @@ void World::make_current() {
     current_ = this;
     point = double(display_->pwidth()) / display_->a_width();
     points = point;
-#if defined(__sgi)
-printf("bug in sgi interviews. inch, inches, cm, and mm not being set\n");  
-return;  
-#endif
     inch = 72.27 * point;
     inches = inch;
     cm = inch / 2.54;

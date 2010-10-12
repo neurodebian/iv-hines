@@ -1,3 +1,9 @@
+#undef inch
+#undef inches
+#undef cm
+#undef mm
+#undef point
+#undef points
 #undef RasterRect
 #undef Point
 #undef Line

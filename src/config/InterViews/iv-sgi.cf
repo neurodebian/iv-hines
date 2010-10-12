@@ -1,3 +1,8 @@
+#ifdef IVUseInstalled
+#undef UseInstalled
+#define UseInstalled
+#endif
+
 #include <sgi.cf>
 
 #if OSMajorVersion < 4

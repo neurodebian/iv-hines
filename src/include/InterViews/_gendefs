@@ -3,6 +3,13 @@
 set tmp = /tmp/$$
 cp /dev/null $tmp
 
+echo "inch" >> $tmp  
+echo "inches" >> $tmp
+echo "cm" >> $tmp
+echo "mm" >> $tmp
+echo "point" >> $tmp
+echo "points" >> $tmp
+
 echo "RasterRect" >> $tmp
 echo "Point" >> $tmp
 echo "Line" >> $tmp

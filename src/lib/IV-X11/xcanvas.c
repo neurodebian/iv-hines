@@ -357,6 +357,12 @@ void Canvas::move_to(Coord x, Coord y) {
 	tx = x;
 	ty = y;
     }
+#if 1
+	if (tx < -10000. || tx > 10000. || ty < -10000. || tx > 10000.) {
+		p->cur_point_ = p->point_;
+		return;
+	}
+#endif
     Display* d = c->display_;
     XPoint* xp = p->point_;
     xp->x = d->to_pixels(tx);
@@ -394,6 +400,13 @@ void Canvas::line_to(Coord x, Coord y) {
 	tx = x;
 	ty = y;
     }
+
+#if 1
+	if (tx < -10000. || tx > 10000. || ty < -10000. || tx > 10000.) {
+		return;
+	}
+#endif
+   
     Display* d = c->display_;
     XPoint* xp = next_point(p);
     xp->x = d->to_pixels(tx);

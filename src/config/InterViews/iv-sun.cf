@@ -1,9 +1,27 @@
 /* solaris 2.4 requires the following*/
-#define SVR4
+/*#if ( defined(__SVR4 ) && !defined(SVR4) )*/
+#if ( !defined(SVR4) )
+#define SVR4   /* define only if necessary it might already be defined */
+#endif
+
+#ifdef SVR4
+#define INIT NOINIT  /* to get rid of the annoying .INIT target in sun.cf */
+#endif
 
 #include <sun.cf>
+
+#ifdef INIT
+#undef INIT   /* undefine to cause no side effects in other includes */
+#endif
+
 #include <InterViews/xparams.cf>
 #undef ConfigDir
+
+#if ( SystemV || SystemV4 )
+#undef InstallCmd
+#define InstallCmd /usr/ucb/install /* use bsd install here */
+#endif
+
 /*
  * In case sun.cf defines HasSharedLibraries but not HasDynamicSharedLibraries.
  */

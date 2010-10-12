@@ -423,9 +423,7 @@ BACKWARD_CCINCLUDES = /* defined when Use_2_6() is used in Imakefile */
 
 #ifndef IvCCLdFlags
 #ifdef HasDynamicSharedLibraries
-#define IvCCLdFlags \							@@\
-		      DefaultDebugCCFlags\				@@\
-		      DefaultOptimizeCCFlags
+#define IvCCLdFlags DefaultDebugCCFlags DefaultOptimizeCCFlags
 #else
 #define IvCCLdFlags \							@@\
 		      DefaultDebugCCFlags\				@@\

@@ -359,6 +359,8 @@ void EventRep::clear() {
     location_valid_ = false;
 }
 
+Atom wm_delete_window_;
+
 void EventRep::locate() {
     if (!location_valid_ && window_ != nil) {
 	PixelCoord x, y, root_x = 0, root_y = 0;
@@ -392,6 +394,12 @@ void EventRep::locate() {
 	    root_y = xe.xcrossing.y_root;
 	    break;
 	case ClientMessage: /* drag & drop */
+	    if(!wm_delete_window_) {
+	    	wm_delete_window_ = XInternAtom(Session::instance()->default_display()->rep()->display_, "WM_DELETE_WINDOW", False);
+	    }
+	    if (xe.xclient.data.l[0] == wm_delete_window_) {
+	    	break;
+	    }
 	    if (!XDrag::isDrag(xe)) {
 		has_pointer_location_ = false;
 		return;
