@@ -79,7 +79,7 @@ public:
 	unsigned short r, unsigned short g, unsigned short b, XColor&
     );
 
-    unsigned long xor(const Style&) const;
+    unsigned long iv_xor(const Style&) const;
 
     XDisplay* display() const;
     int screen() const;

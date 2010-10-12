@@ -89,11 +89,20 @@ protected:
     TimerQueue* _queue;
     ChildQueue* _cqueue;
 
-#if defined(sgi)
-    static void sigCLD(...);
-#else
-    static void sigCLD();
+#if defined(HAVE_BSD_SIGNALS) || defined(HAVE_POSIX_SIGNALS)
+    static RETSIGTYPE sigCLD(int);
+#else // When is this used?
+    static RETSIGTYPE sigCLD(...);
 #endif
+//#if defined(sgi)
+//    static void sigCLD(...);
+//#else
+//#if defined(AIXV4)
+//    static void sigCLD(int);
+//#else
+//    static void sigCLD();
+//#endif
+//#endif
 private:
     static Dispatcher* _instance;
 private:

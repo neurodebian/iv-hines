@@ -8,8 +8,8 @@
 // operations simply get translated to calls that get and set pixel values
 // the the memory device context.
 //
-// 1.1
-// 1997/03/28 17:35:43
+// 1.2
+// 1999/01/11 12:05:05
 //
 // Windows 3.1/NT Port 
 // Copyright (c) 1993 Tim Prinzing
@@ -41,7 +41,9 @@ public:
 	RasterRep();
 	~RasterRep();
 
-	
+	CGrafPtr cg_;
+	int width_, height_;
+		
 private:
 	
 };

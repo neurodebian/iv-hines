@@ -1,3 +1,6 @@
+#ifdef HAVE_CONFIG_H
+#include <../../config.h>
+#endif
 /*
  * Copyright (c) 1992 Sam Leffler
  * Copyright (c) 1992 Silicon Graphics, Inc.

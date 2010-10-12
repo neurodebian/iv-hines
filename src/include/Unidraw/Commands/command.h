@@ -40,8 +40,7 @@ class GraphicComp;
 class Iterator;
 class Selection;
 
-class istream;
-class ostream;
+#include <ivstream.h>
 
 class Command {
 public:

@@ -1,3 +1,6 @@
+#ifdef HAVE_CONFIG_H
+#include <../../config.h>
+#endif
 #ifndef lint
 static char rcsid[] = "/local/src/master/iv/src/lib/TIFF/tif_swab.c,v 1.2 1997/03/26 15:07:20 hines Exp";
 #endif
@@ -32,7 +35,7 @@ static char rcsid[] = "/local/src/master/iv/src/lib/TIFF/tif_swab.c,v 1.2 1997/0
  * XXX We assume short = 16-bits and long = 32-bits XXX
  */
 
-#include "tiffio.h"
+#include "tiffioP.h"
 
 #ifndef TIFFSwabShort
 TIFFSwabShort(wp)

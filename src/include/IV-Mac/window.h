@@ -20,6 +20,9 @@
 #ifndef iv_mac_window_h
 #define iv_mac_window_h
 
+
+#define WindowPtr WindowRef
+
 #include <InterViews/iv.h>
 #include <InterViews/geometry.h>
 #include <InterViews/window.h>
@@ -93,6 +96,11 @@ public:
 	void doubleBuffer(boolean b);
 	
 	Window* getIvWindow() const;
+#if carbon
+	void setport() {SetPort(GetWindowPort(theMacWindow_));}
+#else
+	void setport() {SetPort(theMacWindow_);}
+#endif
 	
 	// ----- window class parameters ----
 	WindowPtr macWindow();
@@ -111,7 +119,6 @@ public:
 		WindowPtr		  theMacWindow_;		// the actual window associated with this
 		GWorldPtr 		  buffer_bitmap_;
 		boolean 		  doubleBuffered_;		// is window double-buffered?
-		
 };
 
 // The following are the window/class creation parameters.  
@@ -128,7 +135,9 @@ public:
 	boolean away_;						//whether a window can be closed
 	long refCon_input_;  			//what goes into refcon field
 	Point where_;
-	
+#if carbon
+	WindowClass wclass_;
+#endif
 
 private:
 	char* title_;					//string title
@@ -161,6 +170,13 @@ public:
 	MACcursorPtrList* cursor_stack_;
 	Cursor* cursor_;
 	Handler* close_callback_;
+	static WindowRep* rc(WindowPtr wp) {
+#if carbon
+	return (WindowRep*)GetWRefCon(wp);
+#else
+	return (WindowRep*)((CWindowPeek)wp)->refCon;
+#endif
+	}
 private:	
 	Window* win;					// associated InterViews window
 	

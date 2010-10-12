@@ -38,8 +38,8 @@ public:
 
     virtual int GetOriginal(const Coord*&, const Coord*&);
 
-    virtual boolean operator == (Vertices&);
-    virtual boolean operator != (Vertices&);
+    virtual boolean operator == (const Vertices&)const;
+    virtual boolean operator != (const Vertices&)const;
 
     virtual Graphic* Copy();
 protected:

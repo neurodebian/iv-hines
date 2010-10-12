@@ -29,7 +29,7 @@
 
 #include <Unidraw/Components/compview.h>
 
-class ostream;
+#include <ivstream.h>
 
 class ExternView : public ComponentView {
 public:

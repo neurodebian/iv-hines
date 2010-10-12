@@ -1,3 +1,6 @@
+#ifdef HAVE_CONFIG_H
+#include <../../config.h>
+#endif
 #ifndef lint
 static char rcsid[] = "/local/src/master/iv/src/lib/TIFF/tif_getimage.c,v 1.2 1997/03/26 15:07:13 hines Exp";
 #endif
@@ -31,9 +34,9 @@ static char rcsid[] = "/local/src/master/iv/src/lib/TIFF/tif_getimage.c,v 1.2 19
  *
  * Read and return a packed RGBA image.
  */
+#include "tiffioP.h"
 #include "tiffcompat.h"
 #include "prototypes.h"
-#include "tiffio.h"
 
 typedef	u_char RGBvalue;
 

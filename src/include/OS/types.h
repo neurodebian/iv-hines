@@ -29,7 +29,7 @@
 
 #undef boolean
 
-#if !MAC
+#if !defined(__MWERKS__)
 #include <sys/types.h>
 #endif
 

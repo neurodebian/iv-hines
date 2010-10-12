@@ -57,8 +57,7 @@ class Unidraw;
 class UList;
 class World;
 
-class istream;
-class ostream;
+#include <ivstream.h>
 
 class Catalog {
 public:

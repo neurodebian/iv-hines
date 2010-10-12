@@ -14,8 +14,8 @@
 //  c) use the Brush.
 //
 //
-// 1.1
-// 1997/03/28 17:35:39
+// 1.2
+// 1999/08/13 16:36:21
 //
 // InterViews port to the Windows 3.1/NT operating systems 
 // Copyright (c) 1993 Tim Prinzing
@@ -44,7 +44,7 @@
 class BrushRep
 {
 public:
-
+Coord width_;
 };
 
 #endif

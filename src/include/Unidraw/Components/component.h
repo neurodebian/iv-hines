@@ -37,8 +37,7 @@ class Iterator;
 class StateVar;
 class TransferFunct;
 class UList;
-class istream;
-class ostream;
+#include <ivstream.h>
 
 class Component {
 public:

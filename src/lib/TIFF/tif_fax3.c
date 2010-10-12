@@ -1,5 +1,8 @@
+#ifdef HAVE_CONFIG_H
+#include <../../config.h>
+#endif
 #ifndef lint
-static char rcsid[] = "/local/src/master/iv/src/lib/TIFF/tif_fax3.c,v 1.2 1997/03/26 15:07:10 hines Exp";
+static char rcsid[] = "/local/src/master/iv/src/lib/TIFF/tif_fax3.c,v 1.3 1999/07/05 15:35:01 hines Exp";
 #endif
 
 /*
@@ -207,7 +210,7 @@ nextbit(tif)
 }
 
 static void
-bset(cp, n, v)
+bset1(cp, n, v)
 	register unsigned char *cp;
 	register int n;
 	register int v;
@@ -299,7 +302,7 @@ Fax3PreDecode(tif)
 	sp->b.data = 0;
 	sp->b.tag = G3_1D;
 	if (sp->b.refline)
-		bset(sp->b.refline, sp->b.rowbytes, sp->b.white ? 0xff : 0x00);
+		bset1(sp->b.refline, sp->b.rowbytes, sp->b.white ? 0xff : 0x00);
 	/*
 	 * If image has EOL codes, they precede each line
 	 * of data.  We skip over the first one here so that
@@ -892,7 +895,7 @@ Fax3PreEncode(tif)
 	 * up being copied into the refline.
 	 */
 	if (sp->b.refline)
-		bset(sp->b.refline, sp->b.rowbytes, sp->b.white ? 0xff : 0x00);
+		bset1(sp->b.refline, sp->b.rowbytes, sp->b.white ? 0xff : 0x00);
 	if (is2DEncoding(tif)) {
 		float res = tif->tif_dir.td_yresolution;
 		/*

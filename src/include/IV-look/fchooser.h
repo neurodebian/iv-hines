@@ -91,6 +91,7 @@ public:
     virtual ~FileChooser();
 
     virtual const String* selected() const;
+    virtual const String* dir() const;
     virtual void reread();
     virtual void dismiss(boolean);
 private:

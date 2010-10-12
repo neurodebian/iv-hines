@@ -54,6 +54,7 @@ public:
     virtual void request(Requisition&) const;
     virtual void allocate(Canvas*, const Allocation&, Extension&);
     virtual void draw(Canvas*, const Allocation&) const;
+    virtual void print(Printer*, const Allocation&) const;
     virtual void pick(Canvas*, const Allocation&, int depth, Hit&);
     virtual void undraw();
 

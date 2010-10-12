@@ -47,7 +47,7 @@ public:
     GC dashgc;
     boolean fillbg;
     boolean overwrite;
-    boolean xor;
+    boolean iv_xor;
     boolean clipped;
     Display* display;
     XRectangle xclip[1];

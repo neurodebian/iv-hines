@@ -24,6 +24,9 @@
 
 #ifndef iv_geometry_h
 #define iv_geometry_h
+#if MAC
+#undef require
+#endif
 
 #include <InterViews/coord.h>
 
@@ -34,7 +37,6 @@
  * to iterate from 0 to number_of_dimensions.  Alas,
  * C++ does not allow arithmetic on enums.
  */
-
 typedef unsigned int DimensionName;
 
 enum {
@@ -92,7 +94,6 @@ public:
     int penalty() const;
 
     boolean equals(const Requisition&, float epsilon) const;
-
     void require(DimensionName, const Requirement&);
     void require_x(const Requirement&);
     void require_y(const Requirement&);

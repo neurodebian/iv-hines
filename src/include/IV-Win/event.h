@@ -1,3 +1,24 @@
+/*
+Copyright (C) 1993 Tim Prinzing
+Copyright (C) 2002 Tim Prinzing, Michael Hines
+This file contains programs and data originally developed by Tim Prinzing
+with minor changes and improvements by Michael Hines.
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Library General Public
+License as published by the Free Software Foundation; either
+version 2 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Library General Public License for more details.
+
+You should have received a copy of the GNU Library General Public
+License along with this library; if not, write to the Free
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*/
+
 // =======================================================================
 //
 //                     <IV-Win/Event.h>
@@ -31,27 +52,7 @@
 // 1.1
 // 1997/03/28 17:36:01
 //
-// Windows 3.1/NT InterViews Port 
-// Copyright (c) 1993 Tim Prinzing
-//
-// This media contains programs and data which are proprietary
-// to Tim Prinzing.
-//
-// These contents are provided under a Tim Prinzing software source
-// license, which prohibits their unauthorized resale or distribution 
-// outside of the buyer's organization.
-// 
-// THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND, 
-// EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY 
-// WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.  
-//
-// IN NO EVENT SHALL Tim Prinzing BE LIABLE FOR ANY SPECIAL, INCIDENTAL, 
-// INDIRECT OR CONSEQUENTIAL DAMAGES OF ANY KIND, OR ANY DAMAGES WHATSOEVER 
-// RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER OR NOT ADVISED OF THE 
-// POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF LIABILITY, ARISING OUT OF OR 
-// IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-//
-// =======================================================================
+// ========================================================================
 #ifndef iv_win_event_h
 #define iv_win_event_h
 
@@ -74,6 +75,9 @@ public:
 
 	Window* windowOf() const;
 		// window associated with this event (message).  
+
+ 	void windowSet(Window* w);	// set the window pointer: need this if you're faking an event
+ 	// and the Event::window(Window*) call is apparently bad and therefore unsupported
 
 	PixelCoord windowXpos() const;
 	PixelCoord windowYpos() const;
@@ -159,7 +163,8 @@ inline LPARAM EventRep::lparamOf() const
 	{ return lparam_; }
 inline Window* EventRep::windowOf() const
 	{ return window_; }
-
+inline void EventRep::windowSet(Window* w)
+	{ window_ = w; }
 inline PixelCoord EventRep::windowXpos() const
 	{ return ptrX_; }
 inline PixelCoord EventRep::windowYpos() const

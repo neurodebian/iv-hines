@@ -35,8 +35,8 @@ class Viewer;
 class Event;
 class Manipulator;
 class Transformer;
-class istream;
-class ostream;
+
+#include <ivstream.h>
 
 class Tool {
 public:

@@ -4,7 +4,7 @@
 // Machintosh dependent Canvas representation.  This canvas type renders
 // into an Machintosh window.  
 //
-// 1.2
+// 1.5
 // $Date:   4 Aug 1996
 //
 // =========================================================================
@@ -46,6 +46,7 @@ public:
 	void setWinToUpdate(void);
 	
 	virtual void initClip(); // just initializes clipping so no bug on resize
+	virtual void beginPaint();
 	virtual void endPaint(); 				
 		// These two functions determine when the canvas can be rendered
 		// upon, and when it can't.  The canvas is not valid for drawing
@@ -81,7 +82,7 @@ public:
     virtual void transformer(const Transformer&);
     virtual const Transformer& transformer() const;
 
-	virtual void push_clipping();
+	virtual void push_clipping(boolean all = false);
     virtual void pop_clipping();
     virtual void clip();
 
@@ -106,8 +107,6 @@ public:
 	Transformer& matrix() const;		
 		// current transformation matrix in effect for the rendering 
 		// surface.
-
-protected:
 
 	void stencilFill(const Bitmap*, const Color*);
 		// This function fills the current path with a stenciled pattern
@@ -135,7 +134,7 @@ virtual void new_path();
     virtual void image(const Raster*, Coord x, Coord y);
 
 protected:
-	void flush();					// flush any buffered operations
+	virtual void flush();					// flush any buffered operations
 
 	int transformAngle() const;
 		// determines the current transformation angle in terms of tenths
@@ -155,8 +154,9 @@ protected:
 	
 	Rect* clipping_;
 	MACclipList* clippers_;
-	
-private:
+    
+//private:
+protected: // for MacPrinterCanvas
 
 	Rect damageArea;			
 		// area of canvas currently damaged.  This is maintained in terms of

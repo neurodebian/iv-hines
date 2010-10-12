@@ -55,9 +55,9 @@ declare_4(int)
 declare_4(float)
 declare_4(double)
 
-inline int round(double x) { return x > 0 ? int(x+0.5) : -int(-x+0.5); }
+inline int iv26_round(double x) { return x > 0 ? int(x+0.5) : -int(-x+0.5); }
 
-inline boolean equal(float x, float y, float e) {
+inline boolean iv26_equal(float x, float y, float e) {
     return x - y < e && y - x < e;
 }
 

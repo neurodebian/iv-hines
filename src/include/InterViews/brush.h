@@ -46,7 +46,7 @@ public:
     virtual ~Brush();
 
     virtual Coord width() const;
-#if !defined(WIN32) && !MAC
+#if !MAC
     virtual int dash_count() const;
     virtual int dash_list(int index) const;
 #endif

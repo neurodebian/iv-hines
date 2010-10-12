@@ -31,10 +31,10 @@
 
 #include <InterViews/canvas.h>
 
-#if MAC
-#include <ostream.h>
+#if 1 || defined(CYGWIN)
+#include <ivstream.h>
 #else
-class ostream;
+#include <ivstrm.h>
 #endif
 
 class PrinterRep;
@@ -91,7 +91,11 @@ public:
     virtual void transform(const Transformer&);
     virtual void pop_transform();
 
+#if defined(WIN32) || MAC
+    virtual void push_clipping(boolean all = false);
+#else
     virtual void push_clipping();
+#endif
     virtual void clip();
     virtual void pop_clipping();
 

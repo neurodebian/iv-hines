@@ -27,8 +27,8 @@
  */
 // ============================================================================
 //
-// 1.4
-// 1997/04/02 16:20:05
+// 1.5
+// 1999/01/19 14:25:06
 //
 // Changes for InterViews Port to the Windows 3.1/NT operating systems
 // Copyright (c) 1993 Tim Prinzing
@@ -279,7 +279,7 @@ public:
     virtual void transformer(const Transformer&) = 0;
     virtual const Transformer& transformer() const = 0;
 
-    virtual void push_clipping() = 0;
+    virtual void push_clipping(boolean all = false) = 0;
     virtual void clip() = 0;
     virtual void clip_rect(Coord l, Coord b, Coord r, Coord t);
     virtual void pop_clipping() = 0;

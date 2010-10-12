@@ -32,8 +32,8 @@
 class Connector;
 class Path;
 class StateVar;
-class istream;
-class ostream;
+
+#include <ivstream.h>
 
 class TransferFunct {
 public:

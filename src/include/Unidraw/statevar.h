@@ -31,8 +31,8 @@
 
 class Connector;
 class StateVarView;
-class istream;
-class ostream;
+
+#include <ivstream.h>
 
 class StateVar {
 public:

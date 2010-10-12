@@ -55,7 +55,7 @@ public:
 	~FontRep();
 	
 	
-	defaultFontRep(const char* nm);
+	void defaultFontRep(const char* nm);
 
 	// ---- recognized style flags ----
 	enum { normal = 0, bold = 1, italic = 2, underline = 4, strikeout = 8 };
@@ -68,6 +68,7 @@ public:
 	short mode_;			//printing mode
 	int* widths_;
 	FontInfo info_;
+	Str255 name_;
 };
 
 class FontFamilyRep

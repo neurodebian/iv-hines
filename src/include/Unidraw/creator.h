@@ -37,7 +37,8 @@
 }
 
 class ObjectMap;
-class istream;
+
+#include <ivstream.h>
 
 class Creator {
 public:

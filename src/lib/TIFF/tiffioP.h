@@ -29,6 +29,7 @@
 /*
  * ``Library-private'' definitions.
  */
+#include <TIFF/tiffio.h>
 #include "tiffcompat.h"
 #include "tiff.h"
 

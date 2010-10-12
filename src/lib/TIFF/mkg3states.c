@@ -1,3 +1,6 @@
+#ifdef HAVE_CONFIG_H
+#include <../../config.h>
+#endif
 #ifndef lint
 static char rcsid[] = "/local/src/master/iv/src/lib/TIFF/mkg3states.c,v 1.2 1997/03/26 15:06:59 hines Exp";
 #endif
@@ -261,7 +264,7 @@ void	write_tables();
 int	verbose = FALSE;
 char	*storage_class = "";
 
-void
+int
 DECLARE2(main, int, argc, char**, argv)
 {
     while (argc > 1 && argv[1][0] == '-') {
@@ -290,7 +293,7 @@ DECLARE2(main, int, argc, char**, argv)
 	fprintf(stderr, "%d incomplete prefixes defined\n",
 	    (int) horiz_mode_prefix_count);
     write_tables(stdout);
-    exit(0);
+    return 0;
 }
 
 void

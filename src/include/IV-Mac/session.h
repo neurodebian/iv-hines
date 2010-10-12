@@ -97,7 +97,7 @@ public:
     void init_display();
     void connect(Display*);
     void set_style(Display*);
-    boolean check(Event&);
+    boolean srcheck(Event&); // "check" screws up carbon
 	
 private:
 	friend class Session;

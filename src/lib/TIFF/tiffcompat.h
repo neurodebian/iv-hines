@@ -1,4 +1,4 @@
-/* /local/src/master/iv/src/lib/TIFF/tiffcompat.h,v 1.3 1997/04/14 15:44:14 hines Exp */
+/* /local/src/master/iv/src/lib/TIFF/tiffcompat.h,v 1.4 1999/08/11 19:43:02 hines Exp */
 
 /*
  * Copyright (c) 1990, 1991, 1992 Sam Leffler
@@ -154,7 +154,7 @@ extern	void TIFFUnmapFileContents();
 #define	lseek	mpw_lseek
 extern long mpw_lseek(int, long, int);
 #else
-#ifndef SVR4
+#if 0 && !defined(SVR4) && !defined(FreeBSD)
 extern	long lseek();
 #endif
 #endif

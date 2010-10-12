@@ -1,3 +1,6 @@
+#ifdef HAVE_CONFIG_H
+#include <../../config.h>
+#endif
 #ifndef lint
 static char rcsid[] = "/local/src/master/iv/src/lib/TIFF/tif_print.c,v 1.3 1997/03/31 16:45:22 hines Exp";
 #endif

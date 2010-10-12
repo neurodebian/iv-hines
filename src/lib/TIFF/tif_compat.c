@@ -1,3 +1,6 @@
+#ifdef HAVE_CONFIG_H
+#include <../../config.h>
+#endif
 #ifndef lint
 static char rcsid[] = "/local/src/master/iv/src/lib/TIFF/tif_compat.c,v 1.2 1997/03/26 15:07:04 hines Exp";
 #endif
@@ -31,7 +34,7 @@ static char rcsid[] = "/local/src/master/iv/src/lib/TIFF/tif_compat.c,v 1.2 1997
  */
 #include "tiffioP.h"
 
-#if defined(unix) || defined(__unix) || defined(MSDOS) || defined(VMS) || defined(AIXV3)
+#if defined(HAVE_SYS_STAT_H) || defined(unix) || defined(__unix) || defined(MSDOS) || defined(VMS) || defined(AIXV3)
 #include <sys/stat.h>
 
 long
@@ -44,7 +47,7 @@ TIFFGetFileSize(fd)
 }
 #endif
 
-#if (defined(unix) || defined(__unix)) && defined(MMAP_SUPPORT)
+#if (defined(HAVE_SYS_MMAN_H) || defined(unix) || defined(__unix)) && defined(MMAP_SUPPORT)
 #include <sys/mman.h>
 
 int
