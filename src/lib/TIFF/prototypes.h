@@ -1,4 +1,4 @@
-/* $Header: /d/sam/tiff/libtiff/RCS/prototypes.h,v 1.8 92/02/18 18:20:08 sam Exp $ */
+/* /local/src/master/iv/src/lib/TIFF/prototypes.h,v 1.2 1997/03/26 15:07:00 hines Exp */
 
 /*
  * Copyright (c) 1991, 1992 Sam Leffler

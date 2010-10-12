@@ -134,17 +134,17 @@ void HitImpl::free() {
     for (int i = 0; i < items_.used_; i++) {
 	HitTargetList& list = items_.lists_[i];
 	if (list.targets_ != list.fixed_targets_) {
-	    delete list.targets_;
+	    delete [] list.targets_;
 	}
     }
     if (items_.lists_ != items_.fixed_lists_) {
-	delete items_.lists_;
+	delete [] items_.lists_;
     }
     if (picks_.possible_targets_ != picks_.fixed_possible_targets_) {
-	delete picks_.possible_targets_;
+	delete [] picks_.possible_targets_;
     }
     if (areas_.areas_ != areas_.fixed_areas_) {
-	delete areas_.areas_;
+	delete [] areas_.areas_;
     }
 }
 
@@ -196,7 +196,7 @@ void Hit::push_transform() {
 	HitTargetArea* new_areas = new HitTargetArea[new_avail];
 	Memory::copy(s.areas_, new_areas, s.used_ * sizeof(HitTargetArea));
 	if (s.areas_ != s.fixed_areas_) {
-	    delete s.areas_;
+	    delete [] s.areas_;
 	}
 	s.areas_ = new_areas;
 	s.avail_ = new_avail;
@@ -235,7 +235,7 @@ void Hit::begin(int depth, Glyph* target, GlyphIndex index, Handler* h) {
 	    s.used_ * sizeof(PossibleHitTarget)
 	);
 	if (s.possible_targets_ != s.fixed_possible_targets_) {
-	    delete s.possible_targets_;
+	    delete [] s.possible_targets_;
 	}
 	s.possible_targets_ = new_possible;
 	s.avail_ = new_avail;
@@ -276,7 +276,7 @@ void Hit::target(int depth, Glyph* target, GlyphIndex index, Handler* h) {
 	    }
 	}
 	if (i.lists_ != i.fixed_lists_) {
-	    delete i.lists_;
+	    delete [] i.lists_;
 	}
 	i.lists_ = new_lists;
 	i.avail_ = new_avail;
@@ -396,7 +396,7 @@ HitTarget& HitImpl::item(int depth, GlyphIndex t) {
 	    list.targets_, new_targets, (list.used_ + 1) * sizeof(HitTarget)
 	);
 	if (list.targets_ != list.fixed_targets_) {
-	    delete list.targets_;
+	    delete [] list.targets_;
 	}
 	HitTarget* i;
 	for (i = &new_targets[list.avail_]; i < &new_targets[new_avail]; i++) {

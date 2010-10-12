@@ -28,7 +28,11 @@
 #include <OS/enter-scope.h>
 
 #undef boolean
+
+#if !MAC
 #include <sys/types.h>
+#endif
+
 #define boolean _lib_os(boolean)
 
 #endif

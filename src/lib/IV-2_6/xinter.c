@@ -421,7 +421,7 @@ void InteractorWindow::unbind() {
     interactor_->Orphan();
 }
 
-void InteractorWindow::receive(const Event& e) {
+boolean InteractorWindow::receive(const Event& e) {
     int ymax = canvas()->pheight() - 1;
     int itop;
     XEvent& xe = e.rep()->xevent_;
@@ -444,6 +444,7 @@ void InteractorWindow::receive(const Event& e) {
 	e.rep()->acknowledge_motion();
 	break;
     }
+    return false;
 }
 
 /*

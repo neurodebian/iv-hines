@@ -18,13 +18,15 @@
 #define ExtraCCFlags -float -cckr
 #define ExtraCCLdLibs -lC -lsun -lmalloc -lc_s
 #define Ld_libX11 -lX11_s
+#define ExtraCCDefines -DSYSV -Dsigned= -Dvolatile=
 
 #endif
 
-#if OSMajorVersion >= 5
+#if OSMajorVersion == 5
 
 #define CCDriver CC +p
 #define ExtraCCFlags -float
+#define ExtraCCDefines -DSYSV -Dsigned= -Dvolatile=
 #define ExtraCCLdLibs -lC -lsun -lmalloc -lc
 #define Ld_libX11 -lX11
 
@@ -36,7 +38,22 @@
 
 #endif
 
-#define ExtraCCDefines -DSYSV -Dsigned= -Dvolatile=
+#if OSMajorVersion > 5
+
+#define CCDriver CC
+#define ExtraCCFlags -float
+#define ExtraCCDefines -Usgi -DSVR4 -DSYSV -Dsigned= -Dvolatile=
+#define ExtraCCLdLibs -lC -lsun -lmalloc -lc
+#define Ld_libX11 -lX11
+
+#undef HasDynamicSharedLibraries
+#define HasDynamicSharedLibraries YES
+#define SharedCCFlags /**/
+#define SharedCCLdFlags -shared -w
+#define SharedCCLdLibs -lm
+
+#endif
+
 #define ExtraCCIncludes
 #define TIFFExtraCFlags /* can't trust DefaultCCOptions */
 #define BuildGLContext YES

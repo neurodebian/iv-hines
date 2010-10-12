@@ -31,17 +31,53 @@
 
 #include <InterViews/canvas.h>
 
+#if MAC
+#include <ostream.h>
+#else
 class ostream;
+#endif
+
 class PrinterRep;
 
 class Printer : public Canvas {
 public:
     Printer(ostream*);
-    virtual ~Printer();
+	 virtual ~Printer();
 
-    virtual PixelCoord to_pixels(Coord) const;
-    virtual Coord to_coord(PixelCoord) const;
-    virtual Coord to_pixels_coord(Coord) const;
+	 virtual PixelCoord to_pixels(Coord, DimensionName) const;
+	 virtual Coord to_coord(PixelCoord, DimensionName) const;
+	 virtual Coord to_pixels_coord(Coord, DimensionName) const;
+
+#if defined(WIN32) || defined(MAC)
+	 virtual void size(Coord width, Coord height);
+	 virtual void psize(PixelCoord width, PixelCoord height);
+
+	 virtual Coord width() const;
+	 virtual Coord height() const;
+	 virtual PixelCoord pwidth() const;
+	 virtual PixelCoord pheight() const;
+
+	 virtual void transformer(const Transformer&);
+	 virtual const Transformer& transformer() const;
+
+    virtual void damage(const Extension&);
+	 virtual void damage(Coord left, Coord bottom, Coord right, Coord top);
+	 virtual boolean damaged(const Extension&) const;
+    virtual boolean damaged(
+	Coord left, Coord bottom, Coord right, Coord top
+	 ) const;
+	 virtual void damage_area(Extension&);
+	 virtual void damage_all();
+	 virtual boolean any_damage() const;
+	 virtual void restrict_damage(const Extension&);
+    virtual void restrict_damage(
+		Coord left, Coord bottom, Coord right, Coord top
+	 );
+
+	 virtual void redraw(Coord left, Coord bottom, Coord right, Coord top);
+    virtual void repair();
+
+#endif
 
     virtual void resize(Coord left, Coord bottom, Coord right, Coord top);
 

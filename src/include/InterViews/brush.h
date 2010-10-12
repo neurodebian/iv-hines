@@ -46,21 +46,24 @@ public:
     virtual ~Brush();
 
     virtual Coord width() const;
+#if !defined(WIN32) && !MAC
     virtual int dash_count() const;
     virtual int dash_list(int index) const;
-        
+#endif
 
     BrushRep* rep(Display*) const;
 protected:
     void calc_dashes(int pat, int* dash, int& count);
 private:
-    BrushImpl* impl_;
-
     void init(const int*, int, Coord);
-
+#if defined(WIN32) || MAC
+	BrushRep* rep_;
+#else
+    BrushImpl* impl_;
     /* anachronisms */
 public:
     unsigned int Width() const;
+#endif
 };
 
 #include <InterViews/_leave.h>

@@ -57,8 +57,13 @@ static PropertyData kit_props[] = {
     { "*FieldEditor*beveled", "on" },
     { "*FieldEditor*background", "#b88d8d" },
     { "*FieldEditor*flat", "#b88d8d" },
+#if defined(WIN32) || MAC
     { "*MenuBar*font", "*-helvetica-bold-o-normal--14-140-*" },
     { "*MenuItem*font", "*-helvetica-bold-o-normal--14-140-*" },
+#else
+    { "*MenuBar*font", "*-helvetica-bold-o-normal--14-140-*" },
+    { "*MenuItem*font", "*-helvetica-bold-o-normal--14-140-*" },
+#endif
     { "*PaletteButton*minimumWidth", "72.0" },
     { "*Panner*minimumThumbSize", "18.0" },
     { "*PushButton*minimumWidth", "72.0" },
@@ -70,7 +75,10 @@ static PropertyData kit_props[] = {
 
 #define button_border 4
 #define arrow_border 6
-
+#ifdef MAC
+#define shadow shadow_a
+#endif
+ 
 static const int black = 0;
 static const int very_dark_gray = 1;
 static const int dark_gray = 2;
@@ -86,8 +94,13 @@ static const int dark_yellow = 11;
 static const int medium_yellow = 12;
 static const int num_colors = 13;
 
+#if MAC
+static const unsigned int checkmark_width = 8;
+static const unsigned int checkmark_height = 8;
+#else
 static const unsigned int checkmark_width = 32;
 static const unsigned int checkmark_height = 12;
+#endif
 
 static char checkmark_bits[] = {
     0x00, 0x00, 0x3e, 0x00, 0x00, 0xc0, 0x0f, 0x00,
@@ -417,20 +430,28 @@ Glyph* SMFKit::pulldown_look() const {
     SMFKitImpl& k = *impl_;
     const LayoutKit& layout = *k.layout_;
     const SMFKitInfo& i = *k.info_;
+#if defined(WIN32) || MAC
+return outset_frame(layout.vbox());
+#else
     return layout.t_margin(
 	new Shadow(
 	    outset_frame(layout.vbox()), 6, -6, i.color(shadow), true
 	), 4
     );
+#endif
 }
 
 Glyph* SMFKit::pullright_look() const {
     SMFKitImpl& k = *impl_;
     const LayoutKit& layout = *k.layout_;
     const SMFKitInfo& i = *k.info_;
+#if defined(WIN32) || MAC
+return outset_frame(layout.vbox());
+#else
     return new Shadow(
 	outset_frame(layout.vbox()), 6, -6, i.color(shadow), true
     );
+#endif
 }
 
 Glyph* SMFKit::menubar_item_look(Glyph* g, TelltaleState* t) const {
@@ -1051,8 +1072,10 @@ void SMFKitCheckmark::request(Requisition& req) const {
 
 void SMFKitCheckmark::draw(Canvas* c, const Allocation& a) const {
     if (state_->test(TelltaleState::is_chosen)) {
+#if !MAC
 	info().shadow1()->draw(c, a);
 	info().shadow2()->draw(c, a);
+#endif
 	info().checkmark()->draw(c, a);
     }
 }

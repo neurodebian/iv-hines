@@ -80,12 +80,12 @@ PSFont::PSFont(
 	}
 	fclose(file);
     }
-    delete metrics_file;
+    delete [] metrics_file;
 }
 
 PSFont::~PSFont() {
-    delete impl_->name;
-    delete impl_->encoding;
+    delete [] impl_->name;
+    delete [] impl_->encoding;
     delete impl_;
 }
 
@@ -98,7 +98,7 @@ Coord PSFont::width(const char* s, int n) const { return Font::width(s, n); }
 boolean PSFont::exists(const char* psname) {
     char* metrics_file = PSFontImpl::psfile(psname);
     FILE* f = fopen(metrics_file, "r");
-    delete metrics_file;
+    delete [] metrics_file;
     if (f == nil) {
 	return false;
     }

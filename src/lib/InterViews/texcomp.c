@@ -77,7 +77,7 @@ BreakSet::BreakSet(BreakSet* b) {
 BreakSet::~BreakSet() {
     prev_->next_ = next_;
     next_->prev_ = prev_;
-    delete breaks_;
+    delete [] breaks_;
 }
 
 void BreakSet::add_break(CompositorIndex index, int demerits) {
@@ -87,7 +87,7 @@ void BreakSet::add_break(CompositorIndex index, int demerits) {
         for (CompositorIndex i = 0; i < count_; ++i) {
             breaks[i] = breaks_[i];
         }
-        delete breaks_;
+        delete [] breaks_;
         breaks_ = breaks;
         size_ = size;
     }

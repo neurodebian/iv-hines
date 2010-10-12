@@ -71,7 +71,7 @@ private:
  * Action denoted by an object and member function to call on the object.
  */
 
-#if defined(__STDC__) || defined(__ANSI_CPP__)
+#if 1 || defined(__STDC__) || defined(__ANSI_CPP__)
 #define __ActionCallback(T) T##_ActionCallback
 #define ActionCallback(T) __ActionCallback(T)
 #define __ActionMemberFunction(T) T##_ActionMemberFunction

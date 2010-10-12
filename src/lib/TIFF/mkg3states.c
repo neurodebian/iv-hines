@@ -1,5 +1,5 @@
 #ifndef lint
-static char rcsid[] = "$Header: /usr/people/sam/tiff/libtiff/RCS/mkg3states.c,v 1.13 92/03/06 11:10:57 sam Exp $";
+static char rcsid[] = "/local/src/master/iv/src/lib/TIFF/mkg3states.c,v 1.2 1997/03/26 15:06:59 hines Exp";
 #endif
 
 /*
@@ -43,7 +43,7 @@ static char rcsid[] = "$Header: /usr/people/sam/tiff/libtiff/RCS/mkg3states.c,v 
  *	code without payment of royalties or the necessity of notification as
  *	long as this notice (all the text under "LEGAL") is included.
  *
- *	Reference: $Id: mkg3states.c,v 1.13 92/03/06 11:10:57 sam Exp $
+ *	Reference: mkg3states.c,v 1.2 1997/03/26 15:06:59 hines Exp
  *
  *	This program is offered without any warranty of any kind. It includes
  *	no warranty of merchantability or fitness for any purpose. Testing and

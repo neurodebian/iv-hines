@@ -45,7 +45,7 @@ Superpose::~Superpose() {
     for (long i = 0; i < count_; ++i) {
         delete layout_[i];
     }
-    delete layout_;
+    delete [] layout_;
     layout_ = nil;
 }
 

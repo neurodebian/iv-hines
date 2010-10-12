@@ -27,7 +27,7 @@
  */
 
 #include <InterViews/regexp.h>
-#include <stream.h>
+#include <iostream.h>
 #include <string.h>
 
 /*
@@ -87,8 +87,10 @@ Regexp::Regexp (const char* pat, int length) {
 }
 
 Regexp::~Regexp () {
-    delete pattern_;
-    delete c_pattern;
+    delete [] pattern_;
+    if (c_pattern) {
+        delete [] c_pattern;
+    }
 }
 
 const char* Regexp::pattern() const { return pattern_; }
@@ -115,7 +117,7 @@ int Regexp::Search (const char* text, int length, int index, int range) {
     }
 
     if (c_pattern)
-	delete c_pattern;
+	delete [] c_pattern;
 
     if ((c_pattern = regcomp(pattern_)) == nil)
 	return -1;
@@ -193,7 +195,7 @@ int Regexp::Search (const char* text, int length, int index, int range) {
 int Regexp::Match (const char* text, int length, int index) {
 
     if (c_pattern)
-	delete c_pattern;
+	delete [] c_pattern;
 
     if ((c_pattern = regcomp(pattern_)) == nil)
 	return -1;
@@ -420,7 +422,7 @@ regcomp(char* exp) {
 	regcode = r->program;
 	regc(REGEXP_MAGIC);
 	if (reg(0, &flags) == nil) {
-		delete r;
+		delete [] r;
 		return(nil);
 	}
 

@@ -29,6 +29,10 @@
 #ifndef iv_event_h
 #define iv_event_h
 
+#if !defined(WIN32) && !MAC
+#define UNIX 1
+#endif
+
 #include <InterViews/coord.h>
 
 #include <InterViews/_enter.h>
@@ -43,6 +47,7 @@ class World;
 typedef unsigned int EventType;
 typedef unsigned int EventButton;
 
+#if UNIX
 /* anachronism */
 enum {
     MotionEvent,	/* mouse moved */
@@ -59,6 +64,7 @@ enum {
 static const int LEFTMOUSE = 0;
 static const int MIDDLEMOUSE = 1;
 static const int RIGHTMOUSE = 2;
+#endif
 
 class Event {
 public:
@@ -116,6 +122,7 @@ private:
 
     void copy_rep(const Event&);
 
+#if UNIX
     /*
      * Old members for backward compatibility
      */
@@ -151,10 +158,13 @@ private:
     void GetKeyInfo();
     void GetKeyState(unsigned);
     void GetCrossingInfo(EventType);
+#endif
 };
 
 inline EventRep* Event::rep() const { return rep_; }
+#if UNIX
 inline EventRep* Event::Rep() const { return rep(); }
+#endif
 
 #include <InterViews/_leave.h>
 

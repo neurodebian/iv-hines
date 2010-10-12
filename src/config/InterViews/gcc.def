@@ -16,6 +16,7 @@
 #undef TIFFExtraCFlags
 #define TIFFExtraCFlags /**/
 #define CCDriver g++
+#undef CcCmd
 #define CcCmd gcc
 #endif
 
@@ -25,7 +26,7 @@
 
 #undef HasDynamicSharedLibraries
 
-#if defined(SunArchitecture)
+#if defined(SunArchitecture) || defined(HPArchitecture)
 #define HasDynamicSharedLibraries YES
 #endif
 
@@ -34,9 +35,10 @@
 #endif
 
 #if defined(AlphaArchitecture)
-/* perhaps someone can make shared libraries work */
-#define HasDynamicSharedLibraries NO
+#define HasDynamicSharedLibraries YES
 #undef OptimizeCCFlags
+/* g++ + nrniv + libiv.a give x11 problems with optimizing on */
+#define OptimizeCCFlags /**/
 #undef OptimizedCDebugFlags
 #define OptimizedCDebugFlags -O
 #endif

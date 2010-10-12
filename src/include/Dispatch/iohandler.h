@@ -32,6 +32,10 @@
 // number, handle an exception raised on a file number, or handle a
 // timer's expiration.
 
+#if defined(WIN32) || MAC
+typedef int pid_t;
+#endif
+
 class IOHandler {
 protected:
     IOHandler();

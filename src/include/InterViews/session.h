@@ -26,6 +26,37 @@
  * Session -- coordinate control flow and display management
  */
 
+#ifdef WIN32
+// =======================================================================
+//
+// Extensions 
+//
+// 1.2
+// 1997/03/28 22:04:06
+//
+// Windows 3.1/NT InterViews Port 
+// Copyright (c) 1993 Tim Prinzing
+//
+// Permission to use, copy, modify, distribute, and sell this software and 
+// its documentation for any purpose is hereby granted without fee, provided
+// that (i) the above copyright notices and this permission notice appear in
+// all copies of the software and related documentation, and (ii) the name of
+// Tim Prinzing may not be used in any advertising or publicity relating to 
+// the software without the specific, prior written permission of Tim Prinzing.
+// 
+// 
+// THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND, 
+// EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY 
+// WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.  
+//
+// IN NO EVENT SHALL Tim Prinzing BE LIABLE FOR ANY SPECIAL, INCIDENTAL, 
+// INDIRECT OR CONSEQUENTIAL DAMAGES OF ANY KIND, OR ANY DAMAGES WHATSOEVER 
+// RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER OR NOT ADVISED OF THE 
+// POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF LIABILITY, ARISING OUT OF OR 
+// IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+//
+// =======================================================================
+#endif
 #ifndef iv_session_h
 #define iv_session_h
 
@@ -93,6 +124,10 @@ public:
     virtual int run();
     virtual int run_window(Window*);
     virtual void quit();
+    virtual void unquit();
+#if MAC
+    virtual void screen_update(); // normally happens in event loop when no event
+#endif
     virtual boolean done() const;
 
     virtual boolean pending() const;
@@ -100,6 +135,14 @@ public:
     virtual boolean read(long sec, long usec, Event&);
     virtual void unread(Event&);
     virtual void poll(Event&);
+#if defined(WIN32) || MAC
+	static const char* installLocation();
+		// This function is an extension of the InterViews distribution.
+		// A pathname of location of the installation directory tree is
+		// returned, that can be used to locate various pieces of configuration
+		// information (such as application defaults).  How this location
+		// gets set is platform specific.
+#endif
 
     static Session* instance();
 private:

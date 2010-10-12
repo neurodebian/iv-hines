@@ -31,6 +31,7 @@
 
 #include <InterViews/canvas.h>
 #include <InterViews/coord.h>
+#include <InterViews/geometry.h>
 
 #include <InterViews/_enter.h>
 
@@ -89,7 +90,7 @@ public:
     virtual void move(Coord left, Coord bottom);
     virtual void resize();
 
-    virtual void receive(const Event&);
+    virtual boolean receive(const Event&);
     virtual Handler* target(const Event&) const;
     virtual void grab_pointer(Cursor* = nil) const;
     virtual void ungrab_pointer() const;
@@ -106,13 +107,35 @@ protected:
     virtual void set_attributes();
     virtual void set_props();
     virtual void do_map();
+#if defined(WIN32) || MAC
+protected:
+    WindowRep* rep_;
+
+    // The following is different from the SGI distribution.  This stuff is not
+    // device specific and only adds geometry.h as an include dependency, so it
+    // seems more reasonable to keep it here.                                  
+    friend class WindowRep;                                                    
+    Glyph* glyph_;                                                             
+    Style* style_;                                                             
+    Canvas* canvas_;                                                           
+    Requisition shape_;                                                        
+    Allocation allocation_;                                                    
+    Handler* focus_in_;                                                        
+    Handler* focus_out_;                                                       
+#else
 private:
     friend class WindowRep;
-
     WindowRep* rep_;
+#endif
 };
 
 inline WindowRep* Window::rep() const { return rep_; }
+#if defined(WIN32) || MAC
+inline Glyph* Window::glyph() const   
+    { return glyph_; }                
+inline Canvas* Window::canvas() const 
+    { return canvas_; }               
+#endif
 
 class ManagedWindow : public Window {
 protected:
@@ -120,6 +143,14 @@ protected:
 public:
     virtual ~ManagedWindow();
 
+#if defined(WIN32) || MAC
+    virtual Coord width() const;                // width of window 
+    virtual Coord height() const;               // height of window
+#endif
+
+#if defined(WIN32)
+    virtual boolean receive(const Event&);
+#endif
     virtual void icon(ManagedWindow*);
     virtual ManagedWindow* icon() const;
 
@@ -142,10 +173,11 @@ protected:
     virtual void compute_geometry();
     virtual void set_props();
 private:
-    ManagedWindowRep* rep_;
+    friend class ManagedWindowRep;
+    ManagedWindowRep* mrep_;
 };
 
-inline ManagedWindowRep* ManagedWindow::rep() const { return rep_; }
+inline ManagedWindowRep* ManagedWindow::rep() const { return mrep_; }
 
 class ApplicationWindow : public ManagedWindow {
 public:
@@ -185,6 +217,9 @@ public:
     ~PopupWindow();
 protected:
     virtual void set_attributes();
+#if defined(WIN32)
+    virtual boolean receive(const Event&);
+#endif
 };
 
 class IconWindow : public ManagedWindow {

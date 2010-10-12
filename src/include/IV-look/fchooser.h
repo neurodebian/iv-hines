@@ -47,7 +47,7 @@ public:
     virtual void execute(FileChooser*, boolean accept);
 };
 
-#if defined(__STDC__) || defined(__ANSI_CPP__)
+#if 1 || defined(__STDC__) || defined(__ANSI_CPP__)
 #define FileChooserCallback(T) T##_FileChooserCallback
 #define FileChooserMemberFunction(T) T##_FileChooserMemberFunction
 #else

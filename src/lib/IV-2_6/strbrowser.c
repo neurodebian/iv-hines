@@ -109,8 +109,8 @@ void StringBrowser::InitTextDisplay () {
 
 StringBrowser::~StringBrowser () {
     Clear();
-    delete strbuf;
-    delete selbuf;
+    delete [] strbuf;
+    delete [] selbuf;
     delete display;
     Resource::unref(subject);
     Resource::unref(perspective);
@@ -123,7 +123,7 @@ static void BufCheck (char**& buf, int& bufsize, int count, int index) {
         bufsize = (index+1) * 2;
         newbuf = new char*[bufsize];
         Memory::copy(buf, newbuf, count*sizeof(char*));
-        delete buf;
+        delete [] buf;
         buf = newbuf;
     }
 }
@@ -200,7 +200,7 @@ void StringBrowser::Replace (const char* s, int index) {
 	register Perspective* p = perspective;
 
 	char* old_string = String(index);
-	delete old_string;
+	delete [] old_string;
 	char* copy = new char[strlen(s)+1];
 	strcpy(copy, s);
 	strbuf[index] = copy;
@@ -227,7 +227,7 @@ void StringBrowser::Remove (int index) {
 	    UpdateWidth();
 	}
         Unselect(index);
-        delete string;
+        delete [] string;
         BufRemove(index, strbuf, strcount);
     
         p->height -= lineheight;
@@ -252,7 +252,7 @@ char* StringBrowser::String (int index) {
 
 void StringBrowser::Clear () {
     for (int i = 0; i < strcount; ++i) {
-        delete strbuf[i];
+        delete [] strbuf[i];
     }
     strcount = selcount = 0;
     InitTextDisplay();

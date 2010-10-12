@@ -2,23 +2,23 @@
  * Copyright (c) 1991 Stanford University
  * Copyright (c) 1991 Silicon Graphics, Inc.
  *
- * Permission to use, copy, modify, distribute, and sell this software and 
+ * Permission to use, copy, modify, distribute, and sell this software and
  * its documentation for any purpose is hereby granted without fee, provided
  * that (i) the above copyright notices and this permission notice appear in
  * all copies of the software and related documentation, and (ii) the names of
  * Stanford and Silicon Graphics may not be used in any advertising or
  * publicity relating to the software without the specific, prior written
  * permission of Stanford and Silicon Graphics.
- * 
- * THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND, 
- * EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY 
- * WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.  
+ *
+ * THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY
+ * WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
  *
  * IN NO EVENT SHALL STANFORD OR SILICON GRAPHICS BE LIABLE FOR
  * ANY SPECIAL, INCIDENTAL, INDIRECT OR CONSEQUENTIAL DAMAGES OF ANY KIND,
  * OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
- * WHETHER OR NOT ADVISED OF THE POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF 
- * LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE 
+ * WHETHER OR NOT ADVISED OF THE POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF
+ * LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
  * OF THIS SOFTWARE.
  */
 
@@ -26,6 +26,40 @@
  * WidgetKit -- object for creating common UI objects
  */
 
+// =======================================================================
+//
+// 1.3
+// 1997/04/02 16:20:09
+//
+// Windows 3.1/NT InterViews Port 
+// Copyright (c) 1993 Tim Prinzing
+//
+// Permission to use, copy, modify, distribute, and sell this software and 
+// its documentation for any purpose is hereby granted without fee, provided
+// that (i) the above copyright notice and this permission notice appear in
+// all copies of the software and related documentation, and (ii) the name of
+// Tim Prinzing may not be used in any advertising or publicity relating to 
+// the software without the specific, prior written permission of Tim Prinzing.
+// 
+// THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND, 
+// EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY 
+// WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.  
+//
+// IN NO EVENT SHALL Tim Prinzing BE LIABLE FOR ANY SPECIAL, INCIDENTAL, 
+// INDIRECT OR CONSEQUENTIAL DAMAGES OF ANY KIND, OR ANY DAMAGES WHATSOEVER 
+// RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER OR NOT ADVISED OF THE 
+// POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF LIABILITY, ARISING OUT OF OR 
+// IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+//
+// =======================================================================
+
+#ifdef WIN32
+#include <IV-Win/MWlib.h>
+#endif
+
+#ifdef mswin_kit
+#include <IV-look/mw_kit.h>
+#endif
 #ifdef motif_kit
 #include <IV-look/mf_kit.h>
 #endif
@@ -39,6 +73,7 @@
 #include <IV-look/smf_kit.h>
 #endif
 #include <IV-look/bevel.h>
+#include <InterViews/action.h>
 #include <InterViews/background.h>
 #include <InterViews/bitmap.h>
 #include <InterViews/canvas.h>
@@ -50,24 +85,47 @@
 #include <InterViews/layout.h>
 #include <InterViews/session.h>
 #include <InterViews/style.h>
-#include <InterViews/Bitmaps/hand.bm>
-#include <InterViews/Bitmaps/handMask.bm>
-#include <InterViews/Bitmaps/lfast.bm>
-#include <InterViews/Bitmaps/lfastMask.bm>
-#include <InterViews/Bitmaps/lufast.bm>
-#include <InterViews/Bitmaps/lufastMask.bm>
-#include <InterViews/Bitmaps/ufast.bm>
-#include <InterViews/Bitmaps/ufastMask.bm>
-#include <InterViews/Bitmaps/rufast.bm>
-#include <InterViews/Bitmaps/rufastMask.bm>
-#include <InterViews/Bitmaps/rfast.bm>
-#include <InterViews/Bitmaps/rfastMask.bm>
-#include <InterViews/Bitmaps/rdfast.bm>
-#include <InterViews/Bitmaps/rdfastMask.bm>
-#include <InterViews/Bitmaps/dfast.bm>
-#include <InterViews/Bitmaps/dfastMask.bm>
-#include <InterViews/Bitmaps/ldfast.bm>
-#include <InterViews/Bitmaps/ldfastMask.bm>
+
+#ifndef MAC
+	#include <InterViews/Bitmaps/hand.bm>
+	#include <InterViews/Bitmaps/handMask.bm>
+	#include <InterViews/Bitmaps/lfast.bm>
+	#include <InterViews/Bitmaps/lfastMask.bm>
+	#include <InterViews/Bitmaps/lufast.bm>
+	#include <InterViews/Bitmaps/lufastMask.bm>
+	#include <InterViews/Bitmaps/ufast.bm>
+	#include <InterViews/Bitmaps/ufastMask.bm>
+	#include <InterViews/Bitmaps/rufast.bm>
+	#include <InterViews/Bitmaps/rufastMask.bm>
+	#include <InterViews/Bitmaps/rfast.bm>
+	#include <InterViews/Bitmaps/rfastMask.bm>
+	#include <InterViews/Bitmaps/rdfast.bm>
+	#include <InterViews/Bitmaps/rdfastMask.bm>
+	#include <InterViews/Bitmaps/dfast.bm>
+	#include <InterViews/Bitmaps/dfastMask.bm>
+	#include <InterViews/Bitmaps/ldfast.bm>
+	#include <InterViews/Bitmaps/ldfastMask.bm>
+#else
+	#include <Bitmaps/hand.bm>
+	#include <Bitmaps/handMask.bm>
+	#include <Bitmaps/lfast.bm>
+	#include <Bitmaps/lfastMask.bm>
+	#include <Bitmaps/lufast.bm>
+	#include <Bitmaps/lufastMask.bm>
+	#include <Bitmaps/ufast.bm>
+	#include <Bitmaps/ufastMask.bm>
+	#include <Bitmaps/rufast.bm>
+	#include <Bitmaps/rufastMask.bm>
+	#include <Bitmaps/rfast.bm>
+	#include <Bitmaps/rfastMask.bm>
+	#include <Bitmaps/rdfast.bm>
+	#include <Bitmaps/rdfastMask.bm>
+	#include <Bitmaps/dfast.bm>
+	#include <Bitmaps/dfastMask.bm>
+	#include <Bitmaps/ldfast.bm>
+	#include <Bitmaps/ldfastMask.bm>
+#endif
+
 #include <OS/list.h>
 #include <OS/string.h>
 #include <OS/ustring.h>
@@ -219,7 +277,7 @@ void WidgetKit::pop_style() {
 
 void WidgetKit::style_changed(Style*) { }
 
-#if defined(__STDC__) || defined(__ANSI_CPP__)
+#if 1 || defined(__STDC__) || defined(__ANSI_CPP__)
 #define __concat(first,second) first##second
 #else
 #define __concat(first,second) first/**/second
@@ -641,6 +699,8 @@ void WidgetKitImpl::update_style_info() {
     Session* session = Session::instance();
     Display* d = session->default_display();
     String v;
+	
+    // ---- load a font ----
     if (s->find_attribute("font", v) || s->find_attribute("Font", v)) {
 	const Font* f = Font::lookup(v);
 	if (f == nil) {
@@ -656,6 +716,13 @@ void WidgetKitImpl::update_style_info() {
 	    font_ = f;
 	}
     }
+    if (font_ == nil)
+    {
+ 	font_ = Font::lookup("fixed");
+	Resource::ref(font_);
+    }
+
+    // ---- load foreground color ----
     if (s->find_attribute("foreground", v) ||
 	s->find_attribute("Foreground", v)
     ) {
@@ -673,6 +740,13 @@ void WidgetKitImpl::update_style_info() {
 	    foreground_ = c;
 	}
     }
+    if (foreground_ == nil)
+    {
+	foreground_ = new Color(0.0, 0.0, 0.0, 1.0);
+	Resource::ref(foreground_);
+    }
+
+    // ----- load a background color -----
     if (s->find_attribute("background", v) ||
 	s->find_attribute("Background", v)
     ) {
@@ -690,14 +764,24 @@ void WidgetKitImpl::update_style_info() {
 	    background_ = c;
 	}
     }
+    if (background_ == nil)
+    {
+	background_ = new Color(1.0, 1.0, 1.0, 1.0);
+	Resource::ref(background_);
+    }
+
     style_changed_ = false;
 }
 
 void WidgetKitImpl::report_error(
     Session* s, const char* op, const String& name, const char* value
 ) {
-    fprintf(
-	stderr, "%s: unable to %s \"%.*s\", using \"%s\"\n",
+#if defined(WIN32) || MAC
+	printf(
+#else
+    fprintf(stderr,
+#endif
+	"%s: unable to %s \"%.*s\", using \"%s\"\n",
 	s->name(), op, name.length(), name.string(), value
     );
 }
@@ -710,11 +794,16 @@ WidgetKitImpl* WidgetKitImpl::updated() {
 }
 
 WidgetKit* WidgetKitImpl::make_kit() {
-    String gui;
+	 String gui;
     if (Session::instance()->style()->find_attribute("gui", gui)) {
 #ifdef bw_kit
 	if (gui == "monochrome") {
 	    return new MonoKit;
+	}
+#endif
+#ifdef mswin_kit
+	if (gui == "mswin") {
+	    return new MWkit;
 	}
 #endif
 #if defined(motif_kit)
@@ -741,7 +830,7 @@ WidgetKit* WidgetKitImpl::make_kit() {
     Resource::ref(c2);
     const Color* c3 = new Color(0.5, 0.5, 0.5, 1.0);
     Resource::ref(c3);
-    if (!c3->distinguished(c1) || !c3->distinguished(c2)) {
+	 if (!c3->distinguished(c1) || !c3->distinguished(c2)) {
 	return new MonoKit;
     }
     Resource::unref(c1);

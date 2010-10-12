@@ -33,7 +33,7 @@
 #include <stdlib.h>
 #undef NULL
 #include <sys/param.h>
-#if defined(AIXV3) || defined(svr4)
+#if defined(AIXV3) || defined(SVR4)
 #include <sys/select.h>
 #endif
 #include <signal.h>
@@ -42,15 +42,15 @@
 #include <time.h>
 
 /* no standard place for this */
+
 extern "C" {
-#if defined(hpux)
+#if 0
     extern int select(size_t, int*, int*, int*, struct timeval*);
-#else
-#if !defined(AIXV3) && !defined(svr4) && !defined(__lucid)
+#endif
+#if !defined(AIXV3) && !defined(SVR4) && !defined(__lucid)
     extern int select(int, fd_set*, fd_set*, fd_set*, struct timeval*);
 #endif
-#endif
-#if defined(__DECCXX) || (defined(__GNUC__) && !defined(SVR4))
+#if (defined(__DECCXX) || (defined(__GNUC__) && !defined(SVR4)))
     extern int gettimeofday(struct timeval*, struct timezone*);
 #endif
 }
@@ -226,7 +226,7 @@ inline timeval TimerQueue::earliestTime() const {
 
 timeval TimerQueue::currentTime() {
     timeval curTime;
-#if defined(svr4) && !defined(__GNUC__)
+#if 0 && defined(SVR4) && !defined(__GNUC__)
     gettimeofday(&curTime);
 #else
     struct timezone curZone;
@@ -668,7 +668,7 @@ int Dispatcher::waitFor(
 	emaskret = *_emask;
 	howlong = calculateTimeout(howlong);
 
-#if defined(hpux)
+#if 0 || defined(hpux)
  	nfound = select(
 	    _nfds, (int*)&rmaskret, (int*)&wmaskret, (int*)&emaskret, howlong
 	);
@@ -777,7 +777,7 @@ void Dispatcher::checkConnections() {
     for (int fd = 0; fd < _nfds; fd++) {
 	if (_rtable[fd] != nil) {
 	    rmask.setBit(fd);
-#if defined(hpux)
+#if 0 || defined(hpux)
 	    if (select(fd+1, (int*)&rmask, nil, nil, &poll) < 0) {
 #else
 	    if (select(fd+1, &rmask, nil, nil, &poll) < 0) {

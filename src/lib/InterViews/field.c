@@ -1,3 +1,5 @@
+#if !defined(WIN32) && !MAC
+// the unix version -- see #if defined(WIN32) || MAC below
 /*
  * Copyright (c) 1991 Stanford University
  * Copyright (c) 1991 Silicon Graphics, Inc.
@@ -460,3 +462,229 @@ FieldEditorAction::FieldEditorAction() { }
 FieldEditorAction::~FieldEditorAction() { }
 void FieldEditorAction::accept(FieldEditor*) { }
 void FieldEditorAction::cancel(FieldEditor*) { }
+
+#endif
+
+#if defined(WIN32) || MAC
+/*
+ * Copyright (c) 1991 Stanford University
+ * Copyright (c) 1991 Silicon Graphics, Inc.
+ *
+ * Permission to use, copy, modify, distribute, and sell this software and 
+ * its documentation for any purpose is hereby granted without fee, provided
+ * that (i) the above copyright notices and this permission notice appear in
+ * all copies of the software and related documentation, and (ii) the names of
+ * Stanford and Silicon Graphics may not be used in any advertising or
+ * publicity relating to the software without the specific, prior written
+ * permission of Stanford and Silicon Graphics.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND, 
+ * EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY 
+ * WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.  
+ *
+ * IN NO EVENT SHALL STANFORD OR SILICON GRAPHICS BE LIABLE FOR
+ * ANY SPECIAL, INCIDENTAL, INDIRECT OR CONSEQUENTIAL DAMAGES OF ANY KIND,
+ * OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+ * WHETHER OR NOT ADVISED OF THE POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF 
+ * LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE 
+ * OF THIS SOFTWARE.
+ */
+
+/*
+ * FieldEditor -- simple editor for text fields
+ */
+
+
+// =======================================================================
+//
+// Reworked the field editor to be a glyph-based text editor, and removed
+// all usage of Interacters (ie the StringEditor).
+//
+// Windows 3.1/NT InterViews Port 
+// Copyright (c) 1993 Tim Prinzing
+//
+// Permission to use, copy, modify, distribute, and sell this software and 
+// its documentation for any purpose is hereby granted without fee, provided
+// that (i) the above copyright notice and this permission notice appear in
+// all copies of the software and related documentation, and (ii) the name of
+// Tim Prinzing may not be used in any advertising or publicity relating to 
+// the software without the specific, prior written permission of Tim Prinzing.
+// 
+// THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND, 
+// EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY 
+// WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.  
+//
+// IN NO EVENT SHALL Tim Prinzing BE LIABLE FOR ANY SPECIAL, INCIDENTAL, 
+// INDIRECT OR CONSEQUENTIAL DAMAGES OF ANY KIND, OR ANY DAMAGES WHATSOEVER 
+// RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER OR NOT ADVISED OF THE 
+// POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF LIABILITY, ARISING OUT OF OR 
+// IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+//
+// =======================================================================
+
+#include <IV-look/field.h>
+#include <IV-look/kit.h>
+#include <InterViews/background.h>
+#include <InterViews/event.h>
+#include <InterViews/layout.h>
+#include <InterViews/style.h>
+#include <InterViews/text.h>
+#include <OS/string.h>
+
+class FieldEditorImpl 
+{
+private:
+    friend class FieldEditor;
+
+    TextLine* editor_;
+    String text_;
+	FieldEditorAction* action_;
+};
+
+FieldEditor::FieldEditor(
+    const String& sample, 
+    WidgetKit* kit, 
+    Style* s, 
+    FieldEditorAction* action) 
+    : InputHandler(nil, s) 
+{
+    impl_ = new FieldEditorImpl;
+    impl_->action_ = action;
+    Resource::ref(impl_->action_);
+
+    kit->begin_style("FieldEditor");
+    Style* sty = kit->style();
+
+    impl_->editor_ = new TextLine(sample, sample.length());
+    Glyph* g = impl_->editor_;
+    if (sty->value_is_on("beveled")) 
+    {
+		g = kit->inset_frame(
+			new Background(
+				LayoutKit::instance()->h_margin(impl_->editor_, 2.0),
+				kit->background()
+			)
+		);
+    }
+    body(g);
+
+    kit->end_style();
+}
+
+FieldEditor::~FieldEditor() 
+{
+    Resource::unref(impl_->action_);
+    delete impl_;
+}
+
+void FieldEditor::undraw() 
+{
+    InputHandler::undraw();
+}
+
+void FieldEditor::press(const Event& e) 
+{
+    impl_->editor_->press(e);
+}
+
+void FieldEditor::drag(const Event& e) 
+{ 
+	impl_->editor_->drag(e);
+}
+void FieldEditor::release(const Event&) { }
+
+void FieldEditor::keystroke(const Event& e) 
+{
+    FieldEditorImpl& f = *impl_;
+	char buffer[2];
+	int count = e.mapkey(buffer, 2);
+	if (count)
+	{
+		switch (buffer[0]) 
+		{
+		case '\r':
+			f.action_->accept(this);
+			return;
+		case /*  ^G */ '\007':
+		case /* Esc */ '\033':
+			f.action_->cancel(this);
+			return;
+		default:
+			;
+		}
+	}
+	f.editor_->keystroke(e); 
+}
+
+InputHandler* FieldEditor::focus_in() 
+{
+    FieldEditorImpl& f = *impl_;
+    f.editor_->readOnly(false);
+    return InputHandler::focus_in();
+}
+
+void FieldEditor::focus_out() 
+{
+    FieldEditorImpl& f = *impl_;
+    f.editor_->readOnly(true);
+    InputHandler::focus_out();
+}
+
+void FieldEditor::field(const char* str) 
+{
+	String s(str);
+	field(s);
+}
+
+void FieldEditor::field(const String& s) 
+{
+	String old(impl_->editor_->value());
+    impl_->editor_->region(0, 0, 0, old.length());
+    impl_->editor_->cut();
+    impl_->editor_->paste(s.string(), s.length());
+}
+
+void FieldEditor::select(int pos) 
+{
+	select(pos, pos);
+}
+
+void FieldEditor::select(int l, int r) 
+{
+	 impl_->editor_->region(0, l, 0, r);
+//	impl_->editor_->location(0, r);
+	impl_->editor_->location(0, l);
+}
+
+void FieldEditor::edit() 
+{
+    impl_->editor_->reset();
+}
+
+void FieldEditor::edit(const char* str, int left, int right) 
+{
+	field(str);
+	select(left, right);
+}
+
+void FieldEditor::edit(const String& str, int left, int right) 
+{
+	field(str);
+	select(left, right);
+}
+
+const String* FieldEditor::text() const 
+{
+    impl_->text_ = impl_->editor_->value();
+    return &impl_->text_;
+}
+
+/** class FieldEditorAction **/
+
+FieldEditorAction::FieldEditorAction() { }
+FieldEditorAction::~FieldEditorAction() { }
+void FieldEditorAction::accept(FieldEditor*) { }
+void FieldEditorAction::cancel(FieldEditor*) { }
+
+
+#endif

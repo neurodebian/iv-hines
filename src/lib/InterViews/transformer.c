@@ -30,6 +30,10 @@
 #include <OS/math.h>
 #include <math.h>
 
+#if defined (WIN32) || defined (MAC)
+#define M_PI        3.14159265358979323846
+#endif
+
 static const double RADPERDEG = M_PI/180.0;
 
 Transformer::Transformer() {

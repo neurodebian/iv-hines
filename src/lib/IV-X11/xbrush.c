@@ -61,7 +61,7 @@ Brush::~Brush() {
 	BrushRep* r = i.cur();
 	delete r;
     }
-    delete impl_->dash_list;
+    delete [] impl_->dash_list;
     delete impl_->replist;
     delete impl_;
 }

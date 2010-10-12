@@ -31,7 +31,7 @@
 
 #include <OS/enter-scope.h>
 
-#if defined(__STDC__) || defined(__ANSI_CPP__)
+#if 1 || defined(__STDC__) || defined(__ANSI_CPP__)
 #define __TableEntry(Table) Table##_Entry
 #define TableEntry(Table) __TableEntry(Table)
 #define __TableIterator(Table) Table##_Iterator
@@ -122,7 +122,7 @@ Table::~Table() { \
 	TableEntry(Table)* t = *e; \
 	delete t; \
     } \
-    delete first_; \
+    delete [] first_; \
 } \
 \
 inline TableEntry(Table)*& Table::probe(Key i) { \

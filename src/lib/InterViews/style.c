@@ -118,8 +118,8 @@ private:
 	const UniqueString& name, const StyleAttributeTableEntry&,
 	const StyleList&, long s_index, String& value
     );
-    int StyleRep::finish_match(
-	const StyleList&, long s_index, const UniqueStringList&, long p_index
+    int finish_match(
+		const StyleList&, long s_index, const UniqueStringList&, long p_index
     );
 };
 
@@ -142,7 +142,7 @@ public:
 ValueString::ValueString(char* str, int len) : String(str, len) { }
 ValueString::~ValueString() {
     char* s = (char*)string();
-    delete s;
+    delete [] s;
 }
 
 boolean ValueString::null_terminated() const { return true; }
@@ -267,7 +267,7 @@ StyleRep::~StyleRep() {
 		    delete a;
 		}
 	    }
-	    delete e->entries_;
+	    delete [] e->entries_;
 	    delete e;
 	}
 	delete t;
@@ -412,7 +412,8 @@ StyleAttribute* StyleRep::add_attribute(
 	e->entries_ = new StyleAttributeList*[3];
 	e->avail_ = 3;
 	e->used_ = 0;
-	for (long i = 0; i < e->avail_; i++) {
+	long i;
+	for (i = 0; i < e->avail_; i++) {
 	    e->entries_[i] = nil;
 	}
 	table_->insert(u, e);
@@ -429,7 +430,7 @@ StyleAttribute* StyleRep::add_attribute(
 	for (i = e->avail_; i < new_avail; i++) {
 	    new_list[i] = nil;
 	}
-	delete e->entries_;
+	delete [] e->entries_;
 	e->entries_ = new_list;
 	e->avail_ = new_avail;
     }
@@ -712,7 +713,9 @@ void Style::load_list(const String& str, int priority) {
     for (; p < q; p++) {
 	if (*p == '\n') {
 	    if (p > start && *(p-1) != '\\') {
-		load_property(String(start, p - start), priority);
+               const char* q = p;
+               if (*(q-1) == '\r') { q--; }
+               load_property(String(start, q - start), priority);
 		start = p + 1;
 	    }
 	}

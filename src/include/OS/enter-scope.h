@@ -42,8 +42,10 @@
 
 typedef unsigned boolean;
 
+#if !MAC
 static const unsigned false = 0;
 static const unsigned true = 1;
+#endif
 
 #endif
 

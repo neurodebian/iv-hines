@@ -1,6 +1,8 @@
 #undef boolean
+#if !MAC
 #undef true
 #undef false
+#endif
 #undef u_char
 #undef CopyString
 #undef Directory

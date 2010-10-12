@@ -171,8 +171,8 @@ RubberPointList::RubberPointList(
 }
 
 RubberPointList::~RubberPointList() {
-    delete x;
-    delete y;
+    delete [] x;
+    delete [] y;
 }
 
 /*****************************************************************************/
@@ -406,8 +406,8 @@ void SlidingPointList::Draw() {
 		oy[i] = y[i] + offy;
 	    }
 	    output->MultiPoint(canvas, ox, oy, count);
-	    delete ox;
-	    delete oy;
+	    delete [] ox;
+	    delete [] oy;
 	}
 	drawn = true;
     }
@@ -454,8 +454,8 @@ void SlidingLineList::Draw() {
 		oy[i] = y[i] + offy;
 	    }
 	    output->MultiLine(canvas, ox, oy, count);
-	    delete ox;
-	    delete oy;
+	    delete [] ox;
+	    delete [] oy;
 	}
 	drawn = true;
     }
@@ -488,8 +488,8 @@ ScalingLineList::ScalingLineList(
 }
 
 ScalingLineList::~ScalingLineList() {
-    delete newx;
-    delete newy;
+    delete [] newx;
+    delete [] newy;
 }
 
 void ScalingLineList::Update() {
@@ -556,8 +556,8 @@ RotatingLineList::RotatingLineList(
 }
 
 RotatingLineList::~RotatingLineList() {
-    delete newx;
-    delete newy;
+    delete [] newx;
+    delete [] newy;
 }
 
 void RotatingLineList::Update() {

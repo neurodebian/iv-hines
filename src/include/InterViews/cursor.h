@@ -29,6 +29,16 @@
  * If a device does not support a mask the background pixels are not drawn.
  */
 
+#if defined(WIN32) || MAC
+// ======================================================================
+// 
+// This file contains a super-set of the InterViews 3.1 distribution.
+//
+//  1.2
+//  1997/03/28 22:04:01
+//
+// ======================================================================
+#endif
 #ifndef iv_cursor_h
 #define iv_cursor_h
 
@@ -62,6 +72,14 @@ public:
     Cursor(int, const Color* fg = nil, const Color* bg = nil);
     ~Cursor();
 
+#if defined(WIN32) || MAC
+    Cursor(const char*);
+        // This constructor takes a resource name and constructs a 
+	// cursor from that.  Although this functionality isn't native
+	// under X11, it is possible to produce this behavior fairly
+	// easily.  It is quite useful under MS-Windows, which makes
+	// extensive use of resources.
+#endif
     static void init();
 
     CursorRep* rep();

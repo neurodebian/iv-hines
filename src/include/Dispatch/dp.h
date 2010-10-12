@@ -25,7 +25,7 @@
 #ifndef dp_h
 #define dp_h
 
-#if defined(__STDC__) || defined(__ANSI_CPP__)
+#if 1 || defined(__STDC__) || defined(__ANSI_CPP__)
 #define _lib_dp(name) dp##name
 #else
 #define _lib_dp(name) dp/**/name

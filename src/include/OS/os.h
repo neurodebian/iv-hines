@@ -25,7 +25,7 @@
 #ifndef _lib_os_h
 #define _lib_os_h
 
-#if defined(__STDC__) || defined(__ANSI_CPP__)
+#if 1 || defined(__STDC__) || defined(__ANSI_CPP__)
 #define _lib_os(name) os##name
 #else
 #define _lib_os(name) os/**/name

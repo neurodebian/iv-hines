@@ -453,7 +453,7 @@ boolean Window::is_mapped() const {
  * dispatch focus and delete events.
  */
 
-void Window::receive(const Event& e) {
+boolean Window::receive(const Event& e) {
     WindowRep& w = *rep();
     XEvent& xe = e.rep()->xevent_;
     Handler* handler = nil;
@@ -504,6 +504,7 @@ void Window::receive(const Event& e) {
 	Event writable_e(e);
 	handler->event(writable_e);
     }
+    return false;
 }
 
 /*
@@ -605,7 +606,7 @@ void Window::resize() {
 
 ManagedWindow::ManagedWindow(Glyph* g) : Window(g) {
     ManagedWindowRep* w = new ManagedWindowRep;
-    rep_ = w;
+    mrep_ = w;
     w->group_leader_ = nil;
     w->transient_for_ = nil;
     w->icon_ = nil;
@@ -614,7 +615,7 @@ ManagedWindow::ManagedWindow(Glyph* g) : Window(g) {
 }
 
 ManagedWindow::~ManagedWindow() {
-    ManagedWindowRep* w = rep_;
+    ManagedWindowRep* w = mrep_;
     Resource::unref(w->icon_bitmap_);
     Resource::unref(w->icon_mask_);
     delete w;
@@ -1812,8 +1813,8 @@ void Display::set_screen(int s) {
     d.default_visual_ = WindowVisual::find_visual(this, d.style_);
     d.pwidth_ = DisplayWidth(dpy, s);
     d.pheight_ = DisplayHeight(dpy, s);
-    d.set_dpi(pixel_);
-    point_ = 1 / pixel_;
+    d.set_dpi(x_pixel_);
+    x_point_ = 1 / x_pixel_;
     d.width_ = to_coord(d.pwidth_);
     d.height_ = to_coord(d.pheight_);
 }

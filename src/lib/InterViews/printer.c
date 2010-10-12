@@ -25,6 +25,16 @@
 /*
  * Printer - draw for PostScript printer
  */
+ 
+#ifdef MAC
+	#define WIN32
+#endif
+#ifdef WIN32
+#include <iostream.h>
+#else
+#include <stream.h>
+#endif
+#include <string.h>
 
 #include <InterViews/bitmap.h>
 #include <InterViews/brush.h>
@@ -35,8 +45,6 @@
 #include <InterViews/transformer.h>
 #include <OS/list.h>
 #include <OS/math.h>
-#include <stream.h>
-#include <string.h>
 
 static const float PAGE_WIDTH = 8.5 * 72;
 static const float PAGE_HEIGHT = 11 * 72;
@@ -70,6 +78,11 @@ static const char* ps_epilog = "\
 end restore\n\
 ";
 
+#ifdef WIN32
+declareList(PRtransformerList,Transformer)
+implementList(PRtransformerList,Transformer)
+#endif
+
 class PrinterInfo {
 public:
     const Color* color_;
@@ -90,7 +103,11 @@ public:
     Coord text_curx_;
     Coord text_cury_;
     int text_chars_;
-    int text_spaces_;
+	 int text_spaces_;
+#ifdef WIN32
+	 Transformer tr_;
+	 PRtransformerList trl_;
+#endif
 };
 
 declareList(PrinterInfoList,PrinterInfo)
@@ -105,7 +122,7 @@ static void do_color(ostream& out, const Color* color) {
 static void do_brush(ostream& out, const Brush* brush) {
     Coord linewidth = brush->width();
     out << linewidth << " setlinewidth\n";
-#if 1
+#if !defined(WIN32) && !MAC
  // Should do something about patterned brushes.
  // Maybe something like this:
   
@@ -157,9 +174,44 @@ Printer::~Printer() {
     delete rep_;
 }
 
-PixelCoord Printer::to_pixels(Coord p) const { return (PixelCoord)p; }
-Coord Printer::to_coord(PixelCoord p) const { return p; }
-Coord Printer::to_pixels_coord(Coord p) const { return p; }
+PixelCoord Printer::to_pixels(Coord p, DimensionName) const { return (PixelCoord)p; }
+Coord Printer::to_coord(PixelCoord p, DimensionName) const { return p; }
+Coord Printer::to_pixels_coord(Coord p, DimensionName) const { return p; }
+
+#ifdef WIN32
+void Printer::size(Coord width, Coord height){}
+void Printer::psize(PixelCoord width, PixelCoord height){}
+
+Coord Printer::width() const {return 8.5*72;}
+Coord Printer::height() const {return 11.*72;}
+PixelCoord Printer::pwidth() const {return 8.5*72;}
+PixelCoord Printer::pheight() const {return 11.*72;}
+
+void Printer::transformer(const Transformer& t){
+	rep_->tr_ = t;
+}
+const Transformer& Printer::transformer() const {
+	return rep_->tr_;
+}
+
+void Printer::damage(const Extension&){}
+void Printer::damage(Coord, Coord, Coord, Coord){}
+boolean Printer::damaged(const Extension&) const{return true;}
+boolean Printer::damaged(
+	Coord, Coord, Coord, Coord
+	 ) const{return true;}
+void Printer::damage_area(Extension&){}
+void Printer::damage_all(){}
+boolean Printer::any_damage() const{return true;}
+void Printer::restrict_damage(const Extension&){}
+void Printer::restrict_damage(
+		Coord, Coord, Coord, Coord
+	 ){}
+
+void Printer::redraw(Coord, Coord, Coord, Coord){}
+void Printer::repair(){}
+
+#endif
 
 void Printer::resize(Coord left, Coord bottom, Coord right, Coord top) {
     PrinterRep* p = rep_;
@@ -213,9 +265,13 @@ void Printer::page(const char* label) {
 }
 
 void Printer::push_transform() {
-    Canvas::push_transform();
-    PrinterRep* p = rep_;
-    flush();
+	PrinterRep* p = rep_;
+#ifdef WIN32
+	p->trl_.append(p->tr_);
+#else
+	 Canvas::push_transform();
+#endif
+	 flush();
     long depth = p->info_->count();
     PrinterInfo info = p->info_->item_ref(depth - 1);
     p->info_->insert(depth, info);
@@ -227,14 +283,26 @@ void Printer::pop_transform() {
     flush();
     long depth = p->info_->count();
     p->info_->remove(depth - 1);
-    *p->out_ << "grestore\n";
-    Canvas::pop_transform();
+	 *p->out_ << "grestore\n";
+#ifdef WIN32
+	long tcnt = p->trl_.count();
+	if (tcnt) {
+		p->tr_ = p->trl_.item(tcnt - 1);
+		p->trl_.remove(tcnt - 1);
+	}
+#else
+	 Canvas::pop_transform();
+#endif
 }
 
 void Printer::transform(const Transformer& t) {
-    Canvas::transform(t);
-    PrinterRep* p = rep_;
-    flush();
+	PrinterRep* p = rep_;
+#ifdef WIN32
+	p->tr_.premultiply(t);
+#else
+	 Canvas::transform(t);
+#endif
+	 flush();
     float a00, a01, a10, a11, a20, a21;
     t.matrix(a00, a01, a10, a11, a20, a21);
     *p->out_ << "[" << a00 << " " << a01;

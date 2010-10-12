@@ -26,8 +26,14 @@
  * FileBrowser -- browse a directory
  */
 
+#if MAC
+#define WIN32
+#endif
+
+#ifndef WIN32
 #include <Dispatch/dispatcher.h>
 #include <Dispatch/iocallback.h>
+#endif
 #include <IV-look/fbrowser.h>
 #include <IV-look/kit.h>
 #include <InterViews/canvas.h>
@@ -60,8 +66,10 @@ public:
     Coord start_scroll_pointer_;
     Coord cur_scroll_pointer_;
     Coord start_scroll_pos_;
+#ifndef WIN32
     IOHandler* rate_handler_;
     long usec_rate_;
+#endif
     FileBrowserKeyFunc key_[keymap_size];
 
     void rate_scroll_timer(long, long);
@@ -85,8 +93,10 @@ public:
     void half_page_up();
 };
 
+#ifndef WIN32
 declareIOCallback(FileBrowserImpl)
 implementIOCallback(FileBrowserImpl)
+#endif
 
 static FileBrowserKeyInfo default_key_map[] = {
     { '\r', "open", &FileBrowserImpl::open },
@@ -131,6 +141,7 @@ FileBrowser::FileBrowser(
     for (FileBrowserKeyInfo* k = &default_key_map[0]; k->key != 0; k++) {
 	fb.key_[k->key] = k->func;
     }
+#ifndef WIN32
     fb.rate_handler_ = new IOCallback(FileBrowserImpl)(
 	impl_, &FileBrowserImpl::rate_scroll_timer
     );
@@ -138,11 +149,14 @@ FileBrowser::FileBrowser(
     long milliseconds = 75;
     s->find_attribute("scrollRate", milliseconds);
     fb.usec_rate_ = 1000 * milliseconds;
+#endif
     body(fb.box_);
 }
 
 FileBrowser::~FileBrowser() {
+#ifndef WIN32
     delete impl_->rate_handler_;
+#endif
     delete impl_;
 }
 
@@ -195,8 +209,10 @@ void FileBrowser::drag(const Event& e) {
 	} else {
 	    w->cursor(kit.dfast_cursor());
 	}
+#ifndef WIN32
 	Dispatcher::instance().stopTimer(fb.rate_handler_);
 	fb.rate_scroll_timer(0, 0);
+#endif
 	break;
     }
 }
@@ -217,8 +233,10 @@ void FileBrowser::release(const Event& e) {
 	w->cursor(fb.save_cursor_);
 	break;
     case FileBrowserImpl::rate_scrolling:
+#ifndef WIN32
 	Dispatcher::instance().stopTimer(fb.rate_handler_);
 	w->cursor(fb.save_cursor_);
+#endif
 	break;
     }
 }
@@ -272,7 +290,9 @@ void FileBrowserImpl::rate_scroll_timer(long, long) {
     box_->scroll_to(
 	Dimension_Y, box_->cur_lower(Dimension_Y) + delta * scale_
     );
+#ifndef WIN32
     Dispatcher::instance().startTimer(0, usec_rate_, rate_handler_);
+#endif
 }
 
 void FileBrowserImpl::open() {

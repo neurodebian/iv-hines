@@ -120,7 +120,7 @@ Table2::Table2(int n) { \
 } \
 \
 Table2::~Table2() { \
-    delete first_; \
+    delete [] first_; \
 } \
 \
 inline Table2Entry(Table2)*& Table2::probe(Key1 k1, Key2 k2) { \

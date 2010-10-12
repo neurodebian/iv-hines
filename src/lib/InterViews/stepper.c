@@ -25,17 +25,28 @@
 /*
  * Stepper -- button with auto-repeat
  */
+#if !defined(WIN32) && !MAC
+#define UNIX 1
+#endif
 
+#if UNIX
+#define USE_DISPATCH 1
+#endif
+
+#if USE_DISPATCH
 #include <Dispatch/dispatcher.h>
 #include <Dispatch/iocallback.h>
+#endif
 #include <IV-look/stepper.h>
 #include <InterViews/canvas.h>
 #include <InterViews/color.h>
 #include <InterViews/style.h>
 #include <InterViews/target.h>
 
+#if USE_DISPATCH
 declareIOCallback(Stepper)
 implementIOCallback(Stepper)
+#endif
 
 Stepper::Stepper(
     Glyph* g, Style* s, TelltaleState* t, Action* a
@@ -46,11 +57,15 @@ Stepper::Stepper(
     seconds = 0.05;
     s->find_attribute("autorepeatDelay", seconds);
     next_delay_ = long(seconds * 1000000);
+#if USE_DISPATCH
     timer_ = new IOCallback(Stepper)(this, &Stepper::tick);
+#endif
 }
 
 Stepper::~Stepper() {
+#if USE_DISPATCH
     delete timer_;
+#endif
 }
 
 void Stepper::press(const Event& e) {
@@ -65,18 +80,24 @@ void Stepper::release(const Event& e) {
 
 void Stepper::start_stepping() {
     adjust();
+#if USE_DISPATCH
     if (start_delay_ > 10) {
 	Dispatcher::instance().startTimer(0, start_delay_, timer_);
     }
+#endif
 }
 
 void Stepper::stop_stepping() {
+#if USE_DISPATCH
     Dispatcher::instance().stopTimer(timer_);
+#endif
 }
 
 void Stepper::tick(long, long) {
     adjust();
+#if USE_DISPATCH
     Dispatcher::instance().startTimer(0, next_delay_, timer_);
+#endif
 }
 
 #define implementAdjustStepper(name,scroll) \

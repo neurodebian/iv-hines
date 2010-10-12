@@ -157,15 +157,15 @@ Coord Canvas::height() const { return rep()->height_; }
 PixelCoord Canvas::pwidth() const { return rep()->pwidth_; }
 PixelCoord Canvas::pheight() const { return rep()->pheight_; }
 
-PixelCoord Canvas::to_pixels(Coord p) const {
+PixelCoord Canvas::to_pixels(Coord p, DimensionName) const {
     return rep()->display_->to_pixels(p);
 }
 
-Coord Canvas::to_coord(PixelCoord p) const {
+Coord Canvas::to_coord(PixelCoord p, DimensionName) const {
     return rep()->display_->to_coord(p);
 }
 
-Coord Canvas::to_pixels_coord(Coord p) const {
+Coord Canvas::to_pixels_coord(Coord p, DimensionName) const {
     const Display& d = *rep()->display_;
     return d.to_coord(d.to_pixels(p));
 }
@@ -378,7 +378,7 @@ static XPoint* next_point(PathRenderInfo* p) {
         for (int i = 0; i < old_size; i++) {
             new_path[i] = p->point_[i];
         }
-        delete p->point_;
+        delete [] p->point_;
         p->point_ = new_path;
 	p->cur_point_ = p->point_ + old_size;
 	p->end_point_ = p->point_ + new_size;

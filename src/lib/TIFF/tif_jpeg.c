@@ -1,5 +1,5 @@
 #ifndef lint
-static char rcsid[] = "$Header: /usr/people/sam/tiff/libtiff/RCS/tif_jpeg.c,v 1.4 92/02/10 19:06:04 sam Exp $";
+static char rcsid[] = "/local/src/master/iv/src/lib/TIFF/tif_jpeg.c,v 1.2 1997/03/26 15:07:14 hines Exp";
 #endif
 
 /*

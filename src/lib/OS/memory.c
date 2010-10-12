@@ -23,14 +23,20 @@
  */
 
 #include <OS/memory.h>
+#if !defined(WIN32) && !MAC
 #include <unistd.h>
+#endif
 #include <string.h>
 
 void Memory::copy(const void* from, void* to, unsigned int nbytes) {
+#if MAC
+	BlockMove(from, to, nbytes);
+#else
 #if defined(sun) && !defined(SVR4)
     bcopy(from, to, nbytes);
 #else
     memmove(to, from, size_t(nbytes));
+#endif
 #endif
 }
 

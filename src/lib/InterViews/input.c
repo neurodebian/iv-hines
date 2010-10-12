@@ -81,10 +81,20 @@ InputHandler::InputHandler(Glyph* g, Style* s) : MonoGlyph(g) {
 }
 
 InputHandler::~InputHandler() {
+#if defined(WIN32) || MAC
+       //
+       // The 3.1 distribution tried to ensure that the handler was removed fr$
+       // the handler list before destruction... but it was dereferencing a
+       // canvas that had already been free'd which occasionally resulted in an
+       // access violation.  The undraw() function should take care of this...
+       // so the ungrab code has been removed.
+       //
+#else
     AllocationInfo* info = impl_->most_recent_info();
     if (info != nil) {
 	info->canvas()->window()->display()->ungrab(impl_, true);
     }
+#endif
     Resource::unref(impl_);
 }
 
@@ -210,7 +220,7 @@ void InputHandler::pick(Canvas* c, const Allocation& a, int depth, Hit& h) {
     EventType t = (e == nil) ? Event::undefined : e->type();
     switch (t) {
     case Event::key:
-	if (impl_->inside(*e, info)) {
+	if (e && impl_->inside(*e, info)) {
 	    InputHandler* ih = impl_->focus_handler_;
 	    InputHandlerImpl* handler = (ih == nil) ? impl_ : ih->impl_;
 	    h.target(depth, this, 0, handler); 
@@ -315,7 +325,11 @@ InputHandlerImpl::InputHandlerImpl(InputHandler* h, Style* s) {
     focus_handler_ = nil;
     reset();
     if (threshold_ == 0) {
+#if MAC
+	long t = 25;
+#else
 	long t = 250;
+#endif
 	s->find_attribute("clickDelay", t);
 	threshold_ = t;
     }
@@ -407,6 +421,9 @@ void InputHandlerImpl::down(Event& e) {
 	button_ = e.pointer_button();
 	input_->press(e);
 	e.grab(this);
+#if defined(WIN32) || MAC
+	e.window()->grab_pointer();
+#endif
 	if (parent_ != nil) {
 	    parent_->focus(input_);
 	} else {
@@ -433,6 +450,9 @@ void InputHandlerImpl::up(Event& e) {
     if (pressed_ && e.pointer_button() == button_) {
 	pressed_ = false;
 	e.ungrab(this);
+#if defined(WIN32) || MAC
+	e.window()->ungrab_pointer();
+#endif
 	input_->release(e);
 	unsigned long t = e.time();
 	if (recorded_time_ && t - click_time_ < threshold_) {

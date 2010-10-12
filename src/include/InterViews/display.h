@@ -29,7 +29,7 @@
 #ifndef iv_display_h
 #define iv_display_h
 
-#include <InterViews/coord.h>
+#include <InterViews/geometry.h>
 
 #include <InterViews/_enter.h>
 
@@ -45,6 +45,9 @@ class Display {
 protected:
     Display(DisplayRep*);
 public:
+#ifdef WIN32
+	 virtual void rescale();
+#endif
     static Display* open(const String&);
     static Display* open(const char*);
     static Display* open();
@@ -59,8 +62,15 @@ public:
     virtual Coord a_width() const;
     virtual Coord a_height() const;
 
-    PixelCoord to_pixels(Coord) const;
-    Coord to_coord(PixelCoord) const;
+    PixelCoord to_pixels(Coord, DimensionName d = Dimension_X) const;
+    Coord to_coord(PixelCoord, DimensionName d = Dimension_X) const;
+		// device/world coordinate system conversions.  The to_pixels()
+		// function converts printer points to pixels, and the to_coord()
+		// function converts pixels to printer points.  The dimension argument
+		// is an extension of the InterViews 3.1 distribution which doesnt
+		// distinguish between the X and Y dimensions.  The dimension defaults
+		// to the x dimension to provide backward compatibility (although
+		// potentially incorrect behavior).
 
     virtual boolean defaults(String&) const;
     virtual void style(Style*);
@@ -96,15 +106,22 @@ public:
     DisplayRep* rep() const;
 private:
     DisplayRep* rep_;
-    Coord pixel_;
-    Coord point_;
+    Coord x_pixel_;
+    Coord y_pixel_;
+    Coord x_point_;
+    Coord y_point_;
 };
 
-inline PixelCoord Display::to_pixels(Coord c) const {
-    return PixelCoord( c * point_ + ((c > 0) ? 0.5 : -0.5) );
+inline PixelCoord Display::to_pixels(Coord c, DimensionName d) const 
+{
+    return PixelCoord( c * ((d == Dimension_X) ? x_point_ : y_point_ ) + 
+                           ((c > 0) ? 0.5 : -0.5) );
 }
 
-inline Coord Display::to_coord(PixelCoord p) const { return Coord(p)*pixel_; }
+inline Coord Display::to_coord(PixelCoord p, DimensionName d) const 
+{ 
+	return Coord(p) * ((d == Dimension_X) ? x_pixel_ : y_pixel_); 
+}
 
 inline DisplayRep* Display::rep() const { return rep_; }
 

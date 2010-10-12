@@ -112,7 +112,7 @@ UniqueStringPool::UniqueStringPool(unsigned poolsize) {
  */
 
 UniqueStringPool::~UniqueStringPool() {
-    delete data;
+    delete [] data;
     delete prev;
 }
 

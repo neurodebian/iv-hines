@@ -34,7 +34,7 @@
 extern void ListImpl_range_error(long index);
 extern long ListImpl_best_new_count(long count, unsigned size);
 
-#if defined(__STDC__) || defined(__ANSI_CPP__)
+#if 1 || defined(__STDC__) || defined(__ANSI_CPP__)
 #define __ListItr(List) List##_Iterator
 #define ListItr(List) __ListItr(List)
 #define __ListUpdater(List) List##_Updater

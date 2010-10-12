@@ -2,6 +2,7 @@ XCOMM
 XCOMM applications
 XCOMM
 
+#if 0
 SUBDIRS = \
 	alert \
 	dclock \
@@ -14,5 +15,12 @@ SUBDIRS = \
 	logo \
 	mailbox \
 	scripts
+#else
+SUBDIRS = \
+	iclass \
+	idemo \
+	idraw \
+	scripts
+#endif
 
 MakeInSubdirs($(SUBDIRS))

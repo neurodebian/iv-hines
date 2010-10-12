@@ -36,7 +36,10 @@
 #include <InterViews/patch.h>
 #include <InterViews/window.h>
 #include <OS/list.h>
+
+#if !defined(WIN32) && !MAC
 #include <X11/cursorfont.h>
+#endif
 
 declarePtrList(MenuItemList,MenuItem)
 implementPtrList(MenuItemList,MenuItem)
@@ -211,7 +214,6 @@ void Menu::select(GlyphIndex index) {
 	open();
     }
 }
-
 void Menu::open() {
     MenuImpl& i = *impl_;
     GlyphIndex index = i.item_;
@@ -232,11 +234,25 @@ void Menu::open() {
 		const Allocation& a = mi->patch_->allocation();
 		Window& w = *mi->window();
 		w.display(rel.display());
+#if defined(WIN32) || defined(MAC)
+		if (!w.bound()) { // got to get it sized before align
+			w.place(-10000, 10000); // will work
+			w.map();
+			w.unmap();
+		}
+#endif
 		w.place(
-		    rel.left() + (1 - i.x1_) * a.left() + i.x1_ * a.right(),
-		    rel.bottom() + (1 - i.y1_) * a.bottom() + i.y1_ * a.top()
+			 rel.left() + (1 - i.x1_) * a.left() + i.x1_ * a.right(),
+			 rel.bottom() + (1 - i.y1_) * a.bottom() + i.y1_ * a.top()
 		);
 		w.align(i.x2_, i.y2_);
+#ifdef WIN32
+// force onto screen. Well, almost, there is a problem if menu items overlay
+// previous menus. so only check if bottom is negative.
+		if (w.bottom() < 0) {
+			w.place(w.left(), 0);
+		}
+#endif
 		w.map();
 	    }
 	}
@@ -247,18 +263,26 @@ void Menu::close() {
     MenuImpl& i = *impl_;
     GlyphIndex index = i.item_;
     if (index >= 0) {
-	MenuItem* mi = item(index);
-	TelltaleState* t = mi->state();
-	if (t != nil && t->test(TelltaleState::is_enabled)) {
-	    t->set(TelltaleState::is_active, false);
-	}
-	if (mi->menu() != nil) {
-	    mi->menu_->unselect();
-	}
-	Window* w = mi->window();
-	if (w != nil) {
-	    w->unmap();
-	}
+		MenuItem* mi = item(index);
+#if MAC
+		Window* w = mi->window();
+		if (w != nil) {
+	    	w->unmap();
+		}
+#endif
+		TelltaleState* t = mi->state();
+		if (t != nil && t->test(TelltaleState::is_enabled)) {
+	    	t->set(TelltaleState::is_active, false);
+		}
+		if (mi->menu() != nil) {
+	   	 mi->menu_->unselect();
+		}
+#if !MAC
+		Window* w = mi->window();
+		if (w != nil) {
+	    	w->unmap();
+		}
+#endif
     }
 }
 
@@ -275,12 +299,15 @@ void Menu::unselect() {
 }
 
 void Menu::press(const Event& e) {
-    Canvas* c = canvas();
+	 Canvas* c = canvas();
     if (c != nil) {
 	impl_->save_cursor(c);
 	drag(e);
     }
 }
+#if defined(WIN32) || MAC
+extern void iv_window_coords(const Event&, Window*, Coord&, Coord&);
+#endif
 
 void Menu::drag(const Event& e) {
     Canvas* c = canvas();
@@ -288,26 +315,32 @@ void Menu::drag(const Event& e) {
 	unselect();
 	return;
     }
-    Window* w = c->window();
+	 Window* w = c->window();
+#if defined(WIN32)
+	 Coord x, y;
+	iv_window_coords(e, w, x, y);
+	 Hit hit(x, y);
+#else
     Hit hit(e.pointer_root_x() - w->left(), e.pointer_root_y() - w->bottom());
-    pick(c, allocation(), 0, hit);
-    if (hit.any()) {
-	GlyphIndex index = hit.index(0);
-	Menu* submenu = item(index)->menu();
-	if (submenu != nil) {
-	    submenu->unselect();
-	}
-	select(index);
+#endif
+	pick(c, allocation(), 0, hit);
+	if (hit.any()) {
+		GlyphIndex index = hit.index(0);
+		Menu* submenu = item(index)->menu();
+		if (submenu != nil) {
+	    	submenu->unselect();
+		}
+		select(index);
     } else {
-	GlyphIndex index = selected();
-	if (index >= 0) {
-	    Menu* submenu = item(index)->menu();
-	    if (submenu != nil) {
-		submenu->drag(e);
-		return;
-	    }
-	}
-	unselect();
+		GlyphIndex index = selected();
+		if (index >= 0) {
+	    	Menu* submenu = item(index)->menu();
+	    	if (submenu != nil) {
+				submenu->drag(e);
+				return;
+	    	}
+		}
+		unselect();
     }
 }
 
@@ -417,22 +450,26 @@ void MenuImpl::restore_cursor(Canvas* c) {
 }
 
 void MenuImpl::grab(Menu* m, const Event& e) {
-    if (!grabbed_) {
+	 if (!grabbed_) {
 	e.grab(m->handler());
 	grabbed_ = true;
     }
 }
 
 void MenuImpl::ungrab(Menu* m, const Event& e) {
-    if (grabbed_) {
+	 if (grabbed_) {
 	e.ungrab(m->handler());
 	grabbed_ = false;
-    }
+	 }
 }
 
 Cursor* MenuImpl::menu_cursor() {
     if (menu_cursor_ == nil) {
-	menu_cursor_ = new Cursor(XC_arrow);
+#if defined(WIN32) || MAC
+	menu_cursor_ = arrow;
+#else
+	 menu_cursor_ = new Cursor(XC_arrow);
+#endif
     }
     return menu_cursor_;
 }

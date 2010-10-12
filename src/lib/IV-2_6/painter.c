@@ -201,8 +201,8 @@ static void GrowBufs(IntCoord*& b1, IntCoord*& b2, int& cur) {
 	newb2 = new IntCoord[newsize];
 	Memory::copy(b1, newb1, cur * sizeof(IntCoord));
 	Memory::copy(b2, newb2, cur * sizeof(IntCoord));
-	delete b1;
-	delete b2;
+	delete [] b1;
+	delete [] b2;
 	b1 = newb1;
 	b2 = newb2;
 	cur = newsize;
@@ -376,8 +376,8 @@ static void CheckBufs(IntCoord*& b1, IntCoord*& b2, int& cur, int desired) {
 	if (cur == 0) {
 	    cur = Math::max(INITBUFSIZE, desired);
 	} else {
-	    delete b1;
-	    delete b2;
+	    delete [] b1;
+	    delete [] b2;
 	    cur = Math::max(cur * 2, desired);
 	}
 	b1 = new IntCoord[cur];

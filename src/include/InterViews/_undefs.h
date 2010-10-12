@@ -5,7 +5,9 @@
 #undef point
 #undef points
 #undef RasterRect
+#if !MAC
 #undef Point
+#endif
 #undef Line
 #undef Ellipse
 #undef MultiLine
@@ -37,6 +39,7 @@
 #undef ApplicationWindow
 #undef ArrayCompositor
 #undef ArrowSubclassName
+#undef BMPRaster
 #undef Background
 #undef Banner
 #undef Bevel
@@ -160,6 +163,8 @@
 #undef MFDialogKit
 #undef MFKit
 #undef MFKitImpl
+#undef MWkit
+#undef MWkitImpl
 #undef Macro
 #undef MacroActionList
 #undef ManagedWindow
@@ -289,10 +294,16 @@
 #undef Telltale
 #undef TelltaleGroup
 #undef TelltaleState
+#undef Text
+#undef TextAnnotation
 #undef TextBuffer
 #undef TextButton
 #undef TextDisplay
 #undef TextEditor
+#undef TextLine
+#undef TextLineAdjuster
+#undef TextLocation
+#undef TextRegion
 #undef TextRenderInfo
 #undef Tile
 #undef TileFirstAligned

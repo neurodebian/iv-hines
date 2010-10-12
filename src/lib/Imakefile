@@ -10,6 +10,7 @@ OPT_TASK = Task
 OPT_GRAPHIC = graphic
 #endif
 
+#if 0
 SUBDIRS = \
 	IV \
 	$(OPT_TASK) \
@@ -23,5 +24,12 @@ SUBDIRS = \
 	images \
 	logos \
 	styles
+#else
+SUBDIRS = \
+	IV \
+	$(OPT_TASK) \
+	Unidraw \
+	app-defaults
+#endif
 
 MakeInSubdirs($(SUBDIRS))

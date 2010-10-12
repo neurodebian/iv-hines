@@ -153,7 +153,7 @@ void FileChooserImpl::init(
 void FileChooserImpl::free() {
     delete name_;
     delete dir_;
-    delete filter_map_;
+    delete [] filter_map_;
     Resource::unref(action_);
     style_->remove_trigger_any(update_);
     Resource::unref(style_);
@@ -288,7 +288,7 @@ void FileChooserImpl::load() {
     kit.style(style_);
     const LayoutKit& layout = *LayoutKit::instance();
     int dircount = d.count();
-    delete filter_map_;
+    delete [] filter_map_;
     int* index = new int[dircount];
     filter_map_ = index;
     for (int i = 0; i < dircount; i++) {
@@ -378,7 +378,7 @@ void FileChooserImpl::accept_browser() {
     } else {
 	fchooser_->dismiss(true);
     }
-    delete tmp;
+    delete [] tmp;
 }
 
 void FileChooserImpl::cancel_browser() {

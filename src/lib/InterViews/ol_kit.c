@@ -2200,7 +2200,7 @@ OL_Mover::OL_Mover(
     }
     if (font_ != nil) {
 	FontBoundingBox box;
-	font_->char_bbox(box_ul_, box);
+	font_->char_bbox(long(box_ul_), box);
 	width_ = box.width() + 1;
 	height_ = box.ascent() + box.descent() + 1;
     } else {
@@ -2233,13 +2233,13 @@ void OL_Mover::draw(Canvas* c, const Allocation& a) const {
 	c->fill_rect(l + 1, b + 1, r - 1, t - 1, bg3);	// arrow
 
 	if (state_->test(TelltaleState::is_active)) {
-	    c->character(font_, fill_, width_, bg2, l, t);
-	    c->character(font_, box_ul_, width_, bg3, l, t);
-	    c->character(font_, box_lr_, width_, white, l, t);
+	    c->character(font_, long(fill_), width_, bg2, l, t);
+	    c->character(font_, long(box_ul_), width_, bg3, l, t);
+	    c->character(font_, long(box_lr_), width_, white, l, t);
 	} else {
-	    c->character(font_, fill_, width_, bg1, l, t);
-	    c->character(font_, box_ul_, width_, white, l, t);
-	    c->character(font_, box_lr_, width_, bg3, l, t);
+	    c->character(font_, long(fill_), width_, bg1, l, t);
+	    c->character(font_, long(box_ul_), width_, white, l, t);
+	    c->character(font_, long(box_lr_), width_, bg3, l, t);
 	}
 
 	if (state_->test(TelltaleState::is_running)) {
@@ -2793,12 +2793,12 @@ boolean OL_Stepper::at_end() const {
 
 void OL_Stepper::start_stepping() {
     if (initial_delay_ > 10) {
-        Dispatcher::instance().startTimer(0, initial_delay_, timer_);
+        Dispatcher::instance().startTimer(0, long(initial_delay_), timer_);
     }
 }
 
 void OL_Stepper::next_step() {
-    Dispatcher::instance().startTimer(0, interval_, timer_);
+    Dispatcher::instance().startTimer(0, long(interval_), timer_);
 }
 
 void OL_Stepper::stop_stepping() {
@@ -3295,9 +3295,9 @@ void OL_Dragbox::draw(Canvas* c, const Allocation& a) const {
 
     const Font* f = s.font();
     if (f != nil) {
-	c->character(f, ul, width, upper_left, l, t);
-	c->character(f, box, width, fill, l, t);
-	c->character(f, lr, width, lower_right, l, t);
+	c->character(f, long(ul), width, upper_left, l, t);
+	c->character(f, long(box), width, fill, l, t);
+	c->character(f, long(lr), width, lower_right, l, t);
     }
 }
 

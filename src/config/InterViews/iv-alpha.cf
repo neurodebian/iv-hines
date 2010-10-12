@@ -13,6 +13,8 @@
 #undef ExtraCCLdFlags
 #define ExtraCCLdLibs -ldnet_stub
 
+#define SharedCCLdFlags -expect_unresolved \* -shared
+
 /*
  * osf1.cf defines #define StandardIncludes -I$(CROSSBASE)/usr/include
  * which expands here to -I/usr/include. Therefore, /usr/include is loaded
@@ -32,7 +34,8 @@
  * Same for the InstallCmd
  */
 #undef InstallCmd
-#define InstallCmd /usr/bin/X11/install.sh
+/*#define InstallCmd /usr/bin/X11/install.sh*/
+#define InstallCmd bsdinst
 
 #undef DefaultCCOptions
 

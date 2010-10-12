@@ -47,7 +47,7 @@ public:
     virtual void cancel(FieldEditor*);
 };
 
-#if defined(__STDC__) || defined(__ANSI_CPP__)
+#if 1 || defined(__STDC__) || defined(__ANSI_CPP__)
 #define __FieldEditorCallback(T) T##_FieldEditorCallback
 #define FieldEditorCallback(T) __FieldEditorCallback(T)
 #define __FieldEditorMemberFunction(T) T##_FieldEditorMemberFunction

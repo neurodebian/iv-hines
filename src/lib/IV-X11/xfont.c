@@ -706,11 +706,11 @@ void FontFamily::destroy(FontFamilyRep* r) {
     for (int i = 0; i < r->count_; ++i) {
         delete r->names_[i];
     }
-    delete r->names_;
-    delete r->weights_;
-    delete r->slants_;
-    delete r->widths_;
-    delete r->sizes_;
+    delete [] r->names_;
+    delete [] r->weights_;
+    delete [] r->slants_;
+    delete [] r->widths_;
+    delete [] r->sizes_;
 }
 
 boolean FontFamily::font(int size, const char*& name, float& scale) const {

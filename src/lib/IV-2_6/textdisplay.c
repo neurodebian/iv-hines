@@ -92,7 +92,7 @@ TextDisplay::~TextDisplay () {
     for (int i = firstline; i <= lastline; ++i) {
         delete Line(i, false);
     }
-    delete lines;
+    delete [] lines;
 }
 
 void TextDisplay::Scroll (int line, IntCoord x, IntCoord y) {
@@ -204,7 +204,7 @@ void TextDisplay::Size (int first, int last) {
         TextLine** newlines = new TextLine* [newmaxlines];
         Memory::zero(newlines, newmaxlines * sizeof(TextLine*));
         Memory::copy(lines, newlines, maxlines * sizeof(TextLine*));
-        delete lines;
+        delete [] lines;
         lines = newlines;
         maxlines = newmaxlines;
     }
@@ -561,8 +561,8 @@ TextLine::TextLine () {
 }
 
 TextLine::~TextLine () {
-    delete text;
-    delete attr;
+    delete [] text;
+    delete [] attr;
 }
 
 IntCoord TextLine::Offset (TextDisplay* display, int index) {
@@ -635,12 +635,12 @@ void TextLine::Size (int last) {
         char* newtext = new char[newsize];
         Memory::zero(newtext, newsize);
         Memory::copy(text, newtext, size);
-        delete text;
+        delete [] text;
         text = newtext;
         char* newattr = new char[newsize];
         Memory::zero(newattr, newsize);
         Memory::copy(attr, newattr, size);
-        delete attr;
+        delete [] attr;
         attr = newattr;
         size = newsize;
     }
@@ -779,9 +779,9 @@ void TextLine::Delete (
 void TextLine::Replace (
     TextDisplay* display, int line, const char* t, int c
 ) {
-    delete text;
+    delete [] text;
     text = nil;
-    delete attr;
+    delete [] attr;
     attr = nil;
     size = 0;
     Size(c);

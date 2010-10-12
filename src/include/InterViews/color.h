@@ -22,6 +22,20 @@
  * OF THIS SOFTWARE.
  */
 
+#if defined(WIN32)
+// =========================================================================
+//
+//  MS-Windows version.  The InterViews distribution contains some
+//  X11-specific things in the interface, so this version is slightly
+//  different.
+//
+// =========================================================================
+#endif
+
+#if !defined(WIN32) && !defined(MAC)
+#define UNIX 1
+#endif
+
 #ifndef iv_color_h
 #define iv_color_h
 
@@ -33,7 +47,9 @@ class ColorImpl;
 class ColorRep;
 class Display;
 class String;
+#if UNIX
 class WindowVisual;
+#endif
 
 typedef float ColorIntensity;
 typedef unsigned int ColorOp;
@@ -66,7 +82,9 @@ public:
 	Display*, ColorIntensity& r, ColorIntensity& g, ColorIntensity& b
     ) const;
     virtual float alpha() const;
+#if UNIX
     virtual ColorOp op() const;
+#endif
 
     virtual const Color* brightness(float adjust) const;
 
@@ -76,6 +94,7 @@ public:
 	ColorIntensity& r, ColorIntensity& g, ColorIntensity& b
     ) const;
 
+#if UNIX
     ColorRep* rep(WindowVisual*) const;
 private:
     ColorImpl* impl_;
@@ -93,7 +112,18 @@ public:
     Color(int r, int g, int b);
     void Intensities(int& r, int& g, int& b) const;
     int PixelValue() const;
+#else
+    ColorRep* rep() const;
+private:
+    ColorRep* impl_;
+#endif
+
 };
+
+#if !UNIX
+inline ColorRep* Color::rep() const
+	{ return impl_; }
+#endif
 
 #include <InterViews/_leave.h>
 

@@ -25,6 +25,15 @@
 #ifndef os_math_h
 #define os_math_h
 
+#ifdef WIN32
+#ifdef max
+#undef max
+#endif
+#ifdef min
+#undef min
+#endif
+#endif 
+
 #include <OS/enter-scope.h>
 
 /*

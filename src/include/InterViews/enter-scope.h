@@ -47,8 +47,10 @@
 
 #define String _lib_os(String)
 #define boolean _lib_os(boolean)
+#if !MAC
 #define true _lib_os(true)
 #define false _lib_os(false)
+#endif
 #define u_char _lib_os(u_char)
 
 #endif

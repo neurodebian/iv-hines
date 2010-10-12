@@ -48,6 +48,10 @@ long ListImpl_best_new_count(long count, unsigned int size) {
 }
 
 void ListImpl_range_error(long i) {
+#if defined(WIN32) || MAC
+	printf("internal error: list index %d out of range\n", i);
+#else
     fprintf(stderr, "internal error: list index %d out of range\n", i);
+#endif
     abort();
 }

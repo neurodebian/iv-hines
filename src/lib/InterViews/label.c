@@ -66,7 +66,7 @@ Label::~Label() {
     delete text_;
     Resource::unref(font_);
     Resource::unref(color_);
-    delete char_widths_;
+    delete [] char_widths_;
 }
 
 void Label::compute_metrics() {

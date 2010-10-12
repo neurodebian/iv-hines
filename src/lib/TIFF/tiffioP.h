@@ -1,4 +1,4 @@
-/* $Header: /usr/people/sam/tiff/libtiff/RCS/tiffioP.h,v 1.28 92/03/06 11:59:52 sam Exp $ */
+/* /local/src/master/iv/src/lib/TIFF/tiffioP.h,v 1.2 1997/03/26 15:07:25 hines Exp */
 
 /*
  * Copyright (c) 1988, 1989, 1990, 1991, 1992 Sam Leffler

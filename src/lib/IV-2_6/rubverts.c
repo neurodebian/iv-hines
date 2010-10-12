@@ -56,8 +56,8 @@ void GrowingVertices::Init (
 }
 
 GrowingVertices::~GrowingVertices() {
-    delete x;
-    delete y;
+    delete [] x;
+    delete [] y;
 }
 
 void GrowingVertices::GetOriginal(
@@ -85,8 +85,8 @@ void GrowingVertices::CheckBufs() {
 
         Memory::copy(x, nx, count*sizeof(IntCoord));
         Memory::copy(y, ny, count*sizeof(IntCoord));
-        delete x;
-        delete y;
+        delete [] x;
+        delete [] y;
         x = nx;
         y = ny;
     }

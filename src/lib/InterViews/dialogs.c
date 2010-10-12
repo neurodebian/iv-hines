@@ -188,17 +188,28 @@ boolean Dialog::post_at_aligned(
     return b;
 }
 
+#if MAC
+#include <IV-Mac/window.h>
+#endif
+
 boolean Dialog::run() {
     Session* s = Session::instance();
     Event e;
     done_ = false;
     for (;;) {
+#if MAC
+	s->screen_update();
+#endif
 	s->read(e);
+#if defined(WIN32) || MAC
+	e.handle();
+#else
 	if (e.grabber() != nil || inside(e)) {
 	    e.handle();
 	} else if (e.type() == Event::key) {
 	    keystroke(e);
 	}
+#endif
 	if (done_) {
 	    break;
 	}

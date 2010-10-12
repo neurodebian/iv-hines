@@ -89,9 +89,9 @@ StringEditor::~StringEditor () {
         subject->Detach(this);
     }
     delete text;
-    delete sample;
-    delete done;
-    delete buffer;
+    delete [] sample;
+    delete [] done;
+    delete [] buffer;
     delete display;
 }
 

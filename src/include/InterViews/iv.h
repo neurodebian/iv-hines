@@ -25,7 +25,7 @@
 #ifndef _lib_iv_h
 #define _lib_iv_h
 
-#if defined(__STDC__) || defined(__ANSI_CPP__)
+#if 1 || defined(__STDC__) || defined(__ANSI_CPP__)
 #define _lib_iv(name) iv##name
 #define _lib_iv2_6(name) iv2_6_##name
 #else
