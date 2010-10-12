@@ -1,0 +1,201 @@
+// =======================================================================
+//
+//                     <IV-MAC/window.h>
+//
+//  Machintosh implimentation of the InterViews Window classes.
+//
+//	THE MANAGED WINDOW AND OTHER SUB-WINDOW CLASSES HAVE NOT BEEN IMPLEMENTED
+//
+//  The ManagedWindowRep is associated with the ManagedWindow class, which
+//  is a class of window that interacts with the window manager.  Although
+//  there is no seperate "Window Manager" in MS-Windows, the functionality
+//  present in that class has equivalents in MS-Windows.
+//
+//
+// 1.1
+// $Date:   4 AUG 1996 
+//
+// =======================================================================
+
+#ifndef iv_mac_window_h
+#define iv_mac_window_h
+
+#include <InterViews/iv.h>
+#include <InterViews/geometry.h>
+#include <InterViews/window.h>
+#include <OS/list.h>
+
+#include <QDOffscreen.h>
+
+class Window;
+class Bitmap;
+class Handler;
+class ManagedWindow;
+class Style;
+class Glyph;
+class Cursor;
+class Event;
+
+#define USE_SIOUX_WINDOW 1  //Enables one to remove SIOUX specific support
+
+declarePtrList(MACWindowRepList, WindowRep);
+
+
+class MACcursorPtrList;
+class MACcreateParams;
+
+class MACwindow
+{
+public:
+	MACwindow();
+	virtual ~MACwindow();
+	
+	Boolean			hasGrow;			/* true if has grow box		 */
+	ControlHandle	horizScroll;		/* horizontal scroll bar */
+	ControlHandle	vertScroll;			/* vertical scroll bar */
+	
+	enum { MODAL = 1, MODELESS, MOVABLE_MODAL};
+
+	boolean update_;					//whether window currently in list
+	
+	//Points defining the maximum and minimus sizes of window
+	Point shrink_;
+	Point stretch_;
+
+	// ---- typical window operations ----
+	void bind();                     		// bind to an MS-Windows window
+	void unbind();							// unbind from MS-Windows window
+	boolean bound();						// bound to MS-Windows window?
+	boolean map();							// map the window to the display
+	void unmap();							// unmap window from display
+	boolean isMapped();						// is window visible?	
+
+	//functions to determine new window placement
+	int next_window_x(void);
+	int next_window_y(void);
+	boolean placed_;
+	int left_;
+	int bottom_;
+	
+	// MAC specific calls
+	void contentRect (void *data);
+	void drawGrowIcon(void);
+	void activate(boolean activ);
+	void repair(void);
+	void update(void);
+	void doDrag(EventRecord * theEvent);
+	void doGrow(EventRecord* theEvent);
+	void adjustScrollBar (ControlHandle theControl);
+	void doZoom (void *data);
+	void doBackgroundClick(EventRecord * theEvent);
+	long MACpaint(void);
+	
+	void doubleBuffer(boolean b);
+	
+	Window* getIvWindow() const;
+	
+	// ----- window class parameters ----
+	WindowPtr macWindow();
+	
+	// ----- static functions -----
+#if USE_SIOUX_WINDOW
+	static boolean noInterviewsWindows(void);
+	static void setNoInterviewsWindows(boolean windows);
+#endif
+
+	static boolean isOurWindow(WindowPtr theWin);
+	static short isDialog(WindowPtr macWindow);
+	MACcreateParams * params_;					// creation parameters
+		
+	private:
+		WindowPtr		  theMacWindow_;		// the actual window associated with this
+		GWorldPtr 		  buffer_bitmap_;
+		boolean 		  doubleBuffered_;		// is window double-buffered?
+		
+};
+
+// The following are the window/class creation parameters.  
+class MACcreateParams
+{
+public:
+	MACcreateParams();
+	~MACcreateParams();
+	
+	void titleOf(const char*);      // set window title
+	const char* titleOf();          // fetch window title
+	Rect* bounds_;					//size of window
+	int  id_;						//type of window
+	boolean away_;						//whether a window can be closed
+	long refCon_input_;  			//what goes into refcon field
+	Point where_;
+	
+
+private:
+	char* title_;					//string title
+};
+
+// ---- inline functions of MACwindow ----
+inline boolean MACwindow::bound()
+	{ return (theMacWindow_) ? 1 : 0; }
+inline WindowPtr MACwindow::macWindow()
+	{ return theMacWindow_; }
+inline void MACwindow::doubleBuffer(boolean b)
+	{ doubleBuffered_ = b; }
+
+
+class WindowRep : public MACwindow
+{
+public:
+	WindowRep(Window*);
+	~WindowRep();
+
+	Window* ivWindowOf()                    // associated IV window
+		{ return win; }
+	
+	long MACinput(EventRecord* theEvent, int type, int button);
+	void bind();
+	void doGrow(EventRecord* theEvent);	
+	const Allocation& getAllocation(void);
+	static MACWindowRepList update_list;
+	
+	MACcursorPtrList* cursor_stack_;
+	Cursor* cursor_;
+	Handler* close_callback_;
+private:	
+	Window* win;					// associated InterViews window
+	
+	
+};
+
+inline const Allocation& WindowRep::getAllocation(void)
+	{ return win->allocation_;} 
+// #######################################################################
+// ################## ManagedWindowRep
+// #######################################################################
+class ManagedWindowRep
+{
+public:
+	ManagedWindowRep(ManagedWindow*);
+	~ManagedWindowRep();
+	
+	void errorMessage(const char* msg);
+
+	// ---- Windows messages recognized ----
+	
+
+private:
+	ManagedWindow* win;					// associated window
+
+public:
+	 Handler* wm_delete_;
+	 ManagedWindow* icon_;
+	 Bitmap* icon_bitmap_;
+	 Bitmap* icon_mask_;
+	 Window* group_leader_;
+	 Window* transient_for_;
+
+	 //void do_set(Window*, HintFunction);
+
+};
+
+#endif
