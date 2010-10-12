@@ -7,8 +7,8 @@
 //  counterparts in the WIN32 library.
 //
 //
-// $Revision$
-// $Date$
+// $Revision: 1342 $
+// $Date: 2003-02-11 15:21:54 -0500 (Tue, 11 Feb 2003) $
 //
 // Windows 3.1/NT InterViews Port 
 // Copyright (c) 1993 Tim Prinzing
