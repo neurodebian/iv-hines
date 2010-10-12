@@ -4,6 +4,8 @@
 #undef LanguageCCDefines
 #define LanguageCCDefines -Dcplusplus_2_1
 
+#undef DependCmd
+#define DependCmd true
 /*
  * If you are using gcc/g++, then uncomment the include below.
  */
@@ -30,7 +32,7 @@
 #if defined(SGIArchitecture) || defined(SunArchitecture) || \
 defined(StratusArchitecture)
 #undef BuildRPCClasses
-#define BuildRPCClasses YES
+#define BuildRPCClasses NO
 #endif
 
 /*

@@ -1,6 +1,6 @@
 #ifdef IVUseInstalled
 #undef UseInstalled
-#define UseInstalled
+#define UseInstalled 1
 #endif
 
 #include <sgi.cf>

@@ -33,7 +33,7 @@
 #include <stddef.h>
 #include <string.h>
 #include <sys/param.h>
-#if defined(sun) && OSMajorVersion >= 5
+#if defined(sun) && defined(SVR4)
 #include <sys/utsname.h>
 #define MAXHOSTNAMELEN SYS_NMLN
 #endif
@@ -42,7 +42,7 @@
 // during a call to a system function.
 
 static ostream& perror(ostream& s) {
-#if defined(sun) && OSMajorVersion >= 5
+#if defined(sun) && defined(SVR4)
     s << ": " << strerror(errno);
 #else
     if (errno > 0 && errno < sys_nerr) {
